@@ -1,0 +1,72 @@
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: pg_books
+    restart: always
+    environment:
+      POSTGRES_USER: boooks
+      POSTGRES_PASSWORD: boooks_pass
+      POSTGRES_DB: boooks_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+
+  meilisearch:
+    image: getmeili/meilisearch:latest
+    container_name: meilisearch
+    ports:
+      - "7700:7700"
+    environment:
+      MEILI_MASTER_KEY: masterKey123
+      MEILI_ENV: development
+    volumes:
+      - meili_data:/data.ms
+
+  n8n:
+    image: n8nio/n8n
+    container_name: n8n
+    restart: always
+    ports:
+      - "5678:5678"
+    environment:
+      N8N_BASIC_AUTH_ACTIVE: 'true'
+      N8N_BASIC_AUTH_USER: admin
+      N8N_BASIC_AUTH_PASSWORD: admin
+      DB_TYPE: postgres
+      DB_POSTGRESDB_HOST: postgres
+      DB_POSTGRESDB_PORT: 5432
+      DB_POSTGRESDB_DATABASE: boooks_db
+      DB_POSTGRESDB_USER: boooks
+      DB_POSTGRESDB_PASSWORD: boooks_pass
+    depends_on:
+      - postgres
+
+  nextjs:
+    build: .
+    container_name: nextjs
+    command: npm run dev
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgres://boooks:boooks_pass@postgres:5432/boooks_db
+      MEILISEARCH_URL: http://meilisearch:7700
+      MEILISEARCH_KEY: masterKey123
+    develop:
+      watch:
+        - action: sync
+          path: .
+          target: /app
+          ignore:
+            - node_modules/
+            - .next/
+            - docker-compose.yaml
+            - Dockerfile
+    depends_on:
+      - postgres
+      - meilisearch
+
+volumes:
+  pg_data:
+  meili_data:

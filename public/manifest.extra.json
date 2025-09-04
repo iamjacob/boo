@@ -1,0 +1,111 @@
+
+{
+  "name": "Boooks",
+  "short_name": "Boooks",
+  "description": "Scan, collect, and explore books offline and online.",
+  "categories": ["books", "productivity", "education"],
+  "version": "0.0.4",
+  "start_url": "/?source=pwa",
+  "display": "fullscreen",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "orientation": "any",
+  "lang": "en",
+  
+
+
+
+  "prefer_related_applications": false,
+  "related_applications": [
+  {
+    "platform": "play",
+    "url": "https://play.google.com/store/apps/details?id=com.example.app",
+    "id": "com.example.app"
+  }
+],
+
+"screenshots": [
+  {
+    "src": "/screenshots/home.png",
+    "sizes": "540x960",
+    "type": "image/png"
+  },
+  {
+    "src": "/screenshots/search.png",
+    "sizes": "540x960",
+    "type": "image/png"
+  }
+],
+
+"iarc_rating_id": "e1234567890", 
+"shortcuts": [
+  {
+    "name": "Scan a book",
+    "short_name": "Scan",
+    "description": "Open camera to scan a book",
+    "url": "/scan",
+    "icons": [{ "src": "/icons/scan.png", "sizes": "96x96" }]
+  }
+],
+
+"shortcuts": [
+  {
+    "name": "Scan Book",
+    "short_name": "Scan",
+    "description": "Quickly open the book scanner",
+    "url": "/scan",
+    "icons": [
+      {
+        "src": "/icons/scan.png",
+        "sizes": "96x96"
+      }
+    ]
+  },
+  {
+    "name": "My Library",
+    "short_name": "Library",
+    "description": "Jump to your personal library",
+    "url": "/library",
+    "icons": [
+      {
+        "src": "/icons/library.png",
+        "sizes": "96x96"
+      }
+    ]
+  },
+  {
+    "name": "Settings",
+    "short_name": "Settings",
+    "description": "Adjust your preferences",
+    "url": "/settings",
+    "icons": [
+      {
+        "src": "/icons/settings.png",
+        "sizes": "96x96"
+      }
+    ]
+  }
+],
+
+
+
+
+  "icons": [
+    {
+      "src": "/favicon/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/favicon/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

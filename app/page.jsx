@@ -87,6 +87,12 @@ export default function Home() {
                 </div>
               )}
 
+              {isCameraOpen && (
+        <div style={{ marginTop: '20px' }} className='absolute border border-dashed border-1 border-black'>
+          <video ref={videoRef} width="640" height="480" autoPlay />
+        </div>
+      )}
+
 
               <Search />
             </div>

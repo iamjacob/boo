@@ -36,6 +36,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
+      className='h-[100dvh]
+      '
       // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div id="splash">

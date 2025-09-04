@@ -76,7 +76,7 @@ const [inputText, setInputText] = useState("");
   };
 
   return (
-    <div className="flex flex-col items-center w-[80vw] md:w-[50vw]">
+    <div className="flex flex-col items-center w-[90vw] md:w-[60vw]">
 
 {/* {ai/agent/mascot} */}
 

@@ -114,7 +114,8 @@ const [inputText, setInputText] = useState("");
 {results.length < 1 &&
 (
 
-  <div className="flex w-full gap-2 justify-center md:justify-around overflow-hidden">
+  <div className="m-1
+   flex w-full gap-2 justify-center md:justify-around overflow-hidden">
                 <div className="quick-access-buttons flex gap-2 justify-center">
                   <div className="pill">
                     <svg

@@ -331,7 +331,7 @@ const [inputText, setInputText] = useState("");
 {/* {results.length}  */}
 
 {results.length > 1 &&
-      <div className="results--open flex flex-col w-[80vw] md:w-[50vw]">
+      <div className="results--open flex flex-col w-[90vw] md:w-[50vw]">
 
         {/* lastResults.map */}
 

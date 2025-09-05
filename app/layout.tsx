@@ -29,14 +29,16 @@ import BoooksFull from './BoooksFull'
 
 // };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   // Read request headers on the server
-  const headersList = headers();
+  const headersList = await headers();
   const acceptLang = headersList.get("accept-language");
+  console.log("Accept-Language:", acceptLang);
+  
 
   // Extract the first language code (e.g. "en", "da", "de")
   const lang = acceptLang?.split(",")[0].split("-")[0] ?? "en";

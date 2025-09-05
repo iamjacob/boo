@@ -6,6 +6,12 @@
    */
  }
 
+.header-info .transition-all{
+  transition: all .2s ease-in-out;
+  display: flex;
+    justify-content: center;
+    align-items: center;
+}
 
  :root {
    --background: #ffffff;

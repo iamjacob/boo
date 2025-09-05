@@ -100,7 +100,6 @@ export default function Search() {
         ></div>
       </div>
 
-<br></br>
 
       <div className="search flex justify-around w-full">
         <div
@@ -109,7 +108,7 @@ export default function Search() {
           } `}
         >
           <input
-            className="search__field--input pl-1 py-1 flex-grow w-full outline-none"
+            className="search__field--input pl-2 py-1 flex-grow w-full outline-none"
             type="text"
             value={query}
             onChange={handleSearch}
@@ -118,20 +117,7 @@ export default function Search() {
             // onFocus={}
             placeholder={inputText.length === 0 && displayText}
           />
-          {/* <div className="border border-2 border-black p-1 m-1 rounded-full">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-icon lucide-plus"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
-
-                    </div> */}
-        </div>
-      </div>
-
-      {/* categories */}
-
-{results.length < 1 &&
-(
-
-  <div className="flex w-full gap-2 justify-center md:justify-around overflow-hidden mt-1">
-                <div className="quick-access-buttons flex gap-2 justify-center">
+               <div className="quick-access-buttons flex gap-2 m-1 justify-center">
                   <div className="pill">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -178,6 +164,20 @@ export default function Search() {
               </svg>
             </div>
           </div>
+          {/* <div className="border border-2 border-black p-1 m-1 rounded-full">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-icon lucide-plus"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+
+                    </div> */}
+        </div>
+      </div>
+
+      {/* categories */}
+
+{results.length < 1 &&
+(
+
+  <div className="flex w-full gap-2 justify-center md:justify-around overflow-hidden mt-1">
+           
 
           <div className="hidden md:flex justify-around">
             {/* <div className="pill" onClick={(e) => {

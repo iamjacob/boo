@@ -130,7 +130,7 @@ export default function Search() {
 {results.length < 1 &&
 (
 
-  <div className="flex w-full gap-2 justify-center md:justify-around overflow-hidden">
+  <div className="flex w-full gap-2 justify-center md:justify-around overflow-hidden mt-1">
                 <div className="quick-access-buttons flex gap-2 justify-center">
                   <div className="pill">
                     <svg

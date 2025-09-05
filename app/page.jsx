@@ -4,6 +4,8 @@ import Search from "./Search";
 import Loading from "./Loading";
 import Header from "./Header";
 import Footer from "./Footer";
+import HeaderInfo from "./HeaderInfo";
+
 
 export default function Home() {
 
@@ -55,7 +57,7 @@ export default function Home() {
 
   return (
     <Suspense fallback={<Loading progress={50} />}>
-      <div className="font-sans flex flex-col items-center justify-between h-[100dvh]">
+      <div onDoubleClick={toggleCam} className="font-sans flex flex-col items-center justify-between h-[100dvh]">
 
         <Header />
 
@@ -64,9 +66,7 @@ export default function Home() {
           <div className="filters flex flex-col items-center w-[80vw] md:w-[50vw]">
             <div className="search-all-inclusive">
 
-              <div className="btn text-center" onClick={toggleCam}>
-                (0)
-              </div>
+                
 
               {camera && (
                 <div className="absolute top-0 left-0 w-screen h-[150px] bg-[rgba(0,0,0,.8)] flex flex-col justify-around items-center text-center">
@@ -98,9 +98,11 @@ export default function Home() {
               <Search />
 
             </div>
-<img src="header.svg" alt="info text about benefites of reading" />
+
+
           </div>
 
+            <HeaderInfo/>
 
         </main>
         <Footer />

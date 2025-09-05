@@ -230,7 +230,9 @@ html,body{
   /* transform: scale(.1); */
  }
 
-
+.header-info svg{
+  width:135px;
+}
 
 
  .speech-bubble { perspective: 35em; 

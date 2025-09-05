@@ -1,6 +1,7 @@
 // import type { Metadata } from "next";
-
+import { headers } from "next/headers"
 export { metadata } from "./metadata";
+
 
 // import { Geist, Geist_Mono } from "next/font/google";
 
@@ -33,8 +34,15 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Read request headers on the server
+  const headersList = headers();
+  const acceptLang = headersList.get("accept-language");
+
+  // Extract the first language code (e.g. "en", "da", "de")
+  const lang = acceptLang?.split(",")[0].split("-")[0] ?? "en";
+
   return (
-    <html lang="en">
+    <html lang={lang}>
       <body
       // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
@@ -42,6 +50,7 @@ export default function RootLayout({
           {/* <BoooksFull/> */}
           <Loading/>
         </div>
+        
         {children}
       </body>
     </html>

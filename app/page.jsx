@@ -55,11 +55,12 @@ export default function Home() {
 
   return (
     <Suspense fallback={<Loading progress={50} />}>
-      <div className="font-sans flex flex-col items-center justify-between h-screen">
+      <div className="font-sans flex flex-col items-center justify-between h-[100dvh]">
 
         <Header />
 
         <main className="flex flex-col h-screen w-screen justify-around items-center">
+
           <div className="filters flex flex-col items-center w-[80vw] md:w-[50vw]">
             <div className="search-all-inclusive">
 
@@ -95,7 +96,9 @@ export default function Home() {
 
 
               <Search />
+
             </div>
+<img src="header.svg" alt="info text about benefites of reading" />
           </div>
 
 

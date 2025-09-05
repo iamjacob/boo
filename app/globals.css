@@ -25,6 +25,9 @@
      --foreground: #ededed;
    }
  }
+html,body{
+  height:100dvh;
+}
 
  body {
    background: var(--background);

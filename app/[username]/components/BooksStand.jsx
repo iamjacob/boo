@@ -4,7 +4,7 @@ import { DoubleSide } from "three";
 // import { gsap } from "gsap";
 // import useBookExperienceStore from "../../../stores/experience/useBookExperienceStore";
 
-const BooksStand = () => {
+const BooksStand = ({position}) => {
   // const groupRef = useRef();
   // const { isOpenBookVisible } = useBookExperienceStore();
   const glassMaterialProps = {
@@ -56,7 +56,7 @@ const BooksStand = () => {
   // }, [isOpenBookVisible]);
 
   return (
-    <group position={[0, 0, 0]} scale={[0.7, 0.7, 0.7]}>
+    <group position={[position[0], -.5, position[2]]} scale={[0.7, 0.7, 0.7]}>
       {/* Stand base */}
       <mesh position={[0, -1, 0]} rotation={[Math.PI, 0, 0]}>
         <coneGeometry args={[0.2, 1.8, 16]} /> 

@@ -18,7 +18,7 @@ export default function Clock() {
   const displayHours = hours % 12 || 12;
 
   return (
-    <div className="flex pl-1 pr-2 items-center" style={{ fontFamily: "monospace", fontSize: "1.2rem",color:"gray" }}>
+    <div onClick={()=>{alert('sd')}} className="flex pl-1 pr-2 items-center" style={{ fontFamily: "monospace", fontSize: "1.2rem",color:"gray" }}>
       <span>{displayHours}</span>:<span>{minutes}</span>{" "}
       <div className="flex flex-col text-[8px] pr-2 pl-[2px] leading-none">
 

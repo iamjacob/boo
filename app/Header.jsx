@@ -1,4 +1,5 @@
-import { Suspense, useEffect, useState } from "react";
+'use client'
+import { Suspense, useState } from "react";
 
 import BoooksFull from "./BoooksFull";
 import BoooksHeart from './BoooksHeart'
@@ -14,7 +15,7 @@ export default function Header() {
 return (
         
         
-        <header className="flex justify-between w-screen h-[40px] gap-2 m-1">
+        <header className="fixed top-0 left-0 right-0 z-100 flex justify-between w-screen h-[40px] gap-2 m-1">
           <div className="menu flex cursor-pointer items-center">
                 {/* <div className="cursor-pointer border border-2 border-red-500 rounded-full px-2 my-2 text-[12px]">
   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-dna-icon lucide-dna"><path d="m10 16 1.5 1.5"/><path d="m14 8-1.5-1.5"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/><path d="m16.5 10.5 1 1"/><path d="m17 6-2.891-2.891"/><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="m20 9 .891.891"/><path d="M3.109 14.109 4 15"/><path d="m6.5 12.5 1 1"/><path d="m7 18 2.891 2.891"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/></svg>
@@ -45,7 +46,7 @@ return (
                   setIsLoggedIn(true);
                   //toggleLogin()
                 }}
-                className="login cursor-pointer border border-2 border-red-500 rounded-full my-2 px-2 text-[12px]"
+                className="login bg-white/10 text-white cursor-pointer border border-2 border-red-500 rounded-full my-2 px-2 text-[12px]"
               >
                 Login
               </div>
@@ -54,7 +55,7 @@ return (
                   //setIsLoggedIn(true);
                   setLogin(!login)
                 }}
-                className="login cursor-pointer border border-2 border-red-500 rounded-full my-2 px-2 text-[12px]"
+                className="login bg-white/10 text-white cursor-pointer border border-2 border-red-500 rounded-full my-2 px-2 text-[12px]"
               >
                 pop
               </div>
@@ -95,7 +96,7 @@ return (
         >
           <div 
             onClick={(e) => e.stopPropagation()}
-            className="bg-white/95 backdrop-blur-sm rounded-3xl shadow-[0_11px_34px_0_rgba(0,0,0,0.2)] border border-white/50 w-full max-w-md mx-auto overflow-hidden transform transition-all duration-300 hover:shadow-3xl"
+            className="bg-white/30 backdrop-blur-sm rounded-3xl shadow-[0_11px_34px_0_rgba(0,0,0,0.2)] border border-white/50 w-full max-w-md mx-auto overflow-hidden transform transition-all duration-300 hover:shadow-3xl"
           >
             {/* Header */}
             <div className="px-8 pt-8 pb-6 text-center flex flex-col">

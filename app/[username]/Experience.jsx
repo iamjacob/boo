@@ -1,11 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
-import { Stars, OrbitControls, CameraControls, Gltf, useGLTF } from "@react-three/drei";
+import { Stars, OrbitControls, CameraControls, Gltf, useGLTF, Html } from "@react-three/drei";
 // import { Stars, OrbitControls } from "@react-three/drei";
 // import { useThree } from "@react-three/fiber";
 // import { useEffect } from "react";
-
 
 // import { degToRad } from "three/src/math/MathUtils.js";
 // import { Godray } from "./Godray";
@@ -24,6 +23,9 @@ import OpenBook from "./components/OpenBook_test";
 // import BackgroundWall from "./components/BackgroundWall";
 
 export const Experience = () => {
+      const BOOK_STAND_COUNT = 8;
+      const RADIUS = 3;
+
   const CameraZoom = () => {
     const { camera } = useThree();
     useEffect(() => {
@@ -39,6 +41,7 @@ export const Experience = () => {
     <directionalLight position={[0, 10, 0]} intensity={1.5} />
     <directionalLight position={[10, 10, 5]} intensity={0.5} />
     <directionalLight position={[-10, -10, -5]} intensity={0.3} />
+    <directionalLight position={[-10, -10, -5]} intensity={30} color={"#ff0000"}/>
   </>
 );
 
@@ -137,53 +140,63 @@ export const Experience = () => {
             // }}
             >
 
+      {Array.from({ length: BOOK_STAND_COUNT }).map((_, i) => {
+        const angle = (i / BOOK_STAND_COUNT) * 2 * Math.PI;
+        const x = Math.cos(angle) * RADIUS;
+        const z = Math.sin(angle) * RADIUS;
+        return (
+          <BooksStand key={i} position={[x, 0, z]} rotation={[0, -angle + Math.PI / 2, 0]} />
+        );
+      })}
+
+      {/* make camera from center to rotate to each bookstand */}
+      {/* Make 'HOME' button that centers user + cam again */}
+      {/* Make moving man maps and on shelf!!! */}
 
 
-      {/* <Godray
-              
-              settings={{
-                position: [
-                  0.30000000000000004, 4.899999999999998, -6.700000000000005,
-                  ],
-                  rotation: [-0.6781317007977318, 0, 0],
-                  // color: "#9cc7a0ff",
-                  topRadius: 1.7,
-                  bottomRadius: 2,
-                  height: 14.5,
-                  timeSpeed: 0.07999999999999999,
-                  noiseScale: 4.4,
-                  smoothBottom: 0.332,
-                  smoothTop: 0.574,
-                  fresnelPower: 2.9,
-                  }}
-                  /> */}
-
-<BooksStand />
-      {/* <Physics gravity={[0, -9.81, 0]}>
-        {isBookOpen && isOpenBookVisible && (
-          <>
-          <OpenBook bookData={openedBook} />
-          </>
-          )} */}
         {/* <Floor /> */}
         {/* <BackgroundWall debug={false} /> */}
-
         {/* <ShelvesPhysics />*/}
 
         <Shelves/>
 
+        <Html  position={[12,8,2]} center>
+          <div className="text-white text-3xl">Welcome to the 3D Boooks Experience</div>
+        </Html>
+
+
+        <Html  position={[-12,8,2]} center>
+          <div className="text-white text-3xl w-fit">Add a new scene</div>
+        </Html>
+
+        <Html  position={[0,8,-12]} center>
+          <div className="text-white text-3xl w-fit">History (infinite shelf)</div>
+        </Html>
+
+        <Html  position={[0,8,12]} center>
+          <div className="text-white text-3xl w-fit">Maps</div>
+        </Html>
+
         {/* {children} */}
-
-        
-
-
-        {/* <OpenBook/> */}
+      
 
 
 
+        {/* //I need architechture that loads alll books asap, put wireframe till image is loaded and then fade in? */}
+
+      {/* <mesh>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshBasicMaterial color={'red'} />
+        </mesh> */}
+        {/* {materials.map((material, i) => (
+          <primitive key={i} object={material} attach={`material-${i}`} />
+        ))} */}
 
 
+
+      {/* <OpenBook/> */}
       {/* </Physics> */}
+
       <CameraZoom />
       <OrbitControls
         enableDamping={true}
@@ -194,13 +207,6 @@ export const Experience = () => {
         minPolarAngle={-Math.PI / 2}
         // maxPolarAngle={Math.PI / 2}
         />
-
-
-
-
-
-
-
 
       <StudioLighting />
       <Stars />

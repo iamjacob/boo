@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-function CameraComponent() {
+function Camera() {
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const videoRef = useRef(null);
 
@@ -62,4 +62,4 @@ function CameraComponent() {
   );
 }
 
-export default CameraComponent;
+export default Camera;

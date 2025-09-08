@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { client } from "./lib/meilisearchClient";
 import Image from "next/image";
+import BoooksHeart from "./BoooksHeart";
 
 export default function Search() {
   const [query, setQuery] = useState("");
@@ -18,6 +19,15 @@ export default function Search() {
   const [inputText, setInputText] = useState("");
 
   const [lang, setLang] = useState("en");
+
+  const [sortBy, setSortBy] = useState("relevance");
+  const [sortOrder, setSortOrder] = useState("desc");
+
+  const [fictionSelected, setFictionSelected] = useState(false);
+  const [nonFictionSelected, setNonFictionSelected] = useState(false);
+
+  // USE THIS SMART AND NICE!
+  const [lastResults, setLastResults] = useState([]);
 
   useEffect(() => {
     const detected = document.body.getAttribute("data-lang") || "en";
@@ -81,199 +91,253 @@ export default function Search() {
 
   return (
     <div className="flex flex-col items-center w-[90vw] md:w-[40vw]">
-      {/* {ai/agent/mascot} */}
+       {results.length < 1 && (
+        <div className="flex w-full gap-2 flex-wrap justify-center md:justify-around overflow-hidden mt-1">
+          {fictionSelected && (
+            <>
+              {[
+                "Fantasy",
+                "Science Fiction",
+                "Mystery",
+                "Romance",
+                "Thriller",
+                "Horror",
+                "Historical",
+                "Literary",
+                "Adventure",
+                "Young Adult",
+              ].map((genre) => (
+                <div
+                  key={genre}
+                  className="pill"
+                  onClick={(e) => {
+                    e.currentTarget.classList.toggle("pill-selected");
+                  }}
+                >
+                  {genre}
+                </div>
+              ))}
+            </>
+          )}
 
-{/* <div class='speech-bubble'>Hello!</div> */}
+          {nonFictionSelected && (
+            <>
+              {[
+                "Biography",
+                "Memoir",
+                "Self-Help",
+                "History",
+                "Science",
+                "Travel",
+                "True Crime",
+                "Philosophy",
+                "Politics",
+                "Religion",
+              ].map((genre) => (
+                <div
+                  key={genre}
+                  className="pill"
+                  onClick={(e) => {
+                    e.currentTarget.classList.toggle("pill-selected");
+                  }}
+                >
+                  {genre}
+                </div>
+              ))}
+            </>
+          )}
+      <div className="flex mb-4 gap-4 w-full justify-center">
+        <div
+          className="pill"
+          onClick={(e) => {
+            e.currentTarget.classList.toggle("pill-selected");
+            setNonFictionSelected(!nonFictionSelected);
+          }}
+        >
+          Non-fiction
+        </div>
 
-      <div className="TAG p-2 flex gap-1 items-center group cursor-pointer">
         <div
-          className="border border-2 border-red-500 h-2 w-2 rounded-full group-hover:animate-bounce"
-          style={{ animationDelay: "150ms" }}
-        ></div>
-        <div
-          className="border border-2 border-red-500 h-3 w-3 rounded-full group-hover:animate-bounce"
-          style={{ animationDelay: "0ms" }}
-        ></div>
-        <div
-          className="border border-2 border-red-500 h-2 w-2 rounded-full group-hover:animate-bounce"
-          style={{ animationDelay: "150ms" }}
-        ></div>
+          className="pill"
+          onClick={(e) => {
+            e.currentTarget.classList.toggle("pill-selected");
+            setFictionSelected(!fictionSelected);
+          }}
+        >
+          Fiction
+        </div>
       </div>
-
 
       <div className="search flex justify-around w-full">
         <div
-          className={`w-full flex items-center ${
+          className={`w-[90vw] md:w-[40vw] p-1 align-left w- flex flex-col items-center ${
             results.length < 1 ? "search__field" : "search__field--open"
           } `}
         >
           <input
-            className="search__field--input pl-2 py-1 flex-grow w-full outline-none"
+            className="m-1p-[8px] search__field--input pl-2 py-1 flex-grow w-full outline-none"
             type="text"
             value={query}
             onChange={handleSearch}
-            // placeholder="Search Boooks"
+            //placeholder="Search Boooks"
             autoFocus
-            // onFocus={}
+            //onFocus={}
             placeholder={inputText.length === 0 && displayText}
           />
-               <div className="quick-access-buttons flex gap-2 m-1 justify-center">
-                  <div className="pill">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="lucide lucide-sparkles-icon lucide-sparkles"
-                      >
-                      <path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" />
-                      <path d="M20 2v4" />
-                      <path d="M22 4h-4" />
-                      <circle cx="4" cy="20" r="2" />
-                    </svg>{" "}
-                    {/* Explore */}
-                  </div>
 
-            <div className="pill">
+          <div
+            id="categories-and-genres-pills"
+            className="categories-and-genres-pills flex gap-2"
+          >
+            <div
+              className="pill"
+              onClick={(e) => {
+                e.currentTarget.classList.toggle("pill-selected");
+              }}
+            >
+              {/* <img src={`./flags/${lang}.svg`} alt="" /> */}
+              <Image
+                src={`./flags/dk.svg`}
+                width="18"
+                height="12"
+                alt="det danske flag"
+              />
+            </div>
+            <div
+              className="pill"
+              onClick={(e) => {
+                e.currentTarget.classList.toggle("pill-selected");
+              }}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                width="18"
-                height="18"
+                width="16"
+                height="16"
                 viewBox="0 0 24 24"
                 fill="none"
-                stroke="currentColor"
+                stroke="#333"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="lucide lucide-sliders-horizontal-icon lucide-sliders-horizontal"
+                className="lucide lucide-chevron-down-icon lucide-chevron-down"
               >
-                <path d="M10 5H3" />
-                <path d="M12 19H3" />
-                <path d="M14 3v4" />
-                <path d="M16 17v4" />
-                <path d="M21 12h-9" />
-                <path d="M21 19h-5" />
-                <path d="M21 5h-7" />
-                <path d="M8 10v4" />
-                <path d="M8 12H3" />
+                <path d="m9 18 6-6-6-6" />
               </svg>
             </div>
           </div>
-          {/* <div className="border border-2 border-black p-1 m-1 rounded-full">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus-icon lucide-plus"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
 
-                    </div> */}
-        </div>
-      </div>
-
-      {/* categories */}
-
-{results.length < 1 &&
-(
-
-  <div className="flex w-full gap-2 justify-center md:justify-around overflow-hidden mt-1">
-           
-
-          <div className="hidden md:flex justify-around">
-            {/* <div className="pill" onClick={(e) => {
-                      (e.currentTarget).classList.toggle(
-                        "pill-selected"
-                        );
-                        }}>
-                        <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="lucide lucide-chevron-left-icon lucide-chevron-left"
-                        >
-                    <path d="m15 18-6-6 6-6" />
-                    </svg>
-                    </div> */}
-
-            <div
-              id="categories-and-genres-pills"
-              className="categories-and-genres-pills flex gap-2"
-            >
-              <div
-                className="pill"
-                onClick={(e) => {
-                  e.currentTarget.classList.toggle("pill-selected");
-                }}
-              >
-                {/* <img src={`./flags/${lang}.svg`} alt="" /> */}
-                  <Image
-                    src={`./flags/dk.svg`}
+          <div className="quick-access-buttons flex gap-2 m-1 justify-center">
+            {results.length < 1 && (
+              <div className="relative top-2 right-2">
+                <div className="pill">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
                     width="18"
-                    height="12"
-                    alt="det danske flag"
-                  />
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-sparkles-icon lucide-sparkles"
+                  >
+                    <path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" />
+                    <path d="M20 2v4" />
+                    <path d="M22 4h-4" />
+                    <circle cx="4" cy="20" r="2" />
+                  </svg>
+                  {/* Explore */}
+                </div>
               </div>
-              <div
-                className="pill"
-                onClick={(e) => {
-                  e.currentTarget.classList.toggle("pill-selected");
-                }}
-              >
+            )}
 
+            {results.length > 1 && (
+              <div className="pill">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
+                  width="18"
+                  height="18"
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="#333"
+                  stroke="currentColor"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  className="lucide lucide-chevron-down-icon lucide-chevron-down"
+                  className="lucide lucide-sliders-horizontal-icon lucide-sliders-horizontal"
                 >
-                  <path d="m9 18 6-6-6-6"/>
+                  <path d="M10 5H3" />
+                  <path d="M12 19H3" />
+                  <path d="M14 3v4" />
+                  <path d="M16 17v4" />
+                  <path d="M21 12h-9" />
+                  <path d="M21 19h-5" />
+                  <path d="M21 5h-7" />
+                  <path d="M8 10v4" />
+                  <path d="M8 12H3" />
                 </svg>
               </div>
+            )}
+          </div>
+        </div>
 
-              <div
-                className="pill"
-                onClick={(e) => {
-                  e.currentTarget.classList.toggle("pill-selected");
-                }}
-              >
-                Non-fiction
-              </div>
+        {/* Sorting buttons with chevron direction and state */}
+        {results.length > 1 && (
+          <div className="sorting w-full flex">
+            <div className="flex gap-2 w-full m-2">
+              {[
+                { label: "Relevance", value: "relevance" },
+                { label: "Year", value: "year" },
+                { label: "Rating", value: "rating" },
+                { label: "Popularity", value: "popularity" },
+              ].map((sort) => (
+                <button
+                  key={sort.value}
+                  className={`rounded p-1 flex items-center gap-1 text-[14px] text-gray-400 ${
+                    sortBy === sort.value && "text-gray-900"
+                  }`}
+                  onClick={() => {
+                    if (sortBy === sort.value) {
+                      setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+                    } else {
+                      setSortBy(sort.value);
+                      setSortOrder("desc");
+                    }
+                  }}
+                >
+                  {sort.label}
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-chevron-icon"
+                  >
+                    {sortBy === sort.value && sortOrder === "asc" ? (
+                      <path d="m18 15-6-6-6 6" />
+                    ) : (
+                      <path d="m6 9 6 6 6-6" />
+                    )}
+                  </svg>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
 
+        {/* 
               <div
                 className="pill"
                 onClick={(e) => {
                   e.currentTarget.classList.toggle("pill-selected");
                 }}
               >
-                Fiction
-              </div>
-              <div
-                className="pill"
-                onClick={(e) => {
-                  e.currentTarget.classList.toggle("pill-selected");
-                }}
-              >
-                Genre
-              </div>
-              <div
-                className="pill"
-                onClick={(e) => {
-                  e.currentTarget.classList.toggle("pill-selected");
-                }}
-              >
-                year
+                Year
               </div>
               <div
                 className="pill"
@@ -308,34 +372,13 @@ export default function Search() {
                   e.currentTarget.classList.toggle("pill-selected");
                 }}
               >
-                Poetry
-              </div>
-              <div
-                className="pill"
-                onClick={(e) => {
-                  e.currentTarget.classList.toggle("pill-selected");
-                }}
-              >
-                Drama
-              </div>
-              <div
-                className="pill"
-                onClick={(e) => {
-                  e.currentTarget.classList.toggle("pill-selected");
-                }}
-              >
-                History
-              </div>
-              <div
-                className="pill"
-                onClick={(e) => {
-                  e.currentTarget.classList.toggle("pill-selected");
-                }}
-              >
                 Philosophy
-              </div>
-            </div>
-            {/* <div
+              </div> */}
+      </div>
+
+     
+
+          {/* <div
                   className="pill p-[2px]"
                   // onClick={(e) =>{ console.log(document.getElementById("categories-and-genres-pills")?.lastChild.pop()) }}
                   >
@@ -354,52 +397,112 @@ export default function Search() {
                   <path d="m9 18 6-6-6-6" />
                   </svg>
                   </div> */}
-          </div>
         </div>
       )}
 
       {/* {results.length}  */}
 
       {results.length > 1 && (
-        <div className="results--open flex flex-col w-[90vw] md:w-[40vw]">
+        <div className="results--open flex flex-col w-[90vw] md:w-[40vw] max-h-[80vh] mb-2 overflow-y-scroll">
           {/* lastResults.map */}
 
           {results.map((movie) => (
             <div
               key={movie.id}
-              className="border-top shadow p-1 flex items-center"
+              className="border-top shadow p-1 flex justify-between"
             >
               <img
                 src={movie.poster}
                 alt={movie.title}
                 className="w-12 h-auto mb-2"
               />
-              <div className="flex flex-col">
-                <h2 className="font-bold text-lg">{movie.title}</h2>
-                {/* <p className="text-sm mt-1">{movie.overview.length > 150 
-              ? movie.overview.substring(0, 50) + "..." 
-              : movie.overview}</p> */}
+              <div className="flex">
+                <div className="flex flex-col">
+                  <h2 className="font-bold text-lg">{movie.title}</h2>
+                  <p className="text-sm mt-1">
+                    {movie.overview.length > 50
+                      ? movie.overview.substring(0, 50) + "..."
+                      : movie.overview}
+                  </p>
 
-                <div className="flex">
-                  <p className="text-xs mt-2">
-                    Genres: {movie.genres.join(", ")}
-                  </p>
-                  <p className="text-xs">
-                    Release: {new Date(movie.release_date * 1000).getFullYear()}
-                  </p>
+                  <div className="flex">
+                    <p className="text-xs mt-2">
+                      Genres: {movie.genres.join(", ")}
+                    </p>
+                    <p className="text-xs">
+                      Release:{" "}
+                      {new Date(movie.release_date * 1000).getFullYear()}
+                    </p>
+                  </div>
                 </div>
 
-                <ul className="bg-red-500 flex">
-                  <li>
-                    <a href="">Save</a>
-                  </li>
-                  <li>
-                    <a href="">Care</a>
-                  </li>
-                  <li>
-                    <a href="">Add to Shelf</a>
-                  </li>
-                </ul>
+                {/* quick action buttons*/}
+                <div className="ml-4 flex justify-between items-center">
+                  <ul className="flex gap-4 justify-around w-full">
+                    <li>
+                      <a href="#">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="lucide lucide-share2-icon lucide-share-2"
+                        >
+                          <circle cx="18" cy="5" r="3" />
+                          <circle cx="6" cy="12" r="3" />
+                          <circle cx="18" cy="19" r="3" />
+                          <line x1="8.59" x2="15.42" y1="13.51" y2="17.49" />
+                          <line x1="15.41" x2="8.59" y1="6.51" y2="10.49" />
+                        </svg>
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <BoooksHeart width="24" height="24" fill="#000000" />
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          class="lucide lucide-cross-icon lucide-cross"
+                        >
+                          <path d="M4 9a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h4a1 1 0 0 1 1 1v4a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-4a1 1 0 0 1 1-1h4a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-4a1 1 0 0 1-1-1V4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4a1 1 0 0 1-1 1z" />
+                        </svg>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="arrow bg-red-500 w-4 rounded m-2 flex align-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="32"
+                    height="32"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#fff"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className="lucide lucide-chevron-down-icon lucide-chevron-down"
+                  >
+                    <path d="m9 18 6-6-6-6" />
+                  </svg>
+                </div>
               </div>
             </div>
           ))}

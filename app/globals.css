@@ -118,7 +118,7 @@ html,body{
  }
 
  .search {
-   /* margin: 40px; */
+  /* margin: 40px; */
  }
 
  .search__field--open {
@@ -132,8 +132,11 @@ html,body{
   }
   
   .search__field {
+    /* padding:8px; */
    border: 2px solid #333;
   border-radius: 22px;
+  	-webkit-box-shadow: 0 11px 34px 0 rgba(0, 0, 0, 0.2);
+	box-shadow: 0 11px 34px 0 rgba(0, 0, 0, 0.2);
 }
 
  .results--open {
@@ -270,4 +273,14 @@ html,body{
   bottom: .25em; left: 1.25em;
   width: 0; height: 1em;
   transform: rotate(45deg) skewX(75deg);
+}
+
+.arrow{
+  align-items: center;
+}
+
+
+.sorting{
+  border-right: 2px solid #333;
+  border-left: 2px solid #333;
 }

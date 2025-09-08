@@ -13,7 +13,7 @@ import ScannerOverlay from "./components/ScannerOverlay";
 import { useRouter } from "next/navigation"; // eller "next/router" afhængig af version
 import BoooksFull from "../BoooksFull";
 import * as THREE from "three";
-import GreenCamProcessor from "./components/GreenCamProcessor";
+// import GreenCamProcessor from "./components/GreenCamProcessor";
 // import { useControls } from "leva";
 
 const stepTexts = [
@@ -93,7 +93,7 @@ function CameraStep({ step }) {
 const page = () => {
   const [isCameraOpen, setIsCameraOpen] = useState(false);
   const [isBookOpen, setIsBookOpen] = useState(false);
-  // const [isBookOpenPage, setIsBookOpen] = useState(false);
+  // const [isBookOpenPage, setIsBookOpenPage] = useState(false);
   const [isDJOpen, setIsDJOpen] = useState(false);
   const [isDJ, setIsDJ] = useState(false);
   const videoRef = useRef(null);

@@ -1,0 +1,112 @@
+[
+  {
+    "id": "book-001",
+    "title": "David & Goliat",
+    "author": "Malcolm Gladwell",
+    "year": null,
+    "pages": null,
+    "size": { "width": 0.15, "height": 0.22, "thickness": 0.03 },
+    "position": { "x": -6.0, "y": 2.0, "z": 0 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "/covers/david-goliat.jpg" }
+  },
+  {
+    "id": "book-002",
+    "title": "Afvigere",
+    "author": "Malcolm Gladwell",
+    "year": null,
+    "pages": null,
+    "size": { "width": 0.15, "height": 0.22, "thickness": 0.03 },
+    "position": { "x": -5.7, "y": 2.0, "z": 0 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "/covers/afvigere.jpg" }
+  },
+  {
+    "id": "book-003",
+    "title": "Blink",
+    "author": "Malcolm Gladwell",
+    "year": null,
+    "pages": null,
+    "size": { "width": 0.15, "height": 0.22, "thickness": 0.03 },
+    "position": { "x": -5.4, "y": 2.0, "z": 0 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "/covers/blink.jpg" }
+  },
+  {
+    "id": "book-004",
+    "title": "Det Magiske Vendepunkt",
+    "author": "Malcolm Gladwell",
+    "year": null,
+    "pages": null,
+    "size": { "width": 0.15, "height": 0.22, "thickness": 0.03 },
+    "position": { "x": -5.1, "y": 2.0, "z": 0 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "/covers/vendepunkt.jpg" }
+  },
+  {
+    "id": "book-005",
+    "title": "Nelson Mandela",
+    "author": "Nelson Mandela",
+    "year": null,
+    "pages": null,
+    "size": { "width": 0.15, "height": 0.22, "thickness": 0.03 },
+    "position": { "x": -4.8, "y": 2.0, "z": 0 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "/covers/nelson-mandela.jpg" }
+  },
+  {
+    "id": "book-006",
+    "title": "Social Engineering",
+    "author": null,
+    "year": null,
+    "pages": null,
+    "size": { "width": 0.15, "height": 0.22, "thickness": 0.03 },
+    "position": { "x": -4.5, "y": 2.0, "z": 0 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "/covers/social-engineering.jpg" }
+  },
+  {
+    "id": "book-007",
+    "title": "Trafficking Data",
+    "author": "Aynne Kokas",
+    "year": null,
+    "pages": null,
+    "size": { "width": 0.15, "height": 0.22, "thickness": 0.03 },
+    "position": { "x": -4.2, "y": 2.0, "z": 0 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "/covers/trafficking-data.jpg" }
+  },
+  {
+    "id": "book-008",
+    "title": "Think Again",
+    "author": "Adam Grant",
+    "year": null,
+    "pages": null,
+    "size": { "width": 0.15, "height": 0.22, "thickness": 0.03 },
+    "position": { "x": -3.9, "y": 2.0, "z": 0 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "/covers/think-again.jpg" }
+  },
+  {
+    "id": "book-009",
+    "title": "Permanent Record",
+    "author": "Edward Snowden",
+    "year": null,
+    "pages": null,
+    "size": { "width": 0.15, "height": 0.22, "thickness": 0.03 },
+    "position": { "x": -3.6, "y": 2.0, "z": 0 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "/covers/permanent-record.jpg" }
+  },
+  {
+    "id": "book-010",
+    "title": "Mastering Blockchain",
+    "author": "Imran Bashir",
+    "year": null,
+    "pages": null,
+    "size": { "width": 0.15, "height": 0.22, "thickness": 0.03 },
+    "position": { "x": -3.3, "y": 2.0, "z": 0 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "/covers/mastering-blockchain.jpg" }
+  }
+]

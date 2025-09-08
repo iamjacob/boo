@@ -25,7 +25,7 @@ const ScannerOverlay = ({isBookOpen, isDJOpen, isDJ}) => {
   const [pagesToFlip, setPagesToFlip] = useState(1);
   const [bookOpen, setBookOpen] = useState(0);
 
-  const [isOpen, setIsOpen] = useState(isDJOpen || isBookOpen);
+  const [isOpen, setIsOpen] = useState(isBookOpen);
 
   /* Gets dynamic when possible */
   /* [0.5, 0.7, 0.07] */
@@ -65,119 +65,101 @@ const pageThickness = thickness / pages;
     side: DoubleSide,
   };
 
-  const close = () => {
-    for (let i = 0; i < pages; i++) {
-      const page = pageRefs.current[i];
-      if (page) {
-        gsap.to(page.rotation, {
+
+  // Unified open/close logic for book and dustjacket
+  const handleOpenClose = (openBook, openDJ) => {
+    // Book open/close
+    if (openBook) {
+      gsap.to(rightPageRef.current.rotation, {
+        y: -openDegrees,
+        duration: 0.4,
+      });
+      gsap.to(leftPageRef.current.rotation, {
+        y: openDegrees,
+        duration: 0.4,
+      });
+      for (let i = 0; i < pages; i++) {
+        const page = pageRefs.current[i];
+        if (page) {
+          gsap.to(page.rotation, {
+            y: i >= currentPage ? openDegrees : -openDegrees,
+            duration: 0.5 - 0.0001 * i,
+          });
+        }
+      }
+      setBookOpen(1);
+      setIsOpen(true);
+    } else {
+      for (let i = 0; i < pages; i++) {
+        const page = pageRefs.current[i];
+        if (page) {
+          gsap.to(page.rotation, {
+            y: 0,
+            duration: 0.4,
+          });
+        }
+      }
+      gsap.to(rightPageRef.current.rotation, {
+        y: 0,
+        duration: 0.5,
+      });
+      gsap.to(leftPageRef.current.rotation, {
+        y: 0,
+        duration: 0.5,
+      });
+      setBookOpen(0);
+      setIsOpen(false);
+    }
+
+    // Dustjacket open/close
+    if (isDJ) {
+      if (openDJ) {
+        gsap.to(DJrightPageRef.current.rotation, {
+          y: -openDegrees,
+          duration: 0.4,
+        });
+        gsap.to(DJleftPageRef.current.rotation, {
+          y: openDegrees,
+          duration: 0.4,
+        });
+        gsap.to(DJrightPageFlipRef.current.rotation, {
+          y: -openDegrees+0.1,
+          duration: 0.4,
+        });
+        gsap.to(DJleftPageFlipRef.current.rotation, {
+          y: openDegrees-0.1,
+          duration: 0.4,
+        });
+        for (let i = 0; i < pages; i++) {
+          const page = pageRefs.current[i];
+          if (page) {
+            gsap.to(page.rotation, {
+              y: i >= currentPage ? openDegrees : -openDegrees,
+              duration: 0.5 - 0.001 * i,
+            });
+          }
+        }
+        setBookOpen(1);
+      } else {
+        gsap.to(DJrightPageRef.current.rotation, {
+          y: 0,
+          duration: 0.5,
+        });
+        gsap.to(DJleftPageRef.current.rotation, {
+          y: 0,
+          duration: 0.5,
+        });
+        gsap.to(DJrightPageFlipRef.current.rotation, {
           y: 0,
           duration: 0.4,
         });
-      }
-    }
-    gsap.to(rightPageRef.current.rotation, {
-      y: 0,
-      duration: 0.5,
-    });
-    gsap.to(leftPageRef.current.rotation, {
-      y: 0,
-      duration: 0.5,
-    });
-    setBookOpen(0);
-  };
-
-
-  const open = () => {
-
-    gsap.to(rightPageRef.current.rotation, {
-      y: -openDegrees,
-      duration: 0.4,
-    });
-    gsap.to(leftPageRef.current.rotation, {
-      y: openDegrees,
-      duration: 0.4,
-    });
-
-    // Animate each page in the book
-    for (let i = 0; i < pages; i++) {
-      const page = pageRefs.current[i];
-      if (page) {
-        gsap.to(page.rotation, {
-          y: i >= currentPage ? openDegrees : -openDegrees,
-          duration: 0.5 - 0.0001 * i,
+        gsap.to(DJleftPageFlipRef.current.rotation, {
+          y: 0,
+          duration: 0.4,
         });
+        setBookOpen(0);
       }
     }
-    setBookOpen(1);
-    setIsOpen(true);
-  };
-
-
-
-  /* DUSTJACKET! */
-const closeDJ = () => {
-    // for (let i = 0; i < pages; i++) {
-    //   const page = pageRefs.current[i];
-    //   if (page) {
-    //     gsap.to(page.rotation, {
-    //       y: 0,
-    //       duration: 0.4,
-    //     });
-    //   }
-    // }
-    if (!isDJ) return;
-    setIsOpen(false);
-    gsap.to(DJrightPageRef.current.rotation, {
-      y: 0,
-      duration: 0.5,
-    });
-    gsap.to(DJleftPageRef.current.rotation, {
-      y: 0,
-      duration: 0.5,
-    });
-
-     gsap.to(DJrightPageFlipRef.current.rotation, {
-      y: 0,
-      duration: 0.4,
-    });
-    gsap.to(DJleftPageFlipRef.current.rotation, {
-      y: 0,
-      duration: 0.4,
-    });
-    // setBookOpen(0);
-    setBookOpen(0);
-  };
-
-  const openDJ = () => {
-    if (!isDJ) return;
-    gsap.to(DJrightPageRef.current.rotation, {
-      y: -openDegrees,
-      duration: 0.4,
-    });
-    gsap.to(DJleftPageRef.current.rotation, {
-      y: openDegrees,
-      duration: 0.4,
-    });
-    gsap.to(DJrightPageFlipRef.current.rotation, {
-      y: -openDegrees+0.1,
-      duration: 0.4,
-    });
-    gsap.to(DJleftPageFlipRef.current.rotation, {
-      y: openDegrees-0.1,
-      duration: 0.4,
-    });
-
-    // Animate each page in the book
-    for (let i = 0; i < pages; i++) {
-      const page = pageRefs.current[i];
-      if (page) {
-        gsap.to(page.rotation, {
-          y: i >= currentPage ? openDegrees : -openDegrees,
-          duration: 0.5 - 0.0001 * i,
-        });
-      }
-    }
-    setBookOpen(1);
   };
 
 
@@ -200,22 +182,10 @@ const closeDJ = () => {
   };
 
 
+// Unified effect for open/close
 useEffect(() => {
-  if (isBookOpen) {
-    open();
-  } else {
-    close();
-  }
-}, [isBookOpen]);
-
-
-useEffect(() => {
-  if (isDJOpen) {
-    openDJ();
-  } else {
-    closeDJ();
-  }
-}, [isDJOpen]);
+  handleOpenClose(isBookOpen, isDJOpen);
+}, [isBookOpen, isDJOpen]);
 
 
 
@@ -238,7 +208,6 @@ useEffect(() => {
   const flipForward = () => {
     if (currentPage >= pages - pagesToFlip) return;
     const targetPage = Math.min(currentPage + pagesToFlip, pages - 1);
-    //animatePages(currentPage + 1, targetPage, true);
     open();
     flippin(targetPage);
   };
@@ -246,65 +215,13 @@ useEffect(() => {
   const flipBackward = () => {
     if (currentPage <= 0) return;
     const targetPage = Math.max(currentPage - pagesToFlip, 0);
-    //animatePages(currentPage, targetPage, false);
     open();
     flippin(targetPage);
   };
 
-  // useEffect(() => {
-  //   open();
-  // }, [currentPage]);
-
-  // // Animate in/out on open/close
-  // useEffect(() => {
-  //   if (!groupRef.current) return;
-  //   if (isOpenBookVisible) {
-  //     // Animate in
-  //     gsap.to(groupRef.current.position, {
-  //       y: 0,
-  //       duration: 0.7,
-  //       ease: "power3.out"
-  //     });
-  //     gsap.to(groupRef.current.scale, {
-  //       x: 1,
-  //       y: 1,
-  //       z: 1,
-  //       duration: 0.7,
-  //       ease: "power3.out"
-  //     });
-  //   } else {
-  //     // Animate out (move down and shrink)
-  //     gsap.to(groupRef.current.position, {
-  //       y: -2,
-  //       duration: 0.7,
-  //       ease: "power3.in"
-  //     });
-  //     gsap.to(groupRef.current.scale, {
-  //       x: 0.7,
-  //       y: 0.7,
-  //       z: 0.7,
-  //       duration: 0.7,
-  //       ease: "power3.in"
-  //     });
-  //   }
-  // }, [isOpenBookVisible]);
-
   return (
     <>
-      {/* <group position={[0, 0, 0]} scale={[0.7, 0.7, 0.7]}> */}
-        {/* Stand base
-      <mesh position={[0, -1, 0]} rotation={[Math.PI, 0, 0]}>
-        <coneGeometry args={[0.2, 1.8, 16]} /> 
-        <meshPhysicalMaterial {...glassMaterialProps} />
-      </mesh> */}
-
-        {/* Books demo */}
-        {/* <mesh position={[0, 0.4, 0]} rotation={[Math.PI, 0, 0.45]}>
-          <boxGeometry args={[0.2, 0.8, 0.5]} />
-          <meshPhysicalMaterial {...glassMaterialProps} />
-        </mesh>
-      </group> */}
-  
+ 
 {/* Dust jacket */}
       {/* Front cover */}
       {isDJ && (
@@ -332,7 +249,7 @@ useEffect(() => {
         </mesh>
       </group>
 
-      {/* Back cover */}
+      {/* DJ Back cover */}
       <group
         ref={DJleftPageRef}
         position={[-width * 0.5, 0, -thickness * 0.5]}
@@ -344,7 +261,7 @@ useEffect(() => {
         </mesh>
       </group>
 
-      {/* Back cover flip */}
+      {/* DJ left flip */}
       <group
         ref={DJleftPageFlipRef}
         position={[-width * 0.5, 0, -thickness * 0.5]}
@@ -466,7 +383,7 @@ useEffect(() => {
         >
           <div className="rotate-45">
             {bookOpen ? (
-              <button onClick={close}>
+              <button onClick={() => handleOpenClose(false, false)}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="24px"
@@ -478,7 +395,7 @@ useEffect(() => {
                 </svg>
               </button>
             ) : (
-              <button onClick={open}>
+              <button onClick={() => handleOpenClose(true, isDJOpen)}>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="24px"

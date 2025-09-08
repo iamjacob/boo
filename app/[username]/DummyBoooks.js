@@ -1,0 +1,88 @@
+const dummyBooks = [
+  {
+    scale: [0.52, 0.75, 0.22],
+    position: [0.724871, -0.43, -6.459455],
+    rotation: [0, 0, 0],
+    cover: "./books/covers/000.jpg",
+    bookID:"1",
+  },
+  {
+    scale: [0.55, 0.7, 0.2],
+    position: [-0.08427, -1.43, -6.499454],
+    rotation: [0, Math.PI / 4, 0],
+    cover: "./books/covers/111.jpg",
+    bookID:"2",
+  },
+  {
+    scale: [0.4, 0.6, 0.15],
+    position: [0.504387, -1.43, -6.480401],
+    rotation: [0, Math.PI / 2, 0],
+    cover: "./books/covers/444.jpg",
+    bookID:"3",
+  },
+  {
+    scale: [0.4, 0.65, 0.18],
+    position: [-0.848035, -1.43, -6.444442],
+    rotation: [0, Math.PI / 2, 0],
+    cover: "./books/covers/222.jpg",
+    bookID:"4",
+  },
+  {
+    scale: [0.4, 0.62, 0.2],
+    position: [-0.34117, -0.43, -6.49104],
+    rotation: [0, Math.PI / 2, 0],
+    cover: "./books/covers/333.jpg",
+    bookID:"5",
+  },
+  {
+    scale: [0.4, 0.71, 0.15],
+    position: [-0.786191, 0.57, -6.452279],
+    rotation: [0, Math.PI / 2, 0],
+    cover: "./books/covers/555.webp",
+    bookID:"6",
+  },
+  {
+    scale: [0.4, 0.75, 0.2],
+    position: [0.023491, 0.57, -6.499958],
+    rotation: [0, Math.PI / 2, 0],
+    cover: "./books/covers/666.jpg",
+    bookID:"7",
+  },
+  {
+    scale: [0.4, 0.75, 0.2],
+    position: [-1.619093, 0.57, -6.29512],
+    rotation: [0, Math.PI / 2, 0],
+    cover: "./books/covers/777.jpg",
+    bookID:"8",
+  },
+  {
+    scale: [0.4, 0.75, 0.2],
+    position: [-1.373081, -1.43, -6.353318],
+    rotation: [0, Math.PI / 2, 0],
+    cover: "./books/covers/888.jpg",
+    bookID:"9",
+  },
+  {
+    scale: [0.4, 0.75, 0.2],
+    position: [-0.861802, -0.43, -6.442616],
+    rotation: [0, Math.PI / 2, 0],
+    cover: "./books/covers/999.jpg",
+    bookID:"10",
+  },
+  {
+    scale: [0.4, 0.75, 0.2],
+    position: [-1.489202, -0.43, -6.327107],
+    rotation: [0, Math.PI / 2, 0],
+    cover: "./books/covers/101010.jpg",
+    bookID:"11",
+  },
+  {
+    scale: [0.4, 0.75, 0.2],
+    position: [-1.196352, 1.57, -6.388955],
+    rotation: [0, Math.PI / 2, 0],
+    cover: "./books/covers/111111.jpg",
+    bookID:"12",
+  },
+];
+
+export default dummyBooks;

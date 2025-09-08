@@ -13,6 +13,7 @@ import { Stars, OrbitControls, CameraControls, Gltf, useGLTF, Html } from "@reac
 import BooksStand from "./components/BooksStand";
 import Shelves from "./Shelves";
 import OpenBook from "./components/OpenBook_test";
+import { gsap } from "gsap";
 // import { Physics } from "@react-three/rapier";
 // import useShelvesStore from "../../stores/shelves/useShelvesStore";
 // import useBookExperienceStore from "../../stores/experience/useBookExperienceStore";
@@ -38,14 +39,25 @@ export const Experience = ({children}) => {
   };
 
   // Move camera to active bookstand
+  // Animate camera movement to active bookstand using GSAP
+
   useEffect(() => {
     if (!orbitControls) return;
     const angle = (activeBookstand / BOOK_STAND_COUNT) * 2 * Math.PI;
     const x = Math.cos(angle) * RADIUS * 2.2;
     const z = Math.sin(angle) * RADIUS * 2.2;
-    orbitControls.target.set(0, 0, 0);
-    orbitControls.object.position.set(x, 0.5, z);
-    orbitControls.update();
+
+    // Animate camera position
+    gsap.to(orbitControls.object.position, {
+      x,
+      y: 0.5,
+      z,
+      duration: 1,
+      onUpdate: () => {
+        orbitControls.target.set(0, 0, 0);
+        orbitControls.update();
+      }
+    });
   }, [activeBookstand, orbitControls]);
 
   // Swipe support

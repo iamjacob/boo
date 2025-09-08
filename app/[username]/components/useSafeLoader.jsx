@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import * as THREE from "three";
 
-const useSafeLoader = (url, fallbackUrl = "/apple-touch-icon.png") => {
+const useSafeLoader = (url, fallbackUrl = "/covers/test.jpg") => {
   const loader = useMemo(() => new THREE.TextureLoader(), []); // ✅ Cache the loader
   const placeholderTexture = useMemo(() => new THREE.Texture(), []); // ✅ Initial placeholder
 

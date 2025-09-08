@@ -1,29 +1,57 @@
+"use client";
+// import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import Experience from "./Experience";
 import Header from "../Header";
-import books from './boooks.json';
+import books from "./boooks.json";
+import { useLoader } from "@react-three/fiber";
+import * as THREE from "three";
+import Book from "./components/Book";
+import Footer from "../Footer";
+
+import FooterExperience from "./FooterExperience.jsx";
+
 
 export default function Page() {
+  const [selectedBook, setSelectedBook] = useState(null);
+  const [texture, setTexture] = useState(null);
 
-  // get user name to title
+  // useEffect(() => {
+  //   const texture = useLoader(THREE.TextureLoader, "./covers/test.jpg");
+  //   setTexture(texture);
+  // }, []);
+  // get user name to title from url
+  // const { username } = useParams();
 
   return (
     <div className="fixed top-0 left-0 w-full h-full">
-      <Header/>
+      <Header />
+
       <Experience>
+        
+        {books.map((book, index) => {
+          return (
+              <Book
+                key={book.id}
+                id={book.id}
+                scale={[0.15, 0.22, 0.03]}
+                initialPosition={[book.position.x, book.position.y, book.position.z]}
+                initialRotation={[book.rotation.x, book.rotation.y, book.rotation.z]}
+                shelfRadius={6}
+                otherBooks={books.filter((b) => b.id !== book.id)}
+                bookID={book.id}
+                cover={texture}
+                selectedBook={selectedBook}
+                setSelectedBook={setSelectedBook}
+              /> 
+            
+          );
+        })}
+      </Experience>
+
+<FooterExperience />
 
 
-
-          {books.map((book, index) => (
-            <mesh key={index} position={[book.position.x, book.position.y, book.position.z]}
-              rotation={[book.rotation.x, book.rotation.y, book.rotation.z]}>
-              <boxGeometry args={[book.size.width, book.size.height, book.size.thickness]} />
-              <meshBasicMaterial color={'red'} />
-            </mesh>
-          ))}
-
-          
-
-        </Experience>
     </div>
   );
 }

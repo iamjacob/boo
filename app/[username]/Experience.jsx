@@ -38,6 +38,9 @@ export const Experience = ({children}) => {
     return null;
   };
 
+
+// BIG CAMERA SCENE
+
   // Move camera to active bookstand
   // Animate camera movement to active bookstand using GSAP
 

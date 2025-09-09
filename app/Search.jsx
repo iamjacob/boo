@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { client } from "./lib/meilisearchClient";
 import Image from "next/image";
 import BoooksHeart from "./BoooksHeart";
@@ -28,6 +28,43 @@ export default function Search() {
 
   // USE THIS SMART AND NICE!
   const [lastResults, setLastResults] = useState([]);
+
+// Add at the top of your component:
+const [focusedIdx, setFocusedIdx] = useState(0);
+const resultRefs = useRef([]);
+
+// Add this useEffect inside your component:
+useEffect(() => {
+  if (!results.length) return;
+  resultRefs.current = resultRefs.current.slice(0, results.length);
+  const observer = new window.IntersectionObserver(
+    (entries) => {
+      // Find all intersecting entries
+      const visibleEntries = entries.filter(entry => entry.isIntersecting);
+      if (visibleEntries.length > 0) {
+        // Find the entry closest to the top
+        const topEntry = visibleEntries.reduce((prev, curr) =>
+          curr.boundingClientRect.top < prev.boundingClientRect.top ? curr : prev
+        );
+        setFocusedIdx(Number(topEntry.target.dataset.idx));
+      }
+    },
+    {
+      root: null,
+      threshold: 0.1, // Lower threshold for earlier detection
+    }
+  );
+  resultRefs.current.forEach((ref) => {
+    if (ref) observer.observe(ref);
+  });
+  return () => {
+    resultRefs.current.forEach((ref) => {
+      if (ref) observer.unobserve(ref);
+    });
+    observer.disconnect();
+  };
+}, [results]);
+
 
   useEffect(() => {
     const detected = document.body.getAttribute("data-lang") || "en";
@@ -78,19 +115,199 @@ export default function Search() {
     return () => clearInterval(cursorInterval);
   }, []);
 
-  const handleSearch = async (e) => {
-    const q = e.target.value;
-    setQuery(q);
+const handleSearch = async (e) => {
+  const q = e.target.value;
+  setQuery(q);
 
-    if (!q) return setResults([]);
+  if (!q) return setResults([]);
 
-    const index = client.index("movies");
-    const searchResults = await index.search(q);
+  const index = client.index("movies");
+  const searchResults = await index.search(q);
+
+  // Brug View Transitions API hvis muligt
+  if (document.startViewTransition) {
+    document.startViewTransition(() => {
+      setResults(searchResults.hits);
+    });
+  } else {
     setResults(searchResults.hits);
-  };
+  }
+};
 
   return (
     <div className="flex flex-col items-center w-[90vw] md:w-[40vw]">
+      <div className="search flex flex-col justify-around w-full">
+        <div
+          className={`w-[90vw] md:w-[40vw] p-1 align-left flex flex-col items-center 
+              ${results.length < 1 ? "search__field" : "search__field--open"}
+              `}
+        >
+          <div className="flex w-full justify-between">
+            <input
+              className="m-1p-[8px] search__field--input pl-2 py-1 flex-grow w-full outline-none"
+              type="text"
+              value={query}
+              onChange={handleSearch}
+              //placeholder="Search Boooks"
+              autoFocus
+              //onFocus={}
+              placeholder={inputText.length === 0 && displayText}
+            />
+            <div className="quick-access-buttons flex gap-2 m-1 justify-center">
+              {results.length < 1 && (
+                <div className="top-2 right-2">
+                  <div className="pill">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="lucide lucide-sparkles-icon lucide-sparkles"
+                    >
+                      <path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" />
+                      <path d="M20 2v4" />
+                      <path d="M22 4h-4" />
+                      <circle cx="4" cy="20" r="2" />
+                    </svg>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div
+            id="categories-and-genres-pills"
+            className="categories-and-genres-pills flex gap-1 p-1 justify-between w-full"
+          >
+            <div className="choosen flex gap-2">
+              <div
+                className="pill"
+                onClick={(e) => {
+                  e.currentTarget.classList.toggle("pill-selected");
+                }}
+              >
+                {/* <img src={`./flags/${lang}.svg`} alt="" /> */}
+                <Image
+                  src={`./flags/dk.svg`}
+                  width="18"
+                  height="12"
+                  alt="det danske flag"
+                />
+              </div>
+              <div
+                className="pill"
+                onClick={(e) => {
+                  e.currentTarget.classList.toggle("pill-selected");
+                }}
+              >
+                {/* <img src={`./flags/${lang}.svg`} alt="" /> */}
+                <Image
+                  src={`./flags/gb.svg`}
+                  width="18"
+                  height="12"
+                  alt="det engelske flag"
+                />
+              </div>
+              <div
+                className="pill"
+                onClick={(e) => {
+                  e.currentTarget.classList.toggle("pill-selected");
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#333"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-chevron-down-icon lucide-chevron-down"
+                >
+                  <path d="m9 18 6-6-6-6" />
+                </svg>
+              </div>
+            </div>
+
+            <div className="flex gap-2 justify-right">
+              <div className="pill">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-dot-icon lucide-dot"
+                >
+                  <circle cx="12.1" cy="12.1" r="1" />
+                </svg>
+                {/* <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis-icon lucide-ellipsis"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg> */}
+              </div>
+              {results.length < 1 && (
+                <div
+                  className="pill"
+                  onClick={(e) => {
+                    e.currentTarget.classList.toggle("pill-selected");
+                    setNonFictionSelected(!nonFictionSelected);
+                  }}
+                >
+                  Non-fiction
+                </div>
+              )}
+              {results.length < 1 && (
+                <div
+                  className="pill"
+                  onClick={(e) => {
+                    e.currentTarget.classList.toggle("pill-selected");
+                    setFictionSelected(!fictionSelected);
+                  }}
+                >
+                  Fiction
+                </div>
+              )}
+            </div>
+          </div>
+
+          {/* {results.length > 1 && (
+            <div className="pill">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="lucide lucide-sliders-horizontal-icon lucide-sliders-horizontal"
+              >
+                <path d="M10 5H3" />
+                <path d="M12 19H3" />
+                <path d="M14 3v4" />
+                <path d="M16 17v4" />
+                <path d="M21 12h-9" />
+                <path d="M21 19h-5" />
+                <path d="M21 5h-7" />
+                <path d="M8 10v4" />
+                <path d="M8 12H3" />
+              </svg>
+            </div>
+          )} */}
+        </div>
+      </div>
+
       {results.length < 1 && (
         <div className="flex w-full gap-2 flex-wrap justify-center md:justify-around overflow-hidden mt-1">
           {fictionSelected && (
@@ -146,240 +363,89 @@ export default function Search() {
               ))}
             </>
           )}
-          <div className="flex mb-4 gap-4 w-full justify-center">
-            <div
-              className="pill"
-              onClick={(e) => {
-                e.currentTarget.classList.toggle("pill-selected");
-                setNonFictionSelected(!nonFictionSelected);
-              }}
-            >
-              Non-fiction
-            </div>
-
-{/* <div className="pill">
-  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis-icon lucide-ellipsis"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg>
-</div> */}
-
-            <div
-              className="pill"
-              onClick={(e) => {
-                e.currentTarget.classList.toggle("pill-selected");
-                setFictionSelected(!fictionSelected);
-              }}
-            >
-              Fiction
-            </div>
-          </div>
-
- 
-
-
-          </div>
+        </div>
       )}
 
-          <div className="search flex flex-col justify-around w-full">
-           <div
-              className={`w-[90vw] md:w-[40vw] p-1 align-left flex flex-col items-center 
-              ${results.length < 1 ? "search__field" : "search__field--open"}
-              `}
-            >
-              <div className="flex w-full justify-between">
-              <input
-                className="m-1p-[8px] search__field--input pl-2 py-1 flex-grow w-full outline-none"
-                type="text"
-                value={query}
-                onChange={handleSearch}
-                //placeholder="Search Boooks"
-                autoFocus
-                //onFocus={}
-                placeholder={inputText.length === 0 && displayText}
-              />
- <div className="quick-access-buttons flex gap-2 m-1 justify-center">
-
-                {results.length < 1 && (
-                  <div className="top-2 right-2">
-                    <div className="pill">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="lucide lucide-sparkles-icon lucide-sparkles"
-                        >
-                        <path d="M11.017 2.814a1 1 0 0 1 1.966 0l1.051 5.558a2 2 0 0 0 1.594 1.594l5.558 1.051a1 1 0 0 1 0 1.966l-5.558 1.051a2 2 0 0 0-1.594 1.594l-1.051 5.558a1 1 0 0 1-1.966 0l-1.051-5.558a2 2 0 0 0-1.594-1.594l-5.558-1.051a1 1 0 0 1 0-1.966l5.558-1.051a2 2 0 0 0 1.594-1.594z" />
-                        <path d="M20 2v4" />
-                        <path d="M22 4h-4" />
-                        <circle cx="4" cy="20" r="2" />
-                      </svg>
-                    </div>
-                  </div>
-                )}
-              </div>
-              </div>
-                  
-
-                
-              <div
-                id="categories-and-genres-pills"
-                className="categories-and-genres-pills flex gap-1 p-1 justify-left w-full"
+      {/* Sorting buttons with chevron direction and state */}
+      {results.length > 1 && (
+        <div className="sorting w-full h-[40px] flex">
+          <div className="flex gap-2 w-full m-2">
+            {[
+              { label: "Relevance", value: "relevance" },
+              { label: "Year", value: "year" },
+              { label: "Rating", value: "rating" },
+              { label: "Popularity", value: "popularity" },
+            ].map((sort) => (
+              <button
+                key={sort.value}
+                className={`rounded p-1 flex items-center gap-1 text-[14px] text-gray-400 ${
+                  sortBy === sort.value && "text-gray-900"
+                }`}
+                onClick={() => {
+                  if (sortBy === sort.value) {
+                    setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+                  } else {
+                    setSortBy(sort.value);
+                    setSortOrder("desc");
+                  }
+                }}
               >
-                <div
-                  className="pill"
-                  onClick={(e) => {
-                    e.currentTarget.classList.toggle("pill-selected");
-                  }}
+                {sort.label}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-chevron-icon"
                 >
-                  {/* <img src={`./flags/${lang}.svg`} alt="" /> */}
-                  <Image
-                    src={`./flags/dk.svg`}
-                    width="18"
-                    height="12"
-                    alt="det danske flag"
-                  />
-                </div>
-                <div
-                  className="pill"
-                  onClick={(e) => {
-                    e.currentTarget.classList.toggle("pill-selected");
-                  }}
-                >
-                  {/* <img src={`./flags/${lang}.svg`} alt="" /> */}
-                  <Image
-                    src={`./flags/gb.svg`}
-                    width="18"
-                    height="12"
-                    alt="det engelske flag"
-                  />
-                </div>
-                <div
-                  className="pill"
-                  onClick={(e) => {
-                    e.currentTarget.classList.toggle("pill-selected");
-                  }}
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#333"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="lucide lucide-chevron-down-icon lucide-chevron-down"
-                  >
-                    <path d="m9 18 6-6-6-6" />
-                  </svg>
-                </div>
-
-                {results.length > 1 && (
-                  <div className="pill">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="lucide lucide-sliders-horizontal-icon lucide-sliders-horizontal"
-                    >
-                      <path d="M10 5H3" />
-                      <path d="M12 19H3" />
-                      <path d="M14 3v4" />
-                      <path d="M16 17v4" />
-                      <path d="M21 12h-9" />
-                      <path d="M21 19h-5" />
-                      <path d="M21 5h-7" />
-                      <path d="M8 10v4" />
-                      <path d="M8 12H3" />
-                    </svg>
-                  </div>
-                )}
-              </div>
-
-              </div>
-             
-            </div>
-
-
-            {/* Sorting buttons with chevron direction and state */}
-            {results.length > 1 && (
-              <div className="sorting w-full h-[40px] flex">
-                <div className="flex gap-2 w-full m-2">
-                  {[
-                    { label: "Relevance", value: "relevance" },
-                    { label: "Year", value: "year" },
-                    { label: "Rating", value: "rating" },
-                    { label: "Popularity", value: "popularity" },
-                  ].map((sort) => (
-                    <button
-                      key={sort.value}
-                      className={`rounded p-1 flex items-center gap-1 text-[14px] text-gray-400 ${
-                        sortBy === sort.value && "text-gray-900"
-                      }`}
-                      onClick={() => {
-                        if (sortBy === sort.value) {
-                          setSortOrder((prev) =>
-                            prev === "asc" ? "desc" : "asc"
-                          );
-                        } else {
-                          setSortBy(sort.value);
-                          setSortOrder("desc");
-                        }
-                      }}
-                    >
-                      {sort.label}
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="12"
-                        height="12"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="lucide lucide-chevron-icon"
-                      >
-                        {sortBy === sort.value && sortOrder === "asc" ? (
-                          <path d="m18 15-6-6-6 6" />
-                        ) : (
-                          <path d="m6 9 6 6 6-6" />
-                        )}
-                      </svg>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
+                  {sortBy === sort.value && sortOrder === "asc" ? (
+                    <path d="m18 15-6-6-6 6" />
+                  ) : (
+                    <path d="m6 9 6 6 6-6" />
+                  )}
+                </svg>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* {results.length}  */}
 
       {results.length > 1 && (
-        <div className="results--open flex flex-col w-[90vw] md:w-[40vw] max-h-[60vh] mb-2 overflow-y-scroll">
+        <div className="results--open flex flex-col w-[90vw] md:w-[40vw] max-h-[60vh] mb-2 overflow-auto">
           {/* lastResults.map */}
-
-          {results.map((movie) => (
-            <div
-              key={movie.id}
-              className="border-top shadow p-1 flex justify-between"
-            >
-              <img
-                src={movie.poster}
-                alt={movie.title}
-                className="w-12 h-auto mb-2"
-              />
+{results.map((movie, idx) => (
+  <div
+    key={movie.id}
+    ref={el => resultRefs.current[idx] = el}
+    data-idx={idx}
+    className={`border-top shadow p-1 flex justify-between transition-all duration-500 ${idx === focusedIdx ? "focused-result" : ""}`}
+    style={
+      idx === focusedIdx
+        ? { height: "220px", background: "#fffbe6", zIndex: 2 }
+        : { height: "100px", zIndex: 1 }
+    }
+    {...(idx === focusedIdx
+      ? {
+          id: "focused-result",
+          "data-view-transition-name": "focused-result",
+        }
+      : {})}
+  >
+    <img
+      src={movie.poster}
+      alt={movie.title}
+      className={idx === focusedIdx ? "w-32 h-auto mb-2" : "w-12 h-auto mb-2"}
+      {...(idx === focusedIdx
+        ? { "data-view-transition-name": "focused-image" }
+        : {})}
+    />
               <div className="flex">
                 <div className="flex flex-col">
                   <h2 className="font-bold text-lg">{movie.title}</h2>
@@ -472,6 +538,50 @@ export default function Search() {
           ))}
         </div>
       )}
+      <div className="flex gap-2 text-[#ff000050] px-2 hidden">
+        {/* <div className="pill">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-atom-icon lucide-atom"><circle cx="12" cy="12" r="1"/><path d="M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.54-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.54 4.52 9.87 6.54 11.9 4.5Z"/><path d="M15.7 15.7c4.52-4.54 6.54-9.87 4.5-11.9-2.03-2.04-7.36-.02-11.9 4.5-4.52 4.54-6.54 9.87-4.5 11.9 2.03 2.04 7.36.02 11.9-4.5Z"/></svg>
+      </div> */}
+        <div className="pil">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#ff0000"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-whole-word-icon lucide-whole-word"
+          >
+            <circle cx="7" cy="12" r="3" />
+            <path d="M10 9v6" />
+            <circle cx="17" cy="12" r="3" />
+            <path d="M14 7v8" />
+            <path d="M22 17v1c0 .5-.5 1-1 1H3c-.5 0-1-.5-1-1v-1" />
+          </svg>
+        </div>
+        <div className="pil">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#ff000050"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-camera-icon lucide-camera"
+          >
+            <path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" />
+            <circle cx="12" cy="13" r="3" />
+          </svg>
+        </div>
+       
+        
+      </div>
     </div>
   );
 }

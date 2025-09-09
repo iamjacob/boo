@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Billboard, Text } from '@react-three/drei';
 import { Html } from '@react-three/drei';
 import 'maplibre-gl/dist/maplibre-gl.css';
@@ -10,6 +10,62 @@ import BoooksHeart from '../BoooksHeart';
 import { StoryMap } from './story-map';
 import { createTornado } from './Tornado';
 
+
+
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
+
+
+
+
+
+
+// import { useRef, useState, useEffect } from 'react';
+
+function Character() {
+  const ref = useRef();
+  const [position, setPosition] = useState([0, 0.5, 0]);
+  const [direction, setDirection] = useState(0); // Y rotation in radians
+
+  // Keyboard controls
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      setPosition(([x, y, z]) => {
+        let speed = 0.2;
+        let angle = direction;
+        if (e.key === 'ArrowUp' || e.key === 'w') {
+          return [x - Math.sin(angle) * speed, y, z - Math.cos(angle) * speed];
+        }
+        if (e.key === 'ArrowDown' || e.key === 's') {
+          return [x + Math.sin(angle) * speed, y, z + Math.cos(angle) * speed];
+        }
+        if (e.key === 'ArrowLeft' || e.key === 'a') {
+          setDirection((d) => d + 0.1);
+        }
+        if (e.key === 'ArrowRight' || e.key === 'd') {
+          setDirection((d) => d - 0.1);
+        }
+        return [x, y, z];
+      });
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [direction]);
+
+  // Camera follow
+  useFrame(({ camera }) => {
+    camera.position.x = position[0] - Math.sin(direction) * 3;
+    camera.position.y = 2;
+    camera.position.z = position[2] - Math.cos(direction) * 3;
+    camera.lookAt(...position);
+  });
+
+  return (
+    <mesh ref={ref} position={position} rotation={[0, direction, 0]}>
+      <boxGeometry args={[1, 1, 1]} />
+      <meshStandardMaterial color="orange" />
+    </mesh>
+  );
+}
 // const Box = ({ position }: { position?: [number, number, number] }) => {
 //     const ref = useRef(null);
 //     const [hovered, setHovered] = useState(false);
@@ -72,6 +128,8 @@ const Maplibre = () => {
                     // canvas={{ frameloop: 'demand' }}
                 >
 
+
+<Character />
                     {/* fix light! */}
                     <hemisphereLight
                         args={['#ffffff', '#60666C']}

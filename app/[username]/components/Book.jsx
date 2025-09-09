@@ -5,8 +5,9 @@ import { Html, useCursor, PivotControls } from "@react-three/drei";
 import { useDrag } from "@use-gesture/react";
 import * as THREE from "three";
 import gsap from "gsap";
-// import { openDB } from "idb";
 import useSafeLoader from "./useSafeLoader";
+
+// import { openDB } from "idb";
 // import BookDimensionControls from "./Dimensions"
 // import RainbowAurora from './RainbowAurora'
 
@@ -16,7 +17,7 @@ const Book = ({
   scale,
   initialPosition = [-2.79, -0.61, -5.87],
   initialRotation = [0, 0, 0],
-  shelfRadius = 6.5,
+  shelfRadius = 8,
   otherBooks = [],
   bookID,
   cover,
@@ -32,6 +33,7 @@ const Book = ({
   const draggingRef = useRef(false);
   const mouseVecRef = useRef(new THREE.Vector2()); // ✅ UseRef (No reallocation)
   const intersectionVecRef = useRef(new THREE.Vector3()); // ✅ UseRef (No reallocation)
+  const longPressTimer = useRef(); // ✅ Timer reference for long press
 
   //Why does this not auto update sometimes I have to press twice?
   const currentPlace = useRef("home");
@@ -40,6 +42,19 @@ const Book = ({
     currentPlace.current = place;
   };
 
+  const handlePointerDown = () => {
+    setSelectedBook(bookID); // ✅ Updates the selected book in `Bookshelf`
+    longPressTimer.current = setTimeout(() => {
+      switchPlace("positionAndRotate");
+    }, 500); // ✅ Long press detection (500ms)
+  };
+
+  const handlePointerUp = () => {
+    clearTimeout(longPressTimer.current); // ✅ Clear the timer
+    setTimeout(() => {
+      switchPlace("home");
+    }, 6000);
+  };
 
   const plane = useMemo(
     () => new THREE.Plane(new THREE.Vector3(0, 1, 0), 0),
@@ -52,7 +67,6 @@ const Book = ({
   );
 
   const shelfLevels = useMemo(() => [-1, 0, 1, 2], []);
-
 
   const constrainToCircle = (x, z, r) => {
     const angle = Math.atan2(z, x);
@@ -111,7 +125,6 @@ const Book = ({
 
   //This one will have so it can update scale, note + more as well and needs to go to its own component
   const saveToDB = async () => {
-
     // const db = await openDB("BookDatabase", 2, {
     //   upgrade(db) {
     //     if (!db.objectStoreNames.contains("books")) {
@@ -125,14 +138,14 @@ const Book = ({
       // const book = (await tx.objectStore("books").get(bookID)) || {
       //   id: bookID,
       // };
-      
+
       //already commented out
 
       // We need some check here to make sure it is correct format.
       // Then we use it in useBoooks hook!
 
-     // book.position = meshRef.current.position.toArray();
-     
+      // book.position = meshRef.current.position.toArray();
+
       //already commented out
       //meshRef.current.toArray();
       console.log(meshRef.current.position.toArray());
@@ -142,10 +155,12 @@ const Book = ({
       //   meshRef.current.position.y,
       //   meshRef.current.position.z,
       // ];
-      
-      console.log(meshRef.current.position.x,
+
+      console.log(
+        meshRef.current.position.x,
         meshRef.current.position.y,
-        meshRef.current.position.z,);
+        meshRef.current.position.z
+      );
 
       //already commented out
       // book.scale =
@@ -192,7 +207,7 @@ const Book = ({
       const { x, z, angle } = constrainToCircle(
         intersectionVecRef.current.x,
         intersectionVecRef.current.z,
-        active ? 5.5 : shelfRadius
+        active ? 6.5 : shelfRadius
       );
 
       let newPos = new THREE.Vector3(x, intersectionVecRef.current.y, z);
@@ -224,7 +239,7 @@ const Book = ({
       newPos.y = correctedY - my * 0.007;
 
       if (active) {
-        meshRef.current.position.lerp(newPos, 0.2);
+        meshRef.current.position.copy(newPos);
         // meshRef.current.rotation.x = THREE.MathUtils.lerp(
         //   meshRef.current.rotation.x,
         //   tiltAngle,
@@ -276,7 +291,7 @@ const Book = ({
       // }
     },
     {
-      threshold: 2,
+      threshold: 0.1,
       pointerEvents: true,
       filterTaps: true,
       rubberband: 0.15,
@@ -294,11 +309,12 @@ const Book = ({
     // useSafeLoader(cover?.back || "./books/covers/000.jpg"),
     useSafeLoader(cover || "./books/covers/000.jpg"),
   ];
+
   const materials = textures.map(
     (texture) => new THREE.MeshStandardMaterial({ map: texture })
   );
   //saveToDB();
-//console.log(meshRef.current.scale.set(1,1,1))
+  //console.log(meshRef.current.scale.set(1,1,1))
   return (
     <Suspense fallback={"loading"}>
       <mesh

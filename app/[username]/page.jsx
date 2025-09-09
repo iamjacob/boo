@@ -14,7 +14,7 @@ import FooterExperience from "./FooterExperience.jsx";
 
 export default function Page() {
   const [selectedBook, setSelectedBook] = useState(null);
-  const [texture, setTexture] = useState(null);
+  // const [texture, setTexture] = useState(null);
 
   // useEffect(() => {
   //   const texture = useLoader(THREE.TextureLoader, "./covers/test.jpg");
@@ -34,13 +34,13 @@ export default function Page() {
               <Book
                 key={book.id}
                 id={book.id}
-                scale={[0.15, 0.22, 0.03]}
+                scale={[book.scale.width, book.scale.height, book.scale.thickness]}
                 initialPosition={[book.position.x, book.position.y, book.position.z]}
                 initialRotation={[book.rotation.x, book.rotation.y, book.rotation.z]}
                 shelfRadius={6}
                 otherBooks={books.filter((b) => b.id !== book.id)}
                 bookID={book.id}
-                cover={texture}
+                cover={book.cover.front}
                 selectedBook={selectedBook}
                 setSelectedBook={setSelectedBook}
               /> 
@@ -49,7 +49,7 @@ export default function Page() {
         })}
       </Experience>
 
-<FooterExperience />
+{/* <FooterExperience /> */}
 
 
     </div>

@@ -5,10 +5,10 @@
     "author": "Malcolm Gladwell",
     "year": null,
     "pages": null,
-    "size": { "width": 0.15, "height": 0.22, "thickness": 0.03 },
-    "position": { "x": -6.0, "y": 2.0, "z": 0 },
+    "scale": { "width": 0.3, "height": 0.44, "thickness": 0.7 },
+    "position": { "x": 1, "y": -1.19, "z": -5.914373 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
-    "cover": { "front": "/covers/david-goliat.jpg" }
+    "cover": { "front": "/covers/david-goliat.webp" }
   },
   {
     "id": "book-002",
@@ -16,10 +16,10 @@
     "author": "Malcolm Gladwell",
     "year": null,
     "pages": null,
-    "size": { "width": 0.15, "height": 0.22, "thickness": 0.03 },
-    "position": { "x": -5.7, "y": 2.0, "z": 0 },
+    "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
+    "position": { "x": 0.951649, "y": 1.7, "z": -5.92405 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
-    "cover": { "front": "/covers/afvigere.jpg" }
+    "cover": { "front": "/covers/afvigere.webp" }
   },
   {
     "id": "book-003",
@@ -27,10 +27,10 @@
     "author": "Malcolm Gladwell",
     "year": null,
     "pages": null,
-    "size": { "width": 0.15, "height": 0.22, "thickness": 0.03 },
-    "position": { "x": -5.4, "y": 2.0, "z": 0 },
+    "scale": { "width": 0.36, "height": 0.44, "thickness": 0.07 },
+    "position": { "x": 1.423513, "y": 1.7, "z": -5.828689 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
-    "cover": { "front": "/covers/blink.jpg" }
+    "cover": { "front": "/covers/blink.webp" }
   },
   {
     "id": "book-004",
@@ -38,10 +38,10 @@
     "author": "Malcolm Gladwell",
     "year": null,
     "pages": null,
-    "size": { "width": 0.15, "height": 0.22, "thickness": 0.03 },
-    "position": { "x": -5.1, "y": 2.0, "z": 0 },
+    "scale": { "width": 0.26, "height": 0.44, "thickness": 0.07 },
+    "position": { "x": 1.85187, "y": 1.7, "z": -5.707064 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
-    "cover": { "front": "/covers/vendepunkt.jpg" }
+    "cover": { "front": "/covers/vendepunkt.webp" }
   },
   {
     "id": "book-005",
@@ -49,10 +49,10 @@
     "author": "Nelson Mandela",
     "year": null,
     "pages": null,
-    "size": { "width": 0.15, "height": 0.22, "thickness": 0.03 },
-    "position": { "x": -4.8, "y": 2.0, "z": 0 },
+    "scale": { "width": 0.28, "height": 0.44, "thickness": 0.07 },
+    "position": { "x": 2.393963, "y": 1.7, "z": -5.501722 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
-    "cover": { "front": "/covers/nelson-mandela.jpg" }
+    "cover": { "front": "/covers/nelson-mandela.webp" }
   },
   {
     "id": "book-006",
@@ -60,10 +60,10 @@
     "author": null,
     "year": null,
     "pages": null,
-    "size": { "width": 0.15, "height": 0.22, "thickness": 0.03 },
-    "position": { "x": -4.5, "y": 2.0, "z": 0 },
+    "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
+    "position": { "x": 0.168794, "y": -1.3, "z": -5.997625 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
-    "cover": { "front": "/covers/social-engineering.jpg" }
+    "cover": { "front": "/covers/social-engineering.webp" }
   },
   {
     "id": "book-007",
@@ -71,10 +71,10 @@
     "author": "Aynne Kokas",
     "year": null,
     "pages": null,
-    "size": { "width": 0.15, "height": 0.22, "thickness": 0.03 },
-    "position": { "x": -4.2, "y": 2.0, "z": 0 },
+    "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
+    "position": { "x": 0.150276, "y": 1.7, "z": -5.998118 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
-    "cover": { "front": "/covers/trafficking-data.jpg" }
+    "cover": { "front": "/covers/trafficking-data.webp" }
   },
   {
     "id": "book-008",
@@ -82,10 +82,10 @@
     "author": "Adam Grant",
     "year": null,
     "pages": null,
-    "size": { "width": 0.15, "height": 0.22, "thickness": 0.03 },
-    "position": { "x": -3.9, "y": 2.0, "z": 0 },
+    "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
+    "position": { "x": 2.116946, "y": -1.3, "z": -5.614137 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
-    "cover": { "front": "/covers/think-again.jpg" }
+    "cover": { "front": "/covers/think-again.webp" }
   },
   {
     "id": "book-009",
@@ -93,10 +93,10 @@
     "author": "Edward Snowden",
     "year": null,
     "pages": null,
-    "size": { "width": 0.15, "height": 0.22, "thickness": 0.03 },
-    "position": { "x": -3.6, "y": 2.0, "z": 0 },
+    "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
+    "position": { "x": 0.720156, "y": 0.7, "z": -5.956624 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
-    "cover": { "front": "/covers/permanent-record.jpg" }
+    "cover": { "front": "/covers/permanent-record.webp" }
   },
   {
     "id": "book-010",
@@ -104,9 +104,142 @@
     "author": "Imran Bashir",
     "year": null,
     "pages": null,
-    "size": { "width": 0.15, "height": 0.22, "thickness": 0.03 },
-    "position": { "x": -3.3, "y": 2.0, "z": 0 },
+    "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
+    "position": { "x": 0.720156, "y": -0.3, "z": -5.956624 },    
     "rotation": { "x": 0, "y": 0, "z": 0 },
-    "cover": { "front": "/covers/mastering-blockchain.jpg" }
+    "cover": { "front": "/covers/mastering-blockchain.webp" }
+  },
+    {
+    "id": "book-011",
+    "title": "The Art of War",
+    "author": "Sun Tzu",
+    "year": null,
+    "pages": null,
+
+    "scale": {"width":0.52, "height":0.75, "thickness":0.22},
+    "position": {"x":0.724871, "y":-0.43, "z":-6.459455},
+    "rotation": {"x":0, "y":0, "z":0},
+    "cover": {"front":"./covers/000.webp"}
+  },
+  {
+    "id": "book-012",
+    "title": "The Art of War",
+    "author": "Sun Tzu",
+    "year": null,
+    "pages": null,
+    "scale": {"width":0.55, "height":0.7, "thickness":0.2},
+    "position": {"x":-0.08427, "y":-1.43, "z":-6.499454},
+    "rotation": {"x":0, "y":4, "z":0},
+    "cover": {"front":"./covers/111.webp"}
+  },
+  {
+    "id": "book-013",
+    "title": "The Art of War",
+    "author": "Sun Tzu",
+    "year": null,
+    "pages": null,
+    "scale": {"width":0.4, "height":0.6, "thickness":0.15},
+    "position": {"x":0.504387, "y":-1.43, "z":-6.480401},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/444.webp"}
+  },
+  {
+    "id": "book-014",
+    "title": "The Art of War",
+    "author": "Sun Tzu",
+    "year": null,
+    "pages": null,
+    "scale": {"width":0.4, "height":0.65, "thickness":0.18},
+    "position": {"x":-0.848035, "y":-1.43, "z":-6.444442},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/222.webp"}
+  },
+  {
+    "id": "book-015",
+    "title": "The Art of War",
+    "author": "Sun Tzu",
+    "year": null,
+    "pages": null,
+    "scale": {"width":0.4, "height":0.62, "thickness":0.2},
+    "position": {"x":-0.34117, "y":-0.43, "z":-6.49104},
+    "rotation": {"x":0, "y": 2, "z":0},
+    "cover": {"front":"./covers/333.webp"}
+  },
+  {
+    "id": "book-016",
+    "title": "The Art of War",
+    "author": "Sun Tzu",
+    "year": null,
+    "pages": null,
+    "scale": {"width":0.4, "height":0.71, "thickness":0.15},
+    "position": {"x":-0.786191, "y":0.57, "z":-6.452279},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/555.webp"}
+  },
+  {
+    "id": "book-017",
+    "title": "The Art of War",
+    "author": "Sun Tzu",
+    "year": null,
+    "pages": null,
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":0.023491, "y":0.57, "z":-6.499958},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/666.webp"}
+  },
+  {
+    "id": "book-018",
+    "title": "The Art of War",
+    "author": "Sun Tzu",
+    "year": null,
+    "pages": null,
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-1.619093, "y":0.57, "z":-6.29512},
+    "rotation": {"x":0, "y": 2, "z":0},
+    "cover": {"front":"./covers/777.webp"}
+  },
+  {
+    "id": "book-019",
+    "title": "The Art of War",
+    "author": "Sun Tzu",
+    "year": null,
+    "pages": null,
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-1.373081, "y":-1.43, "z":-6.353318},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/888.webp"}
+  },
+  {
+    "id": "book-020",
+    "title": "The Art of War",
+    "author": "Sun Tzu",
+    "year": null,
+    "pages": null,
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-0.861802, "y":-0.43, "z":-6.442616},
+    "rotation": {"x":0, "y": 2, "z":0},
+    "cover": {"front":"./covers/999.webp"}
+  },
+  {
+    "id": "book-021",
+    "title": "The Art of War",
+    "author": "Sun Tzu",
+    "year": null,
+    "pages": null,
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-1.489202, "y":-0.43, "z":-6.327107},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/101010.webp"}
+  },
+  {
+    "id": "book-022",
+    "title": "The Art of War",
+    "author": "Sun Tzu",
+    "year": null,
+    "pages": null,
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/111111.webp"}
   }
 ]

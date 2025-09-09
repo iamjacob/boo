@@ -22,13 +22,13 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber';
 // import { useRef, useState, useEffect } from 'react';
 
 function Character() {
-  const ref = useRef();
-  const [position, setPosition] = useState([0, 0.5, 0]);
+  const ref = useRef(null);
+  const [position, setPosition] = useState<[number, number, number]>([0, 0.5, 0]);
   const [direction, setDirection] = useState(0); // Y rotation in radians
 
   // Keyboard controls
   useEffect(() => {
-    const handleKeyDown = (e) => {
+    const handleKeyDown = (e: KeyboardEvent) => {
       setPosition(([x, y, z]) => {
         let speed = 0.2;
         let angle = direction;

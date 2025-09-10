@@ -3,8 +3,7 @@ import { Suspense, useState } from "react";
 
 import BoooksFull from "./BoooksFull";
 import BoooksHeart from './BoooksHeart'
-import Time from "./Time";
-import MinimalistMultiTimer from "./MinimalistMultiTimer";
+
 
 
 export default function Header() {
@@ -15,44 +14,7 @@ export default function Header() {
   const [stayLoggedIn, setStayLoggedIn] = useState(false);
 
   
-  const [time, setTime] = useState(new Date());
-  const [isVisible, setIsVisible] = useState(false);
-  const [dragY, setDragY] = useState(0);
-  const [isDragging, setIsDragging] = useState(false);
 
-  const handleTouchStart = (e) => {
-    if (e.touches[0].clientY < 100) { // Only start drag from top area
-      setIsDragging(true);
-      setDragY(0);
-    }
-  };
-
-  const handleTouchMove = (e) => {
-    if (isDragging) {
-      const newY = Math.max(0, e.touches[0].clientY - 50);
-      setDragY(newY);
-      if (newY > 50) {
-        setIsVisible(true);
-      }
-    }
-  };
-
-  const handleTouchEnd = () => {
-    if (isDragging) {
-      if (dragY > 150) {
-        setIsVisible(true);
-        setDragY(0);
-      } else {
-        setIsVisible(false);
-        setDragY(0);
-      }
-      setIsDragging(false);
-    }
-  };
-
-  const handleClose = () => {
-    setIsVisible(false);
-  };
 
 
 return (
@@ -60,47 +22,6 @@ return (
         
         <header className="fixed top-0 left-0 right-0 z-100 flex justify-between w-screen h-[40px] gap-2 m-1">
       
-      
-      {/* Clock overlay */}
-      <div 
-        className={`fixed inset-0 bg-black transition-all duration-300 ease-out flex flex-col justify-center items-center ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full pointer-events-none'
-        }`}
-        style={{ 
-          transform: isDragging ? `translateY(${dragY - window.innerHeight}px)` : undefined 
-        }}
-      >
-        {/* Close button */}
-        <button 
-          onClick={handleClose}
-          className="absolute top-8 right-8 text-white text-2xl font-light hover:text-gray-300 transition-colors"
-        >
-          ×
-        </button>
-
-
-
-
-        {/* Main clock display */}
-        <div className="text-center">
-          <div className="text-white text-8xl md:text-9xl font-thin tracking-tight mb-4 font-mono">
-          </div>
-          <div className="text-gray-400 text-2xl font-light">
-          </div>
-          {/* <MinimalistMultiTimer /> */}
-        </div>
-      </div>
-
-      {/* Drag indicator at top */}
-      <div 
-        className="absolute top-0 left-0 right-0 h-2 cursor-grab z-50 flex justify-center items-start pt-2"
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
-        <div className="w-10 h-1 bg-red-600 rounded-full opacity-50"></div>
-      </div>
-
           <div className="menu flex cursor-pointer items-center">
                 {/* <div className="cursor-pointer border border-2 border-red-500 rounded-full px-2 my-2 text-[12px]">
   <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-dna-icon lucide-dna"><path d="m10 16 1.5 1.5"/><path d="m14 8-1.5-1.5"/><path d="M15 2c-1.798 1.998-2.518 3.995-2.807 5.993"/><path d="m16.5 10.5 1 1"/><path d="m17 6-2.891-2.891"/><path d="M2 15c6.667-6 13.333 0 20-6"/><path d="m20 9 .891.891"/><path d="M3.109 14.109 4 15"/><path d="m6.5 12.5 1 1"/><path d="m7 18 2.891 2.891"/><path d="M9 22c1.798-1.998 2.518-3.995 2.807-5.993"/></svg>
@@ -116,7 +37,7 @@ return (
               {/* <BoooksHeart /> */}
 
               <BoooksFull width="80px" height="30px" />
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#333" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-down-icon lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg>
+              {/* <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#333" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-chevron-down-icon lucide-chevron-down"><path d="m6 9 6 6 6-6"/></svg> */}
             </div>
           </div>
 
@@ -126,7 +47,7 @@ return (
 
             {!isLoggedIn ? (
                 <>
-              <div
+              {/* <div
                 onClick={() => {
                   setIsLoggedIn(true);
                   //toggleLogin()
@@ -134,7 +55,7 @@ return (
                 className="login bg-white/10 text-white cursor-pointer border border-2 border-red-500 rounded-full my-2 px-2 text-[12px]"
               >
                 Login
-              </div>
+              </div> */}
                 <div
                 onClick={() => {
                   //setIsLoggedIn(true);
@@ -142,7 +63,7 @@ return (
                 }}
                 className="login bg-white/10 text-white cursor-pointer border border-2 border-red-500 rounded-full my-2 px-2 text-[12px]"
               >
-                pop
+                next
               </div>
                 </>
 

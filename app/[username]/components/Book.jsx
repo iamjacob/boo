@@ -12,7 +12,7 @@ import useSafeLoader from "./useSafeLoader";
 // import RainbowAurora from './RainbowAurora'
 
 const Book = ({
-  id = "",
+  id="",
   color = "red",
   scale,
   initialPosition = [-2.79, -0.61, -5.87],

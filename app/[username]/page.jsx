@@ -9,8 +9,7 @@ import * as THREE from "three";
 import Book from "./components/Book";
 import Footer from "../Footer";
 
-import FooterExperience from "./FooterExperience.jsx";
-
+// import FooterExperience from "./FooterExperience.jsx";
 
 export default function Page() {
   const [selectedBook, setSelectedBook] = useState(null);
@@ -28,30 +27,41 @@ export default function Page() {
       <Header />
 
       <Experience>
-        
+
+{/* add in this canvas leva and  */}
+
         {books.map((book, index) => {
           return (
-              <Book
-                key={book.id}
-                id={book.id}
-                scale={[book.scale.width, book.scale.height, book.scale.thickness]}
-                initialPosition={[book.position.x, book.position.y, book.position.z]}
-                initialRotation={[book.rotation.x, book.rotation.y, book.rotation.z]}
-                shelfRadius={6}
-                otherBooks={books.filter((b) => b.id !== book.id)}
-                bookID={book.id}
-                cover={book.cover.front}
-                selectedBook={selectedBook}
-                setSelectedBook={setSelectedBook}
-              /> 
-            
+            <Book
+              key={book.id}
+              scale={[
+                book.scale.width,
+                book.scale.height,
+                book.scale.thickness,
+              ]}
+              initialPosition={[
+                book.position.x,
+                book.position.y,
+                book.position.z,
+              ]}
+              initialRotation={[
+                book.rotation.x,
+                book.rotation.y,
+                book.rotation.z,
+              ]}
+              shelfRadius={6}
+              otherBooks={books.filter((b) => b.id !== book.id)}
+              bookID={book.id}
+              cover={book.cover.front}
+              selectedBook={selectedBook}
+              setSelectedBook={setSelectedBook}
+            />
           );
         })}
       </Experience>
 
-{/* <FooterExperience /> */}
-
-
+      {/* <FooterExperience /> */}
+      <Footer />
     </div>
   );
 }

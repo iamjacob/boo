@@ -19,8 +19,9 @@ import {
 
 import BooksStand from "./components/BooksStand";
 import Shelves from "./Shelves";
-import OpenBook from "./components/OpenBook_test";
+// import OpenBook from "./components/OpenBook_test";
 import { gsap } from "gsap";
+import { useControls } from "leva";
 // import { Physics } from "@react-three/rapier";
 // import useShelvesStore from "../../stores/shelves/useShelvesStore";
 // import useBookExperienceStore from "../../stores/experience/useBookExperienceStore";
@@ -64,7 +65,7 @@ const resetCamera = () => {
 
   gsap.to(camera.position, {
     x: 0,
-    y: 0.5,
+    y: 0.0002,
     z: 5,
     duration: 1.2,
     ease: "power2.out",
@@ -146,49 +147,6 @@ const resetCamera = () => {
     </>
   );
 
-  // const controls = useThree((state) => state.controls);
-  // const animate = async () => {
-  //   controls.setLookAt(0, 0.5, -5, 0, 1.5, -2);
-  //   await new Promise((resolve) => setTimeout(resolve, 1000));
-  //   controls.smoothTime = 0.8;
-  //   await controls.setLookAt(5, 2, -5, 0, 2, -2, true);
-  //   controls.smoothTime = 0.4;
-  //   await controls.setLookAt(-5, 0.5, 5, -1, 2, -2, true);
-  // };
-
-  // useEffect(() => {
-  //   if (!controls) {
-  //     return;
-  //   }
-  //   animate();
-  // }, [controls]);
-
-  // const [isLoading, setIsLoading] = useState(true);
-  // const { setShelvesFromData, selectedShelf } = useShelvesStore();
-  // const { selectedBook, isBookOpen, isOpenBookVisible, openedBook, selectBook, openBook } = useBookExperienceStore();
-  // const canvasRef = useRef(null);
-
-  // useEffect(() => {
-  //   if (shelvesData?.shelves && userData?.books) {
-  //     setShelvesFromData(shelvesData.shelves, shelvesData.shelfSlug);
-  //     setIsLoading(false);
-  //   }
-  // }, [shelvesData, userData, setShelvesFromData]);
-
-  // const getBookDataById = (bookID) => {
-  //   const book = userData.books.find((b) => b.id === bookID);
-  //   if (!book) return null;
-  //   return {
-  //     bookID: book.id,
-  //     title: book.title,
-  //     cover: book.coverImages[0] || "https://example.com/default.jpg",
-  //     dimensions: book.scale || [0.4, 0.7, 0.2],
-  //     pages: book.pageCount || 200,
-  //     position: book.position || [0, -0.43, -6.5],
-  //     rotation: book.rotation || [0, 0, 0],
-  //   };
-  // };
-
   // const handleBookSelection = (bookID) => {
   //   selectBook(bookID);
   // };
@@ -199,10 +157,6 @@ const resetCamera = () => {
   //     openBook(bookData);
   //   }
   // };
-
-  // if (isLoading) {
-  //   return <div>Loading...</div>;
-  // }
 
   const [frameloop, setFrameloop] = useState("never");
 
@@ -215,11 +169,31 @@ const resetCamera = () => {
     }
   }, []);
 
+
+// // add leva controls for camera rotation
+// const { cameraRotateX, cameraRotateY, cameraRotateZ } = useControls('Camera Rotation', {
+//   cameraRotateX: { value: 0.002, min: -Math.PI, max: Math.PI, step: 0.01 },
+//   cameraRotateY: { value: 0, min: -Math.PI, max: Math.PI, step: 0.01 },
+//   cameraRotateZ: { value: 0, min: -Math.PI, max: Math.PI, step: 0.01 },
+// });
+
+// const rotateLEVA = [cameraRotateX, cameraRotateY, cameraRotateZ];
+
+// // Update camera rotation live when LEVA controls change
+// useEffect(() => {
+//   if (cameraRef.current) {
+//     cameraRef.current.rotation.set(cameraRotateX, cameraRotateY, cameraRotateZ);
+//     cameraRef.current.updateProjectionMatrix();
+//   }
+// }, [cameraRotateX, cameraRotateY, cameraRotateZ]);
+
+
+
   return (
     <div style={{ position: "relative", width: "100vw", height: "100vh" }}>
       <Canvas
         className="fixed top-0 left-0 w-full h-full bg-gray-900"
-        camera={{ position: [0, 0.5, 5], fov: 75, zoom: 3.5 }}
+        camera={{ position: [0, 0.0002, 5], rotation: [0, 0, 0], fov: 75, zoom: 3.5 }}
         frameloop="always"
         onCreated={({ camera }) => {
           cameraRef.current = camera; // 👈 store camera reference
@@ -313,7 +287,7 @@ const resetCamera = () => {
 
       <div onClick={toggleCones} className="absolute bottom-44 right-10 z-50 cursor-pointer">
 
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cone-icon lucide-cone"><path d="m20.9 18.55-8-15.98a1 1 0 0 0-1.8 0l-8 15.98"/><ellipse cx="12" cy="19" rx="9" ry="3"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-cone-icon lucide-cone"><path d="m20.9 18.55-8-15.98a1 1 0 0 0-1.8 0l-8 15.98"/><ellipse cx="12" cy="19" rx="9" ry="3"/></svg>
       </div>
 
       {/* Navigation UI

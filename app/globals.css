@@ -307,3 +307,15 @@
 .maplibregl-ctrl-bottom-right{
   display:none;
 }
+
+
+.control{
+  background: rgba(255, 255, 255, 0.1);
+  border:1px solid white;
+  border-radius:8px;
+  padding:4px 8px;
+  color:white;
+  font-size:12px;
+  cursor:pointer;
+  transition: all .2s ease-in-out;
+}

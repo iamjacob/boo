@@ -12,7 +12,7 @@ import useSafeLoader from "./useSafeLoader";
 // import RainbowAurora from './RainbowAurora'
 
 const Book = ({
-  id="",
+  id,
   color = "red",
   scale,
   initialPosition = [-2.79, -0.61, -5.87],
@@ -95,9 +95,9 @@ const Book = ({
       shelfRadius
     );
 
-    // console.log(`🔄 Book Rotation Change [Axis: ${axis}]`);
-    // console.log(`  ⏳ Input Value: ${value}`);
-    // console.log(`  📏 Constrained Angle: ${angle}`);
+    console.log(`🔄 Book Rotation Change [Axis: ${axis}]`);
+    console.log(`  ⏳ Input Value: ${value}`);
+    console.log(`  📏 Constrained Angle: ${angle}`);
 
     // Update rotation reference
     if (axis === "x") rotationRef.current.x = value;
@@ -235,18 +235,19 @@ const Book = ({
         newPos.y = closestShelf;
       }
 
-      let correctedY = newPos.y - (scale[1] / 2 + 0.08);
-      newPos.y = correctedY - my * 0.007;
+      let correctedY = newPos.y - (scale[1] / 2) + 0.01;
+      // newPos.y = correctedY - my * 0.007;
+      newPos.y = correctedY;
 
       if (active) {
         meshRef.current.position.copy(newPos);
-        // meshRef.current.rotation.x = THREE.MathUtils.lerp(
-        //   meshRef.current.rotation.x,
-        //   tiltAngle,
-        //   0.4
-        // );
+        meshRef.current.rotation.x = THREE.MathUtils.lerp(
+          meshRef.current.rotation.x,
+          tiltAngle,
+          0.4
+        );
 
-        //THIS IS PERFECT DRAG WHEN SPINE!
+        //THIS IS PERFECT DRAG WHEN SPINE!?
 
         meshRef.current.rotation.y = -angle + rotationRef.current.y;
 
@@ -316,6 +317,8 @@ const Book = ({
   //saveToDB();
   //console.log(meshRef.current.scale.set(1,1,1))
   return (
+
+
     <Suspense fallback={"loading"}>
       <mesh
         ref={meshRef}
@@ -326,7 +329,12 @@ const Book = ({
         onDoubleClick={() => {
           meshRef.current.position.set(0, 0, 0);
           //alert(bookID);
+          handleRotationChange("y", 0);
+          handleRotationChange("x", 0);
+          handleRotationChange("z", 0);
         }}
+
+
         scale={scale}
         key={id}
         position={positionRef.current}
@@ -338,10 +346,45 @@ const Book = ({
         {/* //I need architechture that loads alll books asap, put wireframe till image is loaded and then fade in? */}
         <meshBasicMaterial color={color} />
         {materials.map((material, i) => (
-          <primitive key={i} object={material} attach={`material-${i}`} />
+          <primitive key={`${id}-${i}`} object={material} attach={`material-${i}`} />
         ))}
       </mesh>
+      {/* {selectedBook === bookID && currentPlace.current === "positionAndRotate" && ( */}
+        {/* <PivotControls
+          anchor={[0, -0.5, 0]}
+          depthTest={false}
+          lineWidth={2}
+          axisColors={["#9381ff", "#ff4d6d", "#3ae374"]}
+          fixed={true}
+          scale={100}
+          onDrag={(e) => {
+            e.stopPropagation();
+            const { axis, offset } = e;
+            if (axis === "X") handleRotationChange("x", offset[0]);
+            if (axis === "Y") handleRotationChange("y", offset[1]);
+            if (axis === "Z") handleRotationChange("z", offset[2]);
+          }}
+        >
+      
+        </PivotControls> */}
+      {/* // )} */}
+      {/* {selectedBook === bookID && ( */}
+      {/* <RainbowAurora/> */}
+        {/* <Html center distanceFactor={10} position={positionRef.current}>
+          safadsf
+           <div className="bg-white/90 backdrop-blur-md text-xs px-2 py-1 rounded-md border border-gray-200">
+            <div>Position: {positionRef.current.x.toFixed(2)}, {positionRef.current.y.toFixed(2)}, {positionRef.current.z.toFixed(2)}</div>
+            <div>Rotation: {(rotationRef.current.x * (180 / Math.PI)).toFixed(1)}°, {(rotationRef.current.y
+  * (180 / Math.PI)).toFixed(1)}°, {(rotationRef.current.z * (180 / Math.PI)).toFixed(1)}°</div>
+          </div> 
+        </Html> */}
+      {/* // )} */}
+
+
     </Suspense>
+
+
+
   );
 };
 export default Book;

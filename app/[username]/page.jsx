@@ -1,17 +1,30 @@
 "use client";
+
 // import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
+// import { useParams } from "next/navigation";
 import Experience from "./Experience";
 import Header from "../Header";
 import books from "./boooks.json";
-import { useLoader } from "@react-three/fiber";
-import * as THREE from "three";
+// import { useLoader } from "@react-three/fiber";
+// import * as THREE from "three";
 import Book from "./components/Book";
 import Footer from "../Footer";
 
+
 // import FooterExperience from "./FooterExperience.jsx";
+// export async function generateMetadata({ params }) {
+//   const { username } = params;
+//   return {
+//     title: `${username} ${username.endsWith("s") ? "'" : "'s"} Boooks`,
+//     description: `Explore ${username}'s collection of books.`,
+//     // ...other metadata fields
+//   };
+// }
 
 export default function Page() {
+  // const params = useParams();
+  // const { username } = params;
   const [selectedBook, setSelectedBook] = useState(null);
   // const [texture, setTexture] = useState(null);
 
@@ -20,7 +33,6 @@ export default function Page() {
   //   setTexture(texture);
   // }, []);
   // get user name to title from url
-  // const { username } = useParams();
 
   return (
     <div className="fixed top-0 left-0 w-full h-full">
@@ -34,6 +46,7 @@ export default function Page() {
           return (
             <Book
               key={book.id}
+              {...book}
               scale={[
                 book.scale.width,
                 book.scale.height,
@@ -51,7 +64,7 @@ export default function Page() {
               ]}
               shelfRadius={6}
               otherBooks={books.filter((b) => b.id !== book.id)}
-              bookID={book.id}
+              id={book.id}
               cover={book.cover.front}
               selectedBook={selectedBook}
               setSelectedBook={setSelectedBook}

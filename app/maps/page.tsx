@@ -10,14 +10,7 @@ import BoooksHeart from '../BoooksHeart';
 import { StoryMap } from './story-map';
 import { createTornado } from './Tornado';
 
-
-
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-
-
-
-
-
 
 // import { useRef, useState, useEffect } from 'react';
 

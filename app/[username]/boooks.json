@@ -241,5 +241,16 @@
     "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
     "rotation": {"x":0, "y":2, "z":0},
     "cover": {"front":"./covers/111111.webp"}
+  },
+    {
+    "id": "book-023",
+    "title": "The Art of War",
+    "author": "Sun Tzu",
+    "year": null,
+    "pages": null,
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/111111.webp"}
   }
 ]

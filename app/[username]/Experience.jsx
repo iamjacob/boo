@@ -30,6 +30,7 @@ import { useControls } from "leva";
 // import ShelvesPhysics from "./components/ShelvesPhysics";
 // import Floor from "./components/Floor";
 // import BackgroundWall from "./components/BackgroundWall";
+import FullScreen from "../Fullscreen";
 
 export const Experience = ({ children }) => {
   const BOOK_STAND_COUNT = 8;
@@ -50,35 +51,34 @@ export const Experience = ({ children }) => {
   //   return null;
   // };
 
-const toggleCones = () => {
-  setToggleReading(!toggleReading);
-}
+  const toggleCones = () => {
+    setToggleReading(!toggleReading);
+  };
 
-const resetCamera = () => {
-  const controls = controlsRef.current;
-  const camera = cameraRef.current;
-  if (!controls || !camera) return;
+  const resetCamera = () => {
+    const controls = controlsRef.current;
+    const camera = cameraRef.current;
+    if (!controls || !camera) return;
 
-  // Temporarily disable controls damping
-  const prevDamping = controls.enableDamping;
-  controls.enableDamping = false;
+    // Temporarily disable controls damping
+    const prevDamping = controls.enableDamping;
+    controls.enableDamping = false;
 
-  gsap.to(camera.position, {
-    x: 0,
-    y: 0.0002,
-    z: 5,
-    duration: 1.2,
-    ease: "power2.out",
-    onUpdate: () => {
-      controls.target.set(0, 0, 0);
-      controls.update();
-    },
-    onComplete: () => {
-      controls.enableDamping = prevDamping; // restore damping
-    },
-  });
-};
-
+    gsap.to(camera.position, {
+      x: 0,
+      y: 0.0002,
+      z: 5,
+      duration: 1.2,
+      ease: "power2.out",
+      onUpdate: () => {
+        controls.target.set(0, 0, 0);
+        controls.update();
+      },
+      onComplete: () => {
+        controls.enableDamping = prevDamping; // restore damping
+      },
+    });
+  };
 
   // BIG CAMERA SCENE
 
@@ -169,49 +169,53 @@ const resetCamera = () => {
     }
   }, []);
 
+  // // add leva controls for camera rotation
+  // const { cameraRotateX, cameraRotateY, cameraRotateZ } = useControls('Camera Rotation', {
+  //   cameraRotateX: { value: 0.002, min: -Math.PI, max: Math.PI, step: 0.01 },
+  //   cameraRotateY: { value: 0, min: -Math.PI, max: Math.PI, step: 0.01 },
+  //   cameraRotateZ: { value: 0, min: -Math.PI, max: Math.PI, step: 0.01 },
+  // });
 
-// // add leva controls for camera rotation
-// const { cameraRotateX, cameraRotateY, cameraRotateZ } = useControls('Camera Rotation', {
-//   cameraRotateX: { value: 0.002, min: -Math.PI, max: Math.PI, step: 0.01 },
-//   cameraRotateY: { value: 0, min: -Math.PI, max: Math.PI, step: 0.01 },
-//   cameraRotateZ: { value: 0, min: -Math.PI, max: Math.PI, step: 0.01 },
-// });
+  // const rotateLEVA = [cameraRotateX, cameraRotateY, cameraRotateZ];
 
-// const rotateLEVA = [cameraRotateX, cameraRotateY, cameraRotateZ];
-
-// // Update camera rotation live when LEVA controls change
-// useEffect(() => {
-//   if (cameraRef.current) {
-//     cameraRef.current.rotation.set(cameraRotateX, cameraRotateY, cameraRotateZ);
-//     cameraRef.current.updateProjectionMatrix();
-//   }
-// }, [cameraRotateX, cameraRotateY, cameraRotateZ]);
-
-
+  // // Update camera rotation live when LEVA controls change
+  // useEffect(() => {
+  //   if (cameraRef.current) {
+  //     cameraRef.current.rotation.set(cameraRotateX, cameraRotateY, cameraRotateZ);
+  //     cameraRef.current.updateProjectionMatrix();
+  //   }
+  // }, [cameraRotateX, cameraRotateY, cameraRotateZ]);
 
   return (
     <div style={{ position: "relative", width: "100vw", height: "100vh" }}>
       <Canvas
         className="fixed top-0 left-0 w-full h-full bg-gray-900"
-        camera={{ position: [0, 0.0002, 5], rotation: [0, 0, 0], fov: 75, zoom: 3.5 }}
+        camera={{
+          position: [0, 0.0002, 5],
+          rotation: [0, 0, 0],
+          fov: 75,
+          zoom: 3.5,
+        }}
         frameloop="always"
         onCreated={({ camera }) => {
           cameraRef.current = camera; // 👈 store camera reference
           camera.updateProjectionMatrix();
         }}
       >
-
-        {toggleReading && (
+        {toggleReading &&
           Array.from({ length: 4 }).map((_, i) => {
             const angle = (i / BOOK_STAND_COUNT) * 2 * Math.PI;
             const x = Math.cos(angle) * RADIUS;
             const z = Math.sin(angle) * RADIUS;
             return (
-              <BooksStand key={i} position={[x, 0, z]} rotation={[0, -angle + Math.PI / 2, 0]}
-                active={i === activeBookstand} />
+              <BooksStand
+                key={i}
+                position={[x, 0, z]}
+                rotation={[0, -angle + Math.PI / 2, 0]}
+                active={i === activeBookstand}
+              />
             );
-          })
-        )}
+          })}
 
         {/* <OpenBook
           book={readingNow}
@@ -220,7 +224,6 @@ const resetCamera = () => {
           scale={[0.7, 0.7, 0.7]}
         />
          */}
-         
 
         <Shelves />
 
@@ -261,9 +264,33 @@ const resetCamera = () => {
         <Stars />
       </Canvas>
 
+<div className="flex fixed bottom-4 right-4 flex-col gap-4 z-50">
+
+      
+      <div
+        onClick={toggleCones}
+        className="cursor-pointer"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="white"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="lucide lucide-cone-icon lucide-cone"
+        >
+          <path d="m20.9 18.55-8-15.98a1 1 0 0 0-1.8 0l-8 15.98" />
+          <ellipse cx="12" cy="19" rx="9" ry="3" />
+        </svg>
+      </div>
+
       <div
         onClick={resetCamera}
-        className="absolute bottom-22 right-10 z-50 cursor-pointer"
+        className="cursor-pointer"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -285,10 +312,11 @@ const resetCamera = () => {
         </svg>
       </div>
 
-      <div onClick={toggleCones} className="absolute bottom-44 right-10 z-50 cursor-pointer">
-
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-cone-icon lucide-cone"><path d="m20.9 18.55-8-15.98a1 1 0 0 0-1.8 0l-8 15.98"/><ellipse cx="12" cy="19" rx="9" ry="3"/></svg>
+      <div className="cursor-pointer">
+        <FullScreen />
       </div>
+
+</div>
 
       {/* Navigation UI
          <div style={{ position: 'absolute', bottom: 40, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 16, pointerEvents: 'auto' }}>

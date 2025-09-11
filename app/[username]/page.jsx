@@ -104,6 +104,7 @@ export default function Page() {
             className={`absolute ${onHardPress && 'fade-in'} z-50 -translate-x-1/2 -translate-y-1/2 bg-black/70 backdrop-blur p-6 rounded-xl border border-white/30 flex flex-col items-center justify-center gap-4 max-w-[80vw]`}
             style={{ top: top, left: left, position: 'absolute' }}
           >
+            <div onClick={() => setOnHardPress(false)} className="absolute top-0 right-0 text-white bg-black/50 p-2 rounded-full">X</div>
             <a href="#like">
               <svg
                 xmlns="http://www.w3.org/2000/svg"

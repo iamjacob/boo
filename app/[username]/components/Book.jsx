@@ -40,7 +40,6 @@ const Book = ({
   const currentPlace = useRef("home");
   // const [drag, setDrag] = useState(false);
 
-
   const switchPlace = (place) => {
     currentPlace.current = place;
   };
@@ -188,6 +187,9 @@ const Book = ({
       event.stopPropagation();
       draggingRef.current = active;
 
+
+ console.log("scale[1] during drag:", scale[1]);
+
       if (!meshRef.current) return;
 
       if (active) {
@@ -301,6 +303,9 @@ const Book = ({
       rubberband: 0.15,
     }
   );
+
+
+  console.log("scale[1] on render:", scale[1]);
 
   const textures = [
     useSafeLoader("./books/booktexture.png"),

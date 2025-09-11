@@ -5,6 +5,8 @@ import {
   Stars,
   OrbitControls
 } from "@react-three/drei";
+
+// import {LighterWithControls, Lighter} from "./lighterHelper";
 // import { Stars, OrbitControls } from "@react-three/drei";
 // import { useThree } from "@react-three/fiber";
 // import { useEffect } from "react";
@@ -18,6 +20,7 @@ import Shelves from "./Shelves";
 // import OpenBook from "./components/OpenBook_test";
 import { gsap } from "gsap";
 import { useControls } from "leva";
+import ChunkedAudioPlayer from "../ChunkedAudioPlayer";
 // import { Physics } from "@react-three/rapier";
 // import useShelvesStore from "../../stores/shelves/useShelvesStore";
 // import useBookExperienceStore from "../../stores/experience/useBookExperienceStore";
@@ -28,6 +31,8 @@ import { useControls } from "leva";
 // import BackgroundWall from "./components/BackgroundWall";
 import FullScreen from "../Fullscreen";
 
+// import { LighterWithControls, Lighter } from "./lighterHelper";
+
 export const Experience = ({ children, drag, setDrag }) => {
   const BOOK_STAND_COUNT = 8;
   const RADIUS = 3;
@@ -35,6 +40,7 @@ export const Experience = ({ children, drag, setDrag }) => {
   const [orbitControls, setOrbitControls] = useState(null);
 
   const [toggleReading, setToggleReading] = useState(null);
+  const [music, setMusic] = useState(null);
   //const [drag, setDrag] = useState(false);
   const controlsRef = useRef();
   const cameraRef = useRef();
@@ -155,6 +161,7 @@ export const Experience = ({ children, drag, setDrag }) => {
 
   return (
     <div style={{ position: "relative", width: "100vw", height: "100vh" }}>
+      {/* <LighterWithControls /> */}
       <Canvas
         className="fixed top-0 left-0 w-full h-full bg-gray-900"
         camera={{
@@ -169,6 +176,8 @@ export const Experience = ({ children, drag, setDrag }) => {
           camera.updateProjectionMatrix();
         }}
       >
+
+        {/* <Lighter /> */}
         {toggleReading &&
           Array.from({ length: 4 }).map((_, i) => {
             const angle = (i / BOOK_STAND_COUNT) * 2 * Math.PI;
@@ -200,9 +209,13 @@ export const Experience = ({ children, drag, setDrag }) => {
 
         <StudioLighting />
         <Stars />
+
+    {/* Pointer light with helper and Leva controls */}
+        {/* <LighterWithControls /> */}
+        {/* <Lighter intensity={0.5} position={[-5, 5, 5]} color="white" /> */}
       </Canvas>
 
-      <div className="flex fixed bottom-4 right-4 flex-col gap-4 z-50">
+      {/* <div className="flex fixed bottom-4 right-4 flex-col gap-4 z-50">
         <div onClick={toggleCones} className="cursor-pointer">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -283,10 +296,20 @@ export const Experience = ({ children, drag, setDrag }) => {
           )}
         </div>
 
+        <div onClick={()=>{setMusic(music ? false : true)}} className="move">
+          {music ? (
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pause-icon lucide-pause"><rect x="14" y="3" width="5" height="18" rx="1"/><rect x="5" y="3" width="5" height="18" rx="1"/></svg>
+          ): (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play-icon lucide-play"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          )}
+        </div>
+        
         <div className="cursor-pointer">
           <FullScreen />
         </div>
-      </div>
+      </div> */}
+
+<ChunkedAudioPlayer play={music} /> 
 
       {/* Navigation UI
          <div style={{ position: 'absolute', bottom: 40, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 16, pointerEvents: 'auto' }}>

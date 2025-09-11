@@ -3,11 +3,7 @@ import { useEffect, useState, useRef } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import {
   Stars,
-  OrbitControls,
-  CameraControls,
-  Gltf,
-  useGLTF,
-  Html,
+  OrbitControls
 } from "@react-three/drei";
 // import { Stars, OrbitControls } from "@react-three/drei";
 // import { useThree } from "@react-three/fiber";
@@ -32,13 +28,14 @@ import { useControls } from "leva";
 // import BackgroundWall from "./components/BackgroundWall";
 import FullScreen from "../Fullscreen";
 
-export const Experience = ({ children }) => {
+export const Experience = ({ children, drag, setDrag }) => {
   const BOOK_STAND_COUNT = 8;
   const RADIUS = 3;
   const [activeBookstand, setActiveBookstand] = useState(0);
   const [orbitControls, setOrbitControls] = useState(null);
 
   const [toggleReading, setToggleReading] = useState(null);
+  //const [drag, setDrag] = useState(false);
   const controlsRef = useRef();
   const cameraRef = useRef();
 
@@ -147,44 +144,14 @@ export const Experience = ({ children }) => {
     </>
   );
 
-  // const handleBookSelection = (bookID) => {
-  //   selectBook(bookID);
-  // };
-
-  // const handleBookOpen = (bookID) => {
-  //   const bookData = getBookDataById(bookID);
-  //   if (bookData) {
-  //     openBook(bookData);
-  //   }
-  // };
-
-  const [frameloop, setFrameloop] = useState("never");
-
   useEffect(() => {
     const splash = document.getElementById("splash");
 
     if (splash) {
       splash.classList.add("fade-out");
-      setTimeout(() => splash.remove(), 800);
+      setTimeout(() => splash.remove(), 1200);
     }
   }, []);
-
-  // // add leva controls for camera rotation
-  // const { cameraRotateX, cameraRotateY, cameraRotateZ } = useControls('Camera Rotation', {
-  //   cameraRotateX: { value: 0.002, min: -Math.PI, max: Math.PI, step: 0.01 },
-  //   cameraRotateY: { value: 0, min: -Math.PI, max: Math.PI, step: 0.01 },
-  //   cameraRotateZ: { value: 0, min: -Math.PI, max: Math.PI, step: 0.01 },
-  // });
-
-  // const rotateLEVA = [cameraRotateX, cameraRotateY, cameraRotateZ];
-
-  // // Update camera rotation live when LEVA controls change
-  // useEffect(() => {
-  //   if (cameraRef.current) {
-  //     cameraRef.current.rotation.set(cameraRotateX, cameraRotateY, cameraRotateZ);
-  //     cameraRef.current.updateProjectionMatrix();
-  //   }
-  // }, [cameraRotateX, cameraRotateY, cameraRotateZ]);
 
   return (
     <div style={{ position: "relative", width: "100vw", height: "100vh" }}>
@@ -217,28 +184,7 @@ export const Experience = ({ children }) => {
             );
           })}
 
-        {/* <OpenBook
-          book={readingNow}
-          position={[0, -1.5, -2]}
-          rotation={[-0.1, 0, 0]}
-          scale={[0.7, 0.7, 0.7]}
-        />
-         */}
-
         <Shelves />
-
-        {/* <Html position={[12,8,2]} center>
-            <div className="text-white text-3xl">Welcome to the 3D Boooks Experience</div>
-          </Html>
-          <Html position={[-12,8,2]} center>
-            <div className="text-white text-3xl w-fit">Add a new scene</div>
-          </Html>
-          <Html position={[0,8,-12]} center>
-            <div className="text-white text-3xl w-fit">History (infinite shelf)</div>
-          </Html>
-          <Html position={[0,8,12]} center>
-            <div className="text-white text-3xl w-fit">Maps</div>
-          </Html> */}
 
         {children}
 
@@ -249,74 +195,98 @@ export const Experience = ({ children }) => {
           enableZoom
           minDistance={2}
           maxDistance={20}
+          minPolarAngle={-Math.PI / 2}
         />
 
-        {/* <CameraZoom />
-          <OrbitControls
-            ref={setOrbitControls}
-            enableDamping={true}
-            dampingFactor={0.4}
-            enableZoom={true}
-            minDistance={2}
-            minPolarAngle={-Math.PI / 2}
-          /> */}
         <StudioLighting />
         <Stars />
       </Canvas>
 
-<div className="flex fixed bottom-4 right-4 flex-col gap-4 z-50">
+      <div className="flex fixed bottom-4 right-4 flex-col gap-4 z-50">
+        <div onClick={toggleCones} className="cursor-pointer">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="white"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-cone-icon lucide-cone"
+          >
+            <path d="m20.9 18.55-8-15.98a1 1 0 0 0-1.8 0l-8 15.98" />
+            <ellipse cx="12" cy="19" rx="9" ry="3" />
+          </svg>
+        </div>
 
-      
-      <div
-        onClick={toggleCones}
-        className="cursor-pointer"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="white"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="lucide lucide-cone-icon lucide-cone"
-        >
-          <path d="m20.9 18.55-8-15.98a1 1 0 0 0-1.8 0l-8 15.98" />
-          <ellipse cx="12" cy="19" rx="9" ry="3" />
-        </svg>
+        <div onClick={resetCamera} className="cursor-pointer">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="white"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-orbit-icon lucide-orbit"
+          >
+            <path d="M20.341 6.484A10 10 0 0 1 10.266 21.85" />
+            <path d="M3.659 17.516A10 10 0 0 1 13.74 2.152" />
+            <circle cx="12" cy="12" r="3" />
+            <circle cx="19" cy="5" r="2" />
+            <circle cx="5" cy="19" r="2" />
+          </svg>
+        </div>
+
+        <div onClick={()=>{setDrag(!drag)}} className="move">
+          {drag ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#fff"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-hand-icon lucide-hand"
+            >
+              <path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2" />
+              <path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2" />
+              <path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8" />
+              <path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15" />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#fff"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-hand-grab-icon lucide-hand-grab"
+            >
+              <path d="M18 11.5V9a2 2 0 0 0-2-2a2 2 0 0 0-2 2v1.4" />
+              <path d="M14 10V8a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2" />
+              <path d="M10 9.9V9a2 2 0 0 0-2-2a2 2 0 0 0-2 2v5" />
+              <path d="M6 14a2 2 0 0 0-2-2a2 2 0 0 0-2 2" />
+              <path d="M18 11a2 2 0 1 1 4 0v3a8 8 0 0 1-8 8h-4a8 8 0 0 1-8-8 2 2 0 1 1 4 0" />
+            </svg>
+          )}
+        </div>
+
+        <div className="cursor-pointer">
+          <FullScreen />
+        </div>
       </div>
-
-      <div
-        onClick={resetCamera}
-        className="cursor-pointer"
-      >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="white"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          className="lucide lucide-orbit-icon lucide-orbit"
-        >
-          <path d="M20.341 6.484A10 10 0 0 1 10.266 21.85" />
-          <path d="M3.659 17.516A10 10 0 0 1 13.74 2.152" />
-          <circle cx="12" cy="12" r="3" />
-          <circle cx="19" cy="5" r="2" />
-          <circle cx="5" cy="19" r="2" />
-        </svg>
-      </div>
-
-      <div className="cursor-pointer">
-        <FullScreen />
-      </div>
-
-</div>
 
       {/* Navigation UI
          <div style={{ position: 'absolute', bottom: 40, left: 0, right: 0, display: 'flex', justifyContent: 'center', gap: 16, pointerEvents: 'auto' }}>

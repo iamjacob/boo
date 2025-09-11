@@ -55,12 +55,15 @@ const Shelf = ({ position = [0, 0, 0], rotation = [-Math.PI / 2, 0, 0], fraction
 };
 
 const Shelves = () => {
-  const [fractions, setFractions] = useState([1, 1, 1,1]); // én værdi pr. hylde
+  const [fractions, setFractions] = useState([.11, .11, .11, .11]); // én værdi pr. hylde
+// [.11, .11, .11, .11] --- IGNORE ---
+// [1, 1, 1, 1] --- IGNORE ---
+
 
   const toggle = () => {
     fractions.forEach((f, i) => {
       gsap.to({ value: f }, {
-        value: f === 1 ? 0.9 : 1,
+        value: f === 1 ? 0.11 : 1,
         duration: 1.2,
         delay: i * 0.2, // forskydning pr. hylde
         ease: "power2.inOut",
@@ -76,7 +79,7 @@ const Shelves = () => {
   };
 
   return (
-    <group position={[0, -0.8, 0]} onDoubleClick={toggle}>
+    <group position={[0, -0.8, 0]} rotation={[0, 1.2,0]} onDoubleClick={toggle}>
       {fractions.map((fraction, i) => (
         <Shelf key={i} position={[0, i - 1, 0]} fraction={fraction} />
       ))}

@@ -17,12 +17,14 @@ const Book = ({
   scale,
   initialPosition = [-2.79, -0.61, -5.87],
   initialRotation = [0, 0, 0],
-  shelfRadius = 8,
+  shelfRadius = 6.5,
   otherBooks = [],
   bookID,
   cover,
   selectedBook = 0, // ✅ Receives the currently selected book ID
   setSelectedBook, // ✅ Function to update selection
+  drag,
+  setDrag
 }) => {
   const { raycaster, camera, size } = useThree();
   const meshRef = useRef();
@@ -34,9 +36,10 @@ const Book = ({
   const mouseVecRef = useRef(new THREE.Vector2()); // ✅ UseRef (No reallocation)
   const intersectionVecRef = useRef(new THREE.Vector3()); // ✅ UseRef (No reallocation)
   const longPressTimer = useRef(); // ✅ Timer reference for long press
-
   //Why does this not auto update sometimes I have to press twice?
   const currentPlace = useRef("home");
+  // const [drag, setDrag] = useState(false);
+
 
   const switchPlace = (place) => {
     currentPlace.current = place;
@@ -207,7 +210,7 @@ const Book = ({
       const { x, z, angle } = constrainToCircle(
         intersectionVecRef.current.x,
         intersectionVecRef.current.z,
-        active ? 6.5 : shelfRadius
+        !active ? 6.5 : shelfRadius
       );
 
       let newPos = new THREE.Vector3(x, intersectionVecRef.current.y, z);
@@ -223,7 +226,7 @@ const Book = ({
 
       let tiltAngle = Math.max(-0.2, Math.min(0.2, -my * 0.1));
 
-      if (!active && Math.abs(my) > 50) {
+      if (!active && Math.abs(my) > 8) {
         const index = shelfLevels.indexOf(closestShelf);
         newPos.y =
           my < 10 && index < shelfLevels.length - 1
@@ -236,8 +239,8 @@ const Book = ({
       }
 
       let correctedY = newPos.y - (scale[1] / 2) + 0.01;
-      // newPos.y = correctedY - my * 0.007;
-      newPos.y = correctedY;
+      //newPos.y = newPos.y - (scale[1]/2) + 0.01;
+      //newPos.y = correctedY;
 
       if (active) {
         meshRef.current.position.copy(newPos);
@@ -324,10 +327,11 @@ const Book = ({
         ref={meshRef}
         //Should I press this 1 second for it to be active or something like??
         // I need something so bind wont be affected by double click
-        {...bind()} // ✅ Enable drag only if selected
+        // {...bind()} // ✅ Enable drag only if selected
+        {...(drag ? bind() : {})}
         //{...(showPivot ? bind() : {})}
         onDoubleClick={() => {
-          meshRef.current.position.set(0, 0, 0);
+          //meshRef.current.position.set(0, 0, 0);
           //alert(bookID);
           handleRotationChange("y", 0);
           handleRotationChange("x", 0);

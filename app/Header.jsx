@@ -53,7 +53,7 @@ export default function Header() {
               // className="login login bg-white/10 text-white cursor-pointer border border-2 border-red-500 rounded-full my-2 px-2 text-[12px]"
               className="control"
            >
-              next
+              Start
             </div>
           </>
         ) : (
@@ -90,14 +90,14 @@ export default function Header() {
         >
           <div
             onClick={(e) => e.stopPropagation()}
-            className="bg-white/30 backdrop-blur-sm rounded-3xl shadow-[0_11px_34px_0_rgba(0,0,0,0.2)] border border-white/50 w-full max-w-md mx-auto overflow-hidden transform transition-all duration-300 hover:shadow-3xl"
+            className="bg-white/30 backdrop-blur-sm rounded-3xl shadow-[0_11px_34px_0_rgba(0,0,0,0.2)] border border-red-500 border-[4px] w-full max-w-md mx-auto transform transition-all duration-300 hover:shadow-3xl"
           >
             {/* Header */}
             <div className="px-8 pt-8 pb-6 text-center flex flex-col">
               {/* <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-slate-600 rounded-2xl mx-auto mb-4 shadow-lg shadow-blue-500/25 flex items-center justify-center"> */}
               {/* <div className="w-8 h-8 bg-white rounded-lg opacity-90"></div> */}
               <div className="holder flex justify-around">
-                <div className="-rotate-45 absolute">
+                <div className="-rotate-45 absolute top-[-53px]">
                   <BoooksHeart width="45" height="45" />
                 </div>
               </div>

@@ -58,8 +58,8 @@ export default function Page() {
 
         {/* <Lighther/> */}
       </Experience>
-<div className="absolute z-50 right-0 bottom-[13px] w-screen left-0 flex justify-center items-center">
-<nav class="flex w-[fit-content] justify-between items-center gap-8 p-4 m-4 bg-black/20 backdrop-blur rounded-lg">
+<div className="absolute z-50 right-0 bottom-[4px] w-screen left-0 flex justify-center items-center">
+<nav class="flex w-[fit-content] justify-between items-center gap-8 p-4 m-2 bg-black/20 backdrop-blur rounded-lg">
 
   <a href="#" className="relative bottom-[2px]"><BoooksHeart width="24" height="24"/></a>
   <a href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-cross-icon lucide-cross"><path d="M4 9a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h4a1 1 0 0 1 1 1v4a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-4a1 1 0 0 1 1-1h4a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-4a1 1 0 0 1-1-1V4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4a1 1 0 0 1-1 1z"/></svg></a>
@@ -70,7 +70,7 @@ export default function Page() {
 </div>
 
   {/* <PointerLightWithControls /> */}
-  <Footer />
+  {/* <Footer /> */}
     </div>
   );
 }

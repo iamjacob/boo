@@ -62,7 +62,7 @@ export default function Footer() {
         onTouchEnd={handleTouchEnd}
         onClick={isVisible ? handleClose : handleOpen}
       >
-        <div className="w-10 h-1 bg-red-600 rounded-full opacity-50"></div>
+        <div className="w-10 h-2 bg-red-600 rounded-full opacity-50"></div>
       </div>
 
       {/* Clock overlay */}

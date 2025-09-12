@@ -215,7 +215,7 @@ export const Experience = ({ children, drag, setDrag }) => {
         {/* <Lighter intensity={0.5} position={[-5, 5, 5]} color="white" /> */}
       </Canvas>
 
-       <div className="flex fixed bottom-4 right-4 flex-col gap-4 z-50">
+       <div className="flex fixed bottom-32 right-4 flex-col gap-4 z-50">
         <div onClick={toggleCones} className="cursor-pointer">
           <svg
             xmlns="http://www.w3.org/2000/svg"

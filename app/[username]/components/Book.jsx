@@ -68,7 +68,7 @@ const Book = ({
     draggingRef.current ? "grabbing" : "grab"
   );
 
-  const shelfLevels = useMemo(() => [-1, 0, 1, 2], []);
+  const shelfLevels = useMemo(() => [-1, 0, 1, 2], []); //should be correct as well.
 
   const constrainToCircle = (x, z, r) => {
     const angle = Math.atan2(z, x);
@@ -188,7 +188,7 @@ const Book = ({
       draggingRef.current = active;
 
 
- console.log("scale[1] during drag:", scale[1]);
+      console.log("scale[1] during drag:", scale[1]);
 
       if (!meshRef.current) return;
 

@@ -319,3 +319,13 @@
   cursor:pointer;
   transition: all .2s ease-in-out;
 }
+
+ul li a, ul li{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+ul li a svg{
+  margin: 4px;
+}

@@ -12,7 +12,16 @@ import Footer from "../Footer";
 import Joystick from "./components/Joystick";
 import BoooksHeart from "../BoooksHeart";
 
+import { useLevelStore } from '../../stores/useLevelStore';
+
+
 export default function Page() {
+
+ const level = useLevelStore((s) => s.level);
+          const levelUp = useLevelStore((s) => s.levelUp);
+          const levelDown = useLevelStore((s) => s.levelDown);
+
+
   const [selectedBook, setSelectedBook] = useState(null);
   const [drag, setDrag] = useState(false);
   const [share, setShare] = useState(false);
@@ -142,7 +151,7 @@ export default function Page() {
        )
        }
        
-        <nav class="flex w-[fit-content] justify-between items-center gap-8 p-4 m-2 bg-black/20 backdrop-blur rounded-[44px] px-6">
+        <nav className="flex w-[fit-content] justify-between items-center gap-8 p-4 m-2 bg-black/20 backdrop-blur rounded-[44px] px-6">
           <a href="#heart" className="relative bottom-[2px]">
             <BoooksHeart width="24" height="24" />
           </a>
@@ -154,10 +163,10 @@ export default function Page() {
               viewBox="0 0 24 24"
               fill="none"
               stroke="#fff"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-search-icon lucide-search"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-search-icon lucide-search"
             >
               <path d="m21 21-4.34-4.34" />
               <circle cx="11" cy="11" r="8" />
@@ -171,10 +180,10 @@ export default function Page() {
               viewBox="0 0 24 24"
               fill="none"
               stroke="#fff"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-house-icon lucide-house"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-house-icon lucide-house"
             >
               <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8" />
               <path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
@@ -203,7 +212,8 @@ export default function Page() {
             </>
           ) : (
             <></>
-          )} */}
+          )} 
+*/}
 
 
           {/* <a href="#share" onClick={() => share ? setShare(false) : setShare(true)}> */}
@@ -215,10 +225,10 @@ export default function Page() {
               viewBox="0 0 24 24"
               fill="none"
               stroke="#fff"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-repeat2-icon lucide-repeat-2"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-repeat2-icon lucide-repeat-2"
             >
               <path d="m2 9 3-3 3 3" />
               <path d="M13 18H7a2 2 0 0 1-2-2V6" />
@@ -226,7 +236,13 @@ export default function Page() {
               <path d="M11 6h6a2 2 0 0 1 2 2v10" />
             </svg>
           </a>
-        </nav>
+         
+          {/* Level navigation buttons */}
+          {/* <button onClick={levelDown} className="px-3 py-1 rounded bg-black/40 text-white">Level -</button>
+          <span className="px-2 text-white">Level: {level}</span>
+          <button onClick={levelUp} className="px-3 py-1 rounded bg-black/40 text-white">Level +</button>
+        */}
+        </nav> 
       </div>
 
 

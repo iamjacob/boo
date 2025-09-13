@@ -31,6 +31,7 @@ export default function Home() {
     lastTap.current = now;
   };
 
+  
   return (
     <Suspense fallback={<Loading progress={50} />}>
       <div

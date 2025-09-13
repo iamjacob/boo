@@ -1,26 +1,28 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
-import {
-  Stars,
-  OrbitControls
-} from "@react-three/drei";
+import {Stars, OrbitControls} from "@react-three/drei";
+import ChunkedAudioPlayer from "../ChunkedAudioPlayer";
+import BooksStand from "./components/BooksStand";
+import FullScreen from "../Fullscreen";
+import { useControls } from "leva";
+import Shelves from "./Shelves";
+import { gsap } from "gsap";
+// import {useCameraStore} from '../stores/useCameraStore'
+import { useCameraStore } from '../../stores/useCameraStore'
+
+//zoom: 3.5,
+//rotation: [0, 0, 0],
 
 // import {LighterWithControls, Lighter} from "./lighterHelper";
 // import { Stars, OrbitControls } from "@react-three/drei";
 // import { useThree } from "@react-three/fiber";
 // import { useEffect } from "react";
-
 // import { degToRad } from "three/src/math/MathUtils.js";
 // import { Godray } from "./Godray";
 // import { WebGPURenderer } from "three/webgpu";
-
-import BooksStand from "./components/BooksStand";
-import Shelves from "./Shelves";
 // import OpenBook from "./components/OpenBook_test";
-import { gsap } from "gsap";
-import { useControls } from "leva";
-import ChunkedAudioPlayer from "../ChunkedAudioPlayer";
+
 // import { Physics } from "@react-three/rapier";
 // import useShelvesStore from "../../stores/shelves/useShelvesStore";
 // import useBookExperienceStore from "../../stores/experience/useBookExperienceStore";
@@ -29,18 +31,59 @@ import ChunkedAudioPlayer from "../ChunkedAudioPlayer";
 // import ShelvesPhysics from "./components/ShelvesPhysics";
 // import Floor from "./components/Floor";
 // import BackgroundWall from "./components/BackgroundWall";
-import FullScreen from "../Fullscreen";
-
 // import { LighterWithControls, Lighter } from "./lighterHelper";
 
 export const Experience = ({ children, drag, setDrag }) => {
+
+// Inside Experience component
+const zoom = useCameraStore((s) => s.zoom);
+const rotation = useCameraStore((s) => s.rotation);
+const position = useCameraStore((s) => s.position);
+const setZoom = useCameraStore((s) => s.setZoom);
+const setRotation = useCameraStore((s) => s.setRotation);
+const setPosition = useCameraStore((s) => s.setPosition);
+const smooth = useCameraStore((s) => s.smooth);
+const setSmooth = useCameraStore((s) => s.setSmooth);
+
+const setOrbitRules = useCameraStore((s) => s.setOrbitRules);
+
+useEffect(() => {
+  if (typeof setOrbitRules === 'function') {
+    setOrbitRules({
+      minPolarAngle: Math.PI / 2 - Math.PI / 14,
+      maxPolarAngle: Math.PI / 2 + Math.PI / 14,
+      minAzimuthAngle: -Math.PI / 14,
+      maxAzimuthAngle: Math.PI / 14,
+    });
+  } else {
+    console.warn('setOrbitRules is not a function:', setOrbitRules);
+  }
+}, [setOrbitRules]);
+
+const {
+  minPolarAngle,
+  maxPolarAngle,
+  minAzimuthAngle,
+  maxAzimuthAngle,
+  dampingFactor,
+  enablePan,
+  minDistance,
+  maxDistance,
+  enableDamping,
+  enableZoom,
+} = useCameraStore();
+
+console.log('setOrbitRules:', setOrbitRules);
+console.log('useCameraStore:', useCameraStore);
+
   const BOOK_STAND_COUNT = 8;
   const RADIUS = 3;
+
   const [activeBookstand, setActiveBookstand] = useState(0);
   const [orbitControls, setOrbitControls] = useState(null);
-
   const [toggleReading, setToggleReading] = useState(null);
   const [music, setMusic] = useState(null);
+
   //const [drag, setDrag] = useState(false);
   const controlsRef = useRef();
   const cameraRef = useRef();
@@ -67,20 +110,27 @@ export const Experience = ({ children, drag, setDrag }) => {
     const prevDamping = controls.enableDamping;
     controls.enableDamping = false;
 
-    gsap.to(camera.position, {
-      x: 0,
-      y: 0.0002,
-      z: 5,
-      duration: 1.2,
-      ease: "power2.out",
-      onUpdate: () => {
-        controls.target.set(0, 0, 0);
-        controls.update();
-      },
-      onComplete: () => {
-        controls.enableDamping = prevDamping; // restore damping
-      },
-    });
+    if (smooth) {
+      gsap.to(camera.position, {
+        x: 0,
+        y: 0.0002,
+        z: 5,
+        duration: 1.2,
+        ease: "power2.out",
+        onUpdate: () => {
+          controls.target.set(0, 0, 0);
+          controls.update();
+        },
+        onComplete: () => {
+          controls.enableDamping = prevDamping; // restore damping
+        },
+      });
+    } else {
+      camera.position.set(0, 0.0002, 5);
+      controls.target.set(0, 0, 0);
+      controls.update();
+      controls.enableDamping = prevDamping;
+    }
   };
 
   // BIG CAMERA SCENE
@@ -94,18 +144,23 @@ export const Experience = ({ children, drag, setDrag }) => {
     const x = Math.cos(angle) * RADIUS * 2.2;
     const z = Math.sin(angle) * RADIUS * 2.2;
 
-    // Animate camera position
-    gsap.to(orbitControls.object.position, {
-      x,
-      y: 0.5,
-      z,
-      duration: 1,
-      onUpdate: () => {
-        orbitControls.target.set(0, 0, 0);
-        orbitControls.update();
-      },
-    });
-  }, [activeBookstand, orbitControls]);
+    if (smooth) {
+      gsap.to(orbitControls.object.position, {
+        x,
+        y: 0.5,
+        z,
+        duration: 1,
+        onUpdate: () => {
+          orbitControls.target.set(0, 0, 0);
+          orbitControls.update();
+        },
+      });
+    } else {
+      orbitControls.object.position.set(x, 0.5, z);
+      orbitControls.target.set(0, 0, 0);
+      orbitControls.update();
+    }
+  }, [activeBookstand, orbitControls, smooth]);
 
   // Swipe support
   useEffect(() => {
@@ -141,12 +196,12 @@ export const Experience = ({ children, drag, setDrag }) => {
       <ambientLight intensity={1} />
       <directionalLight position={[0, 10, 0]} intensity={1.5} />
       <directionalLight position={[10, 10, 5]} intensity={0.5} />
-      <directionalLight position={[-10, -10, -5]} intensity={0.3} />
-      <directionalLight
+      <directionalLight position={[-10, -10, -5]} intensity={4} />
+      {/* <directionalLight 
         position={[-10, -10, -5]}
-        intensity={30}
+        intensity={10}
         color={"#ff0000"}
-      />
+      />*/}
     </>
   );
 
@@ -159,16 +214,33 @@ export const Experience = ({ children, drag, setDrag }) => {
     }
   }, []);
 
+  // Sync camera live with Zustand store
+useEffect(() => {
+  const camera = cameraRef.current;
+  if (!camera) return;
+  // Fallback/default if position is not a valid array
+  const safePosition = Array.isArray(position) && position.length === 3
+    ? position
+    : [0, 0.0001, 5];
+  const safeRotation = Array.isArray(rotation) && rotation.length === 3
+    ? rotation
+    : [0, 0, 0];
+  camera.position.set(...safePosition);
+  camera.rotation.set(...safeRotation);
+  camera.zoom = typeof zoom === 'number' ? zoom : 3.5;
+  camera.updateProjectionMatrix();
+}, [position, rotation, zoom]);
+
   return (
     <div style={{ position: "relative", width: "100vw", height: "100vh" }}>
       {/* <LighterWithControls /> */}
       <Canvas
         className="fixed top-0 left-0 w-full h-full bg-gray-900"
         camera={{
-          position: [0, 0.0001, 5],
-          rotation: [0, 0, 0],
+          position,
+          rotation,
           fov: 75,
-          zoom: 3.5,
+          zoom,
         }}
         frameloop="always"
         onCreated={({ camera }) => {
@@ -197,23 +269,53 @@ export const Experience = ({ children, drag, setDrag }) => {
 
         {children}
 
-        <OrbitControls
-          ref={controlsRef}
-          enableDamping
-          dampingFactor={0.4}
-          enableZoom
-          minDistance={2}
-          maxDistance={20}
+        {/* <OrbitControls
           minPolarAngle={-Math.PI / 2}
-        />
+          maxPolarAngle={Math.PI / 2}
+          // minAzimuthAngle={Math.PI/2}
+          // maxAzimuthAngle={Math.PI/2}
+          dampingFactor={0.4}
+          enablePan={false}
+          ref={controlsRef}
+          minDistance={4}
+          maxDistance={8}
+          enableDamping
+          enableZoom
+        /> */}
 
+        
+<OrbitControls
+  minPolarAngle={minPolarAngle}
+  maxPolarAngle={maxPolarAngle}
+  minAzimuthAngle={minAzimuthAngle}
+  maxAzimuthAngle={maxAzimuthAngle}
+  dampingFactor={dampingFactor}
+  enablePan={enablePan}
+  ref={controlsRef}
+  minDistance={minDistance}
+  maxDistance={maxDistance}
+  enableDamping={enableDamping}
+  enableZoom={enableZoom}
+/>
         <StudioLighting />
         <Stars />
 
-    {/* Pointer light with helper and Leva controls */}
-        {/* <LighterWithControls /> */}
+        {/* minPolarAngle, maxPolarAngle, and minAzimuthAngle, maxAzimuthAngle */}
         {/* <Lighter intensity={0.5} position={[-5, 5, 5]} color="white" /> */}
+        {/* Pointer light with helper and Leva controls */}
+        {/* <LighterWithControls /> */}
       </Canvas>
+
+
+
+{/* <div className="fixed top-40 right-8 z-50 flex gap-2 bg-black/40 p-2 rounded text-white">
+  <button onClick={() => setZoom(Math.max(zoom - 0.1, 2))}>-</button>
+  <span>Zoom: {zoom.toFixed(2)}</span>
+  <button onClick={() => setZoom(Math.min(zoom + 0.1, 5))}>+</button>
+  <button onClick={() => setRotation([rotation[0], rotation[1] - 0.05, rotation[2]])}>⟲</button>
+  <button onClick={() => setRotation([rotation[0], rotation[1] + 0.05, rotation[2]])}>⟳</button>
+  <button onClick={() => setSmooth(smooth)}>{smooth ? 'Smooth: On' : 'Smooth: Off'}</button>
+</div> */}
 
        <div className="flex fixed bottom-32 right-4 flex-col gap-4 z-50">
         <div onClick={toggleCones} className="cursor-pointer">
@@ -264,10 +366,10 @@ export const Experience = ({ children, drag, setDrag }) => {
               viewBox="0 0 24 24"
               fill="none"
               stroke="#fff"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-hand-icon lucide-hand"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-hand-icon lucide-hand"
             >
               <path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2" />
               <path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2" />
@@ -282,10 +384,10 @@ export const Experience = ({ children, drag, setDrag }) => {
               viewBox="0 0 24 24"
               fill="none"
               stroke="#fff"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-hand-grab-icon lucide-hand-grab"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-hand-grab-icon lucide-hand-grab"
             >
               <path d="M18 11.5V9a2 2 0 0 0-2-2a2 2 0 0 0-2 2v1.4" />
               <path d="M14 10V8a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2" />
@@ -298,9 +400,14 @@ export const Experience = ({ children, drag, setDrag }) => {
 
         <div onClick={()=>{setMusic(music ? false : true)}} className="move">
           {music ? (
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-pause-icon lucide-pause"><rect x="14" y="3" width="5" height="18" rx="1"/><rect x="5" y="3" width="5" height="18" rx="1"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-pause-icon lucide-pause">
+              <rect x="14" y="3" width="5" height="18" rx="1"/>
+              <rect x="5" y="3" width="5" height="18" rx="1"/>
+            </svg>
           ): (
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-play-icon lucide-play"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-play-icon lucide-play">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
           )}
         </div>
         

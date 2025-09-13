@@ -240,7 +240,8 @@ const Book = ({
         newPos.y = closestShelf;
       }
 
-      let correctedY = newPos.y - (scale[1] / 2) + 0.01;
+      let correctedY = newPos.y;
+      // let correctedY = newPos.y - (scale[1] / 2) + 0.01;
       //newPos.y = newPos.y - (scale[1]/2) + 0.01;
       //newPos.y = correctedY;
 

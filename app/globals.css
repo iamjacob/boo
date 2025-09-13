@@ -45,7 +45,6 @@
    overscroll-behavior-y: none;
  }
 
-
  .TAG {}
 
  .quick {
@@ -54,8 +53,6 @@
    padding: 8px 40px;
    border-radius: 8px;
  }
-
-
 
  .categories-and-genres-pills {
    display: flex;
@@ -67,7 +64,6 @@
    /* keep scroll mechanics */
    overscroll-behavior-x: contain;
    scroll-behavior: smooth;
-
    /* Hide scrollbar (cross-browser) */
    scrollbar-width: none;
    /* Firefox */
@@ -80,7 +76,6 @@
  }
 
  /* Chrome/Safari/Edge */
-
  .categories-and-genres-pills {
    cursor: grab;
  }
@@ -122,8 +117,6 @@
 
  .search {
    /* margin: 40px; */
-
-
  }
 
  .search__field--open {
@@ -132,7 +125,6 @@
    border-right: 2px solid #333;
    border-bottom: none;
    border-radius: 22px 22px 0 0;
-
    padding: 0 10px;
  }
 
@@ -152,8 +144,6 @@
    border-radius: 0 0 22px 22px;
    border-top: none;
  }
-
-
 
  .fade-in {
    opacity: 0;
@@ -208,7 +198,6 @@
    animation-delay: 0.9s;
  }
 
-
  .loader-bar {
    opacity: 1;
    animation: loader-bar 1s ease-in-out forwards;
@@ -248,7 +237,6 @@
  .header-info svg {
    width: 135px;
  }
-
 
  .speech-bubble {
    perspective: 35em;
@@ -296,18 +284,15 @@
    align-items: center;
  }
 
-
  .sorting {
    border-right: 2px solid #333;
    border-left: 2px solid #333;
  }
 
-
 /*Maps*/
 .maplibregl-ctrl-bottom-right{
   display:none;
 }
-
 
 .control{
   background: rgba(255, 255, 255, 0.1);
@@ -328,4 +313,14 @@ ul li a, ul li{
 
 ul li a svg{
   margin: 4px;
+}
+
+.closed-menu{
+transform: translateX(-100%);
+}
+
+.open-menu{
+  transform: matrix();
+transform: translateX(0px);
+
 }

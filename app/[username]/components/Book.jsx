@@ -68,7 +68,7 @@ const Book = ({
     draggingRef.current ? "grabbing" : "grab"
   );
 
-  const shelfLevels = useMemo(() => [-1, 0, 1, 2], []); //should be correct as well.
+  const shelfLevels = useMemo(() => [-1.8, -0.8, 0.2, 1.2], []); // Match actual shelf positions
 
   const constrainToCircle = (x, z, r) => {
     const angle = Math.atan2(z, x);
@@ -240,10 +240,17 @@ const Book = ({
         newPos.y = closestShelf;
       }
 
-      let correctedY = newPos.y;
-      // let correctedY = newPos.y - (scale[1] / 2) + 0.01;
+      // Apply height correction to position books properly on shelves
+      console.log("scale array:", scale);
+      console.log("scale[1] (height):", scale[1]);
+      console.log("scale[1]/2 (half height):", scale[1]/2);
+      console.log("newPos.y before correction (shelf level):", newPos.y);
+
+      // Offset books to sit ON TOP of the shelf (add half height + shelf thickness)
+      newPos.y = newPos.y + (scale[1]/2) + 0.08;
+      console.log("newPos.y after correction:", newPos.y);
+
       //newPos.y = newPos.y - (scale[1]/2) + 0.01;
-      //newPos.y = correctedY;
 
       if (active) {
         meshRef.current.position.copy(newPos);
@@ -265,14 +272,14 @@ const Book = ({
       } else {
         gsap.to(meshRef.current.position, {
           x: newPos.x,
-          y: correctedY,
+          y: newPos.y,  // Use newPos.y instead of correctedY
           z: newPos.z,
           duration: 0.8,
           ease: "power4.out",
           overwrite: true,
           onComplete: () => {
             saveToDB();
-            //console.log(newPos.x, correctedY, newPos.z,);
+            //console.log(newPos.x, newPos.y, newPos.z,);
           },
         });
 
@@ -307,6 +314,7 @@ const Book = ({
 
 
   console.log("scale[1] on render:", scale[1]);
+  console.log("scale[1]/2 on render:", scale[1]/2);
 
   const textures = [
     useSafeLoader("./books/booktexture.png"),

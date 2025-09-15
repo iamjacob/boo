@@ -97,7 +97,7 @@ export default function Header() {
           >
             <div
               onClick={(e) => e.stopPropagation()}
-              className="bg-white/30 backdrop-blur-sm rounded-3xl shadow-[0_11px_34px_0_rgba(0,0,0,0.2)] border border-red-500 border-[4px] w-full max-w-md mx-auto transform transition-all duration-300 hover:shadow-3xl"
+              className="bg-black/30 backdrop-blur-sm rounded-3xl shadow-[0_11px_34px_0_rgba(0,0,0,0.2)] border border-red-500 border-[4px] w-full max-w-md mx-auto transform transition-all duration-300 hover:shadow-3xl"
             >
               {/* Header */}
               <div className="px-8 pt-8 pb-6 text-center flex flex-col">
@@ -124,7 +124,7 @@ export default function Header() {
                   <input
                     placeholder="Email address"
                     type="email"
-                    className="w-full px-4 py-4 bg-slate-50/80 border border-slate-200/60 rounded-2xl text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/30 transition-all duration-200 shadow-sm"
+                    className="bg-white/30 w-full px-4 py-4 bg-slate-50/80 border border-slate-200/60 rounded-2xl text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-500/30 transition-all duration-200 shadow-sm"
                   />
                 </div>
 
@@ -265,7 +265,7 @@ export default function Header() {
           </a>
         </div>
         <ul className="mt-2 space-y-2 p-4">
-          <li>
+          {/* <li>
             <a href="#" className="block p-2 rounded-lg hover:bg-white/10">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -306,7 +306,7 @@ export default function Header() {
               maps
             </a>
 
-            {/* <a href="#pinOnMap">
+           <a href="#pinOnMap">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"
@@ -324,7 +324,7 @@ export default function Header() {
                 <path d="M16 18h6" />
                 <path d="M19 15v6" />
               </svg>
-            </a> */}
+            </a>
           </li>
 
           <li>
@@ -375,7 +375,7 @@ export default function Header() {
               </svg>
               History
             </a>
-          </li>
+          </li> */}
 
           <li>
             <a

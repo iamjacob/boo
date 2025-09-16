@@ -264,11 +264,55 @@
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
     "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
     "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/elo-js-third-edition.jpg"}
+    "cover": {"front":"./covers/elo-js-third-ed.jpg"}
   }
    ,
     {
     "id": "book-025",
+    "title": "design",
+    "author": "Sun Tzu",
+    "year": null,
+    "pages": null,
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/accessible-ux.png"}
+  },
+    {
+    "id": "book-026",
+    "title": "building microservices",
+    "author": "Sun Tzu",
+    "year": null,
+    "pages": null,
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/buildingmicroservices.webp"}
+  },
+    {
+    "id": "book-027",
+    "title": "click",
+    "author": "Sun Tzu",
+    "year": null,
+    "pages": null,
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/click-cover.png"}
+  },
+    {
+    "id": "book-028",
+    "title": "DDIA",
+    "author": "Sun Tzu",
+    "year": null,
+    "pages": null,
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/DDIA.webp"}
+  },
+    {
+    "id": "book-029",
     "title": "eloquent javascript 4rd edition",
     "author": "Sun Tzu",
     "year": null,
@@ -276,6 +320,28 @@
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
     "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
     "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/elo-js.jpg"}
+    "cover": {"front":"./covers/definitivejs.jpg"}
+  },
+    {
+    "id": "book-030",
+    "title": "distributed systems",
+    "author": "Sun Tzu",
+    "year": null,
+    "pages": null,
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/distributed.webp"}
+  },
+    {
+    "id": "book-031",
+    "title": "hands on machine learning",
+    "author": "Sun Tzu",
+    "year": null,
+    "pages": null,
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/handsonmachine.webp"}
   }
 ]

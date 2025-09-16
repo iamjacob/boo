@@ -1,9 +1,5 @@
 import { create } from "zustand";
 
-function clamp(val, min, max) {
-  return Math.max(min, Math.min(max, val));
-}
-
 export const useCameraStore = create((set) => ({
   position: [0, 0.0001, 5],
   rotation: [0, 0, 0],
@@ -19,19 +15,7 @@ export const useCameraStore = create((set) => ({
   maxDistance: 16,
   enableDamping: true,
   enableZoom: true,
-    // setPosition: (position) => {
-    //   if (Array.isArray(position)) {
-    //     // Clamp x and y to [-200, 200], z is unchanged
-    //     const x = clamp(position[0], -200, 200);
-    //     const y = clamp(position[1], -200, 200);
-    //     const z = position[2];
-    //     set({ position: [x, y, z] });
-    //     console.log('Camera position set to:', [x, y, z]);
-    //   } else {
-    //     set({ position: [0, 0.0001, 5] });
-    //     console.log('Camera position reset to default');
-    //   }
-    // },
+  setPosition: (position) => set({ position: Array.isArray(position) ? position : [0, 0.0001, 5] }),
   setRotation: (rotation) => set({ rotation: Array.isArray(rotation) ? rotation : [0, 0, 0] }),
   setZoom: (zoom) => set({ zoom: typeof zoom === 'number' ? zoom : 3.5 }),
   setSmooth: (smooth) => set({ smooth }),

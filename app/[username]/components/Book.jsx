@@ -203,6 +203,7 @@ const Book = ({
         //only first index in array on raycaster/one object.
 
         plane.constant = -positionRef.current.y;
+        
         if (!raycaster.ray.intersectPlane(plane, intersectionVecRef.current))
           return;
       } else {
@@ -241,14 +242,14 @@ const Book = ({
       }
 
       // Apply height correction to position books properly on shelves
-      console.log("scale array:", scale);
-      console.log("scale[1] (height):", scale[1]);
-      console.log("scale[1]/2 (half height):", scale[1]/2);
-      console.log("newPos.y before correction (shelf level):", newPos.y);
+      // console.log("scale array:", scale);
+      // console.log("scale[1] (height):", scale[1]);
+      // console.log("scale[1]/2 (half height):", scale[1]/2);
+      // console.log("newPos.y before correction (shelf level):", newPos.y);
 
       // Offset books to sit ON TOP of the shelf (add half height + shelf thickness)
       newPos.y = newPos.y + (scale[1]/2) + 0.08;
-      console.log("newPos.y after correction:", newPos.y);
+      // console.log("newPos.y after correction:", newPos.y);
 
       //newPos.y = newPos.y - (scale[1]/2) + 0.01;
 
@@ -313,8 +314,8 @@ const Book = ({
   );
 
 
-  console.log("scale[1] on render:", scale[1]);
-  console.log("scale[1]/2 on render:", scale[1]/2);
+  // console.log("scale[1] on render:", scale[1]);
+  // console.log("scale[1]/2 on render:", scale[1]/2);
 
   const textures = [
     useSafeLoader("./books/booktexture.png"),
@@ -354,7 +355,6 @@ const Book = ({
 
 
         scale={scale}
-        key={id}
         position={positionRef.current}
         rotation={rotationRef.current}
         onPointerEnter={() => (hoveredRef.current = true)}
@@ -364,7 +364,7 @@ const Book = ({
         {/* //I need architechture that loads alll books asap, put wireframe till image is loaded and then fade in? */}
         <meshBasicMaterial color={color} />
         {materials.map((material, i) => (
-          <primitive key={`${id}-${i}`} object={material} attach={`material-${i}`} />
+          <primitive key={`${bookID}-material-${i}`} object={material} attach={`material-${i}`} />
         ))}
       </mesh>
       {/* {selectedBook === bookID && currentPlace.current === "positionAndRotate" && ( */}

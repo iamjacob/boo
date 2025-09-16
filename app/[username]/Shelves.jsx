@@ -25,8 +25,9 @@ const Shelf = ({ position = [0, 0, 0], rotation = [-Math.PI / 2, 0, 0], fraction
   const geometry = useMemo(() => {
     const outerR = 7;
     const innerR = 6;
-    const startAngle = 0;
-    const endAngle = Math.PI * 2 * fraction;
+    const arcLength = Math.PI * 2 * fraction;
+    const startAngle = -arcLength / 2; // Center the arc
+    const endAngle = arcLength / 2;
 
     const shape = new THREE.Shape();
     shape.moveTo(Math.cos(startAngle) * outerR, Math.sin(startAngle) * outerR);
@@ -89,7 +90,7 @@ const Shelves = () => {
   };
 
   return (
-    <group position={[0, -0.8, 0]} rotation={[0, 1.2,0]} onDoubleClick={toggle}>
+    <group position={[0, -0.8, 0]} rotation={[0, Math.PI / 2, 0]} onDoubleClick={toggle}>
       {fractions.map((fraction, i) => {
         if(fraction == 0) return null;
         return <Shelf key={i} position={[0, i - 1, 0]} fraction={fraction} />;

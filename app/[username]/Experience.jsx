@@ -6,6 +6,7 @@ import Shelves from "./Shelves";
 import { gsap } from "gsap";
 import { useCameraStore } from "../../stores/useCameraStore";
 import Lighting from "./Lighting";
+import OpenBook from "./components/OpenBook";
 
 export const Experience = ({ children, drag, setDrag }) => {
   const zoom = useCameraStore((s) => s.zoom);
@@ -15,7 +16,7 @@ export const Experience = ({ children, drag, setDrag }) => {
   const setOrbitRules = useCameraStore((s) => s.setOrbitRules);
   // const setZoom = useCameraStore((s) => s.setZoom);
   // const setRotation = useCameraStore((s) => s.setRotation);
-  // const setPosition = useCameraStore((s) => s.setPosition);
+  //const setPosition = useCameraStore((s) => s.setPosition);
   // const setSmooth = useCameraStore((s) => s.setSmooth);
 
 
@@ -26,7 +27,7 @@ export const Experience = ({ children, drag, setDrag }) => {
       minAzimuthAngle: -Math.PI / 14,
       maxAzimuthAngle: Math.PI / 14,
     });
-  }, [setOrbitRules]);
+  }, []);
 
   const {
     minPolarAngle,
@@ -110,9 +111,35 @@ export const Experience = ({ children, drag, setDrag }) => {
 
   return (
     <div style={{ position: "relative", width: "100vw", height: "100vh" }}>
+      {/* Testknapper for at ændre position og orbit rules */}
+      <div style={{ position: "absolute", top: 20, left: 20, zIndex: 10, display: "flex", gap: 8 }}>
+        <a href="#" onClick={() => {
+          // Husk at definere readPos i din komponent eller props
+          if (typeof window.readPos !== "undefined") setPosition(window.readPos);
+          setOrbitRules({
+            minPolarAngle: 0,
+            maxPolarAngle: Math.PI,
+            minAzimuthAngle: -Infinity,
+            maxAzimuthAngle: Infinity,
+          });
+        }}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-book-open-icon lucide-book-open"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+        </a>
+        <a href="#" onClick={() => {
+          setPosition([0,0,0]);
+          setOrbitRules({
+            minPolarAngle: Math.PI / 2 - Math.PI / 14,
+            maxPolarAngle: Math.PI / 2 + Math.PI / 14,
+            minAzimuthAngle: -Math.PI / 14,
+            maxAzimuthAngle: Math.PI / 14,
+          });
+        }}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-undo2-icon lucide-undo-2"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"/></svg>
+        </a>
+      </div>
       {/* <LighterWithControls /> */}
       <Canvas
-        className="fixed top-0 left-0 w-full h-full bg-gray-900"
+        className="fixed top-0 left-0 w-screen h-screen bg-gray-900"
         camera={{
           position,
           rotation,
@@ -130,6 +157,8 @@ export const Experience = ({ children, drag, setDrag }) => {
 
         {children}
 
+        {/* <OpenBook /> */}
+
         <OrbitControls
           minPolarAngle={minPolarAngle}
           maxPolarAngle={maxPolarAngle}
@@ -143,6 +172,8 @@ export const Experience = ({ children, drag, setDrag }) => {
           enableDamping={enableDamping}
           enableZoom={enableZoom}
         />
+
+
         <Lighting />
         <Stars />
       </Canvas>

@@ -4,9 +4,50 @@ import { Html, OrbitControls } from "@react-three/drei";
 import { gsap } from "gsap";
 import * as THREE from "three";
 import usePDFToImage from "./usePDFToImage";
+import { useCameraStore } from "../../../stores/useCameraStore";
+
+
 
 // book, onBookDoubleClick
-const OpenBook = () => {
+const OpenBook = ({bookID}) => {
+
+  // const zoom = useCameraStore((s) => s.zoom);
+  // const rotation = useCameraStore((s) => s.rotation);
+  // const position = useCameraStore((s) => s.position);
+  // const smooth = useCameraStore((s) => s.smooth);
+   const setOrbitRules = useCameraStore((s) => s.setOrbitRules);
+  // const setZoom = useCameraStore((s) => s.setZoom);
+  // const setRotation = useCameraStore((s) => s.setRotation);
+   const setPosition = useCameraStore((s) => s.setPosition);
+  // const setSmooth = useCameraStore((s) => s.setSmooth);
+
+
+  useEffect(() => {
+    setOrbitRules({
+      minPolarAngle: 0,
+      maxPolarAngle: Math.PI,
+      minAzimuthAngle: -Infinity,
+      maxAzimuthAngle: Infinity,
+    });
+    setPosition([0, 0, 10]);
+
+  }, [setOrbitRules]);
+
+  // const {
+  //   minPolarAngle,
+  //   maxPolarAngle,
+  //   minAzimuthAngle,
+  //   maxAzimuthAngle,
+  //   dampingFactor,
+  //   enablePan,
+  //   minDistance,
+  //   maxDistance,
+  //   enableDamping,
+  //   enableZoom,
+  // } = useCameraStore();
+
+
+
   const [currentPage, setCurrentPage] = useState(0);
   const [bookOpen, setBookOpen] = useState(0);
   const [pagesToFlip, setPagesToFlip] = useState(1);

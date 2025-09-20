@@ -5,6 +5,7 @@ import Experience from "./Experience";
 import Header from "../Header";
 import books from "./boooks.json";
 import Book from "./components/Book";
+import ReadingNow from "./reading/ReadingNow";
 
 import Footer from "../Footer";
 // import PointerLightWithControls from "./PointerLight";
@@ -100,6 +101,8 @@ export default function Page() {
             />
           );
         })}
+
+        <ReadingNow />
 
         {/* <Lighther/> */}
       </Experience>

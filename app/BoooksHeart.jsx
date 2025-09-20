@@ -1,4 +1,4 @@
-const BoooksHeart = ({ width = "22px", height = "22px", fill = "#ff0000" }) => {
+const BoooksHeart = ({ width = "24px", height = "24px", fill = "#ff0000" }) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

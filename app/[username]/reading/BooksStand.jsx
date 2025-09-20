@@ -1,10 +1,11 @@
 
+import Book from "./Book";
 import React, { useRef, useEffect } from "react";
 import { DoubleSide } from "three";
 // import { gsap } from "gsap";
 // import useBookExperienceStore from "../../../stores/experience/useBookExperienceStore";
 
-const BooksStand = ({position}) => {
+const BooksStand = ({position, book}) => {
   // const groupRef = useRef();
   // const { isOpenBookVisible } = useBookExperienceStore();
   const glassMaterialProps = {
@@ -56,18 +57,23 @@ const BooksStand = ({position}) => {
   // }, [isOpenBookVisible]);
 
   return (
-    <group position={[position[0], -.5, position[2]]} scale={[0.7, 0.7, 0.7]}>
+    <group position={[position[0], -.5, position[2]]}>
       {/* Stand base */}
+      {/* Pass the book object to Book */}
+      {/* <Book book={book} /> */}
       <mesh position={[0, -1, 0]} rotation={[Math.PI, 0, 0]}>
         <coneGeometry args={[0.2, 1.8, 16]} /> 
         <meshPhysicalMaterial {...glassMaterialProps} />
       </mesh>
 
       {/* Books demo */}
+      <Book book={book} position={[0, 0.4, 0]} rotation={[Math.PI, 0, 0.45]} readPos={[position[0], -.5, position[2]]} />
+{/* 
       <mesh position={[0, 0.4, 0]} rotation={[Math.PI, 0, 0.45]}>
         <boxGeometry args={[0.2, 0.8, 0.5]} />
         <meshPhysicalMaterial {...glassMaterialProps} />
-      </mesh>
+      </mesh> */}
+
     </group>
   );
 };

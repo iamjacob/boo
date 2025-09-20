@@ -19,7 +19,7 @@ export const useCameraStore = create((set) => ({
   setRotation: (rotation) => set({ rotation: Array.isArray(rotation) ? rotation : [0, 0, 0] }),
   setZoom: (zoom) => set({ zoom: typeof zoom === 'number' ? zoom : 3.5 }),
   setSmooth: (smooth) => set({ smooth }),
-  setOrbitRules: (rules) => set(rules),
+  setOrbitRules: (rules) => set((s) => ({ ...s, ...rules })),
 }));
 
 // Change rules anywhere in your app like this:

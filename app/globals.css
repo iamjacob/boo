@@ -324,3 +324,7 @@ transform: translateX(-100%);
 transform: translateX(0px);
 
 }
+
+.sideflow{
+  box-shadow: 0 10px 25px #d100f620;
+}

@@ -1,0 +1,88 @@
+[
+  {
+    "id": "book-050",
+    "title": "Radical candor",
+    "author": "Kim Scott",
+    "year": null,
+    "pages": null,
+    "scale": { "width": 0.3, "height": 0.44, "thickness": 0.7 },
+    "position": { "x": 1, "y": -1.19, "z": -5.914373 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "/covers/radical-candor.jpg" }
+  },
+  {
+    "id": "book-051",
+    "title": "10x is easier than 2x",
+    "author": "Dan Sullivan",
+    "year": null,
+    "pages": null,
+    "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
+    "position": { "x": 0.951649, "y": 1.7, "z": -5.92405 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "/covers/10xiseasierthan2x.jpg" }
+  },
+  {
+    "id": "book-052",
+    "title": "The DevOps Handbook",
+    "author": "Gene Kim",
+    "year": null,
+    "pages": null,
+    "scale": { "width": 0.36, "height": 0.44, "thickness": 0.07 },
+    "position": { "x": 1.423513, "y": 1.7, "z": -5.828689 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "/covers/TheDevOpsHandbook.jpg" }
+  },
+  {
+    "id": "book-053",
+    "title": "How to avoid a climate disaster",
+    "author": "Bill Gates",
+    "year": null,
+    "pages": null,
+    "scale": { "width": 0.36, "height": 0.44, "thickness": 0.07 },
+    "position": { "x": 1.423513, "y": 1.7, "z": -5.828689 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "/covers/HowToAvoidAClimateDisaster.png" }
+  },
+    {
+    "id": "book-054",
+    "title": "Hands-on machine learning with Scikit-Learn, Keras, and TensorFlow",
+    "author": "Aurélien Géron",
+    "year": null,
+    "pages": null,
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/handsonmachine.webp"}
+  },
+  {"id": "book-055",
+    "title": "Learning GitHub Actions",
+    "author": "Brent Laster",
+    "year": null,
+    "pages": null,
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/Learning-GitHub-Actions-Cover.jpg"}
+  },
+  
+  {"id": "book-056",
+    "title": "Articulating Design Decisions",
+    "author": "Tom Greever",
+    "year": null,
+    "pages": null,
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/ArticulatingDesignDecisions.jpg"}
+  },
+  {"id": "book-057",
+    "title": "The daily stoic",
+    "author": "Ryan Holiday",
+    "year": null,
+    "pages": null,
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/the-daily-stoic-366.jpg"}
+  }
+]

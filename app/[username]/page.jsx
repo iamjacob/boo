@@ -6,20 +6,26 @@ import Header from "../Header";
 import books from "./boooks.json";
 import Book from "./components/Book";
 import ReadingNow from "./reading/ReadingNow";
+import { useMenuStore } from "../../stores/useMenuStore";
 
-import Footer from "../Footer";
+// import WishList from "./Wishlist/WishList";
+
+// import Footer from "../Footer";
 // import PointerLightWithControls from "./PointerLight";
 
-import Joystick from "./components/Joystick";
+// import Joystick from "./components/Joystick";
 
 import BottomNav from "./BottomNav";
 
 import { useLevelStore } from "../../stores/useLevelStore";
+// import Menu from "./Menu";
 
 export default function Page() {
   const level = useLevelStore((s) => s.level);
   const levelUp = useLevelStore((s) => s.levelUp);
   const levelDown = useLevelStore((s) => s.levelDown);
+
+  const isReadingNow = useMenuStore((s) => s.ReadingNow);
 
   const [selectedBook, setSelectedBook] = useState(null);
   const [drag, setDrag] = useState(false);
@@ -67,7 +73,7 @@ export default function Page() {
     <div className="fixed top-0 left-0 w-full h-full">
       {/* <div onPointerDown={handlePointerDown} onPointerUp={handlePointerUp} className="fixed top-0 left-0 w-full h-full"> */}
       <Header />
-      <Experience drag={drag} setDrag={setDrag}>
+      <Experience drag={drag} setDrag={setDrag} >
         {/* <Joystick/> */}
 
         {books.map((book, index) => {
@@ -102,11 +108,15 @@ export default function Page() {
           );
         })}
 
-        <ReadingNow />
+
+        {isReadingNow && <ReadingNow />}
+
 
         {/* <Lighther/> */}
       </Experience>
-
+{/* <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
+  <WishList />
+</div> */}
       {/* 
          {onHardPress ? (
           <div

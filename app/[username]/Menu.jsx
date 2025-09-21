@@ -1,14 +1,14 @@
 import React from 'react'
 import FullScreen from '../Fullscreen'
 
-// export const Menu = ({ drag, setDrag, resetCamera, toggleCones, music, setMusic }) => {
+export const Menu = ({ drag, setDrag, resetCamera }) => {
 
 
-const Menu = () => {
+//const Menu = () => {
 
   return (
       <div className="flex fixed bottom-32 right-4 flex-col gap-4 z-50">
-        <div onClick={toggleCones} className="cursor-pointer">
+        {/* <div onClick={toggleCones} className="cursor-pointer">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -24,7 +24,7 @@ const Menu = () => {
             <path d="m20.9 18.55-8-15.98a1 1 0 0 0-1.8 0l-8 15.98" />
             <ellipse cx="12" cy="19" rx="9" ry="3" />
           </svg>
-        </div>
+        </div> */}
 
         <div onClick={resetCamera} className="cursor-pointer">
           <svg
@@ -93,7 +93,7 @@ const Menu = () => {
           )}
         </div>
 
-        <div
+        {/* <div
           onClick={() => {
             setMusic(music ? false : true);
           }}
@@ -131,7 +131,7 @@ const Menu = () => {
               <polygon points="5 3 19 12 5 21 5 3" />
             </svg>
           )}
-        </div>
+        </div> */}
 
         <div className="cursor-pointer">
           <FullScreen />

@@ -46,7 +46,9 @@ export default function Home() {
         <main className="flex flex-col h-screen w-screen justify-center items-center">
           <div className="filters flex flex-col items-center w-[80vw] md:w-[50vw]">
             <div className="search-all-inclusive">
-              <h1>Discover your next great read!</h1>
+              {/* <h1>Discover your next great read!</h1> */}
+<h2>Lets get more enlightened together</h2>
+{/* <h2>Lad os blive mere oplyste sammen</h2> */}
               <Search />
             </div>
           </div>

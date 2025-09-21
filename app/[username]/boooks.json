@@ -5,8 +5,8 @@
     "author": "Malcolm Gladwell",
     "year": null,
     "pages": null,
-    "scale": { "width": 0.3, "height": 0.44, "thickness": 0.7 },
-    "position": { "x": 1, "y": -1.19, "z": -5.914373 },
+    "scale": { "width": 0.3, "height": 0.44, "thickness": 0.07 },
+    "position": { "x": -0.73149, "y": 1.5, "z": -6.458709 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
     "cover": { "front": "/covers/david-goliat.webp" }
   },
@@ -17,7 +17,7 @@
     "year": null,
     "pages": null,
     "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
-    "position": { "x": 0.951649, "y": 1.7, "z": -5.92405 },
+    "position": { "x": -0.379287, "y": 1.5, "z": -6.488924 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
     "cover": { "front": "/covers/afvigere.webp" }
   },
@@ -28,7 +28,7 @@
     "year": null,
     "pages": null,
     "scale": { "width": 0.36, "height": 0.44, "thickness": 0.07 },
-    "position": { "x": 1.423513, "y": 1.7, "z": -5.828689 },
+    "position": { "x": 0.437679, "y": 1.5, "z": -6.485248 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
     "cover": { "front": "/covers/blink.webp" }
   },
@@ -39,7 +39,7 @@
     "year": null,
     "pages": null,
     "scale": { "width": 0.26, "height": 0.44, "thickness": 0.07 },
-    "position": { "x": 1.85187, "y": 1.7, "z": -5.707064 },
+    "position": { "x": 0.235908, "y": 1.5, "z": -6.495718 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
     "cover": { "front": "/covers/vendepunkt.webp" }
   },
@@ -189,12 +189,12 @@
   },
   {
     "id": "book-018",
-    "title": "The Art of War",
-    "author": "Sun Tzu",
+    "title": "Creativity, Inc.",
+    "author": "Ed Catmull",
     "year": null,
     "pages": null,
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
-    "position": {"x":-1.619093, "y":0.57, "z":-6.29512},
+    "position": {"x":-1.72178, "y":0.655, "z":-6.267813},
     "rotation": {"x":0, "y": 2, "z":0},
     "cover": {"front":"./covers/777.webp"}
   },

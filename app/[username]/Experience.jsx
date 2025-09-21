@@ -7,6 +7,7 @@ import { gsap } from "gsap";
 import { useCameraStore } from "../../stores/useCameraStore";
 import Lighting from "./Lighting";
 import OpenBook from "./components/OpenBook";
+import Menu from "./Menu";
 
 export const Experience = ({ children, drag, setDrag }) => {
   const zoom = useCameraStore((s) => s.zoom);
@@ -19,6 +20,8 @@ export const Experience = ({ children, drag, setDrag }) => {
   //const setPosition = useCameraStore((s) => s.setPosition);
   // const setSmooth = useCameraStore((s) => s.setSmooth);
 
+
+  
 
   useEffect(() => {
     setOrbitRules({
@@ -82,16 +85,6 @@ export const Experience = ({ children, drag, setDrag }) => {
     }
   };
 
-
-  useEffect(() => {
-    const splash = document.getElementById("splash");
-
-    if (splash) {
-      splash.classList.add("fade-out");
-      setTimeout(() => splash.remove(), 1200);
-    }
-  }, []);
-
   // Sync camera live with Zustand store
   useEffect(() => {
     const camera = cameraRef.current;
@@ -108,6 +101,15 @@ export const Experience = ({ children, drag, setDrag }) => {
     camera.zoom = typeof zoom === "number" ? zoom : 3.5;
     camera.updateProjectionMatrix();
   }, [position, rotation, zoom]);
+
+useEffect(() => {
+    const splash = document.getElementById("splash");
+
+    if (splash) {
+      splash.classList.add("fade-out");
+      setTimeout(() => splash.remove(), 1200);
+    }
+  }, []);
 
   return (
     <div style={{ position: "relative", width: "100vw", height: "100vh" }}>
@@ -157,7 +159,7 @@ export const Experience = ({ children, drag, setDrag }) => {
 
         {children}
 
-        {/* <OpenBook /> */}
+         {/* <OpenBook bookID={selectedBook} />  */}
 
         <OrbitControls
           minPolarAngle={minPolarAngle}
@@ -179,6 +181,7 @@ export const Experience = ({ children, drag, setDrag }) => {
       </Canvas>
 
       
+      <Menu drag={drag} setDrag={setDrag} resetCamera={resetCamera}/>
 
     </div>
   );

@@ -2,12 +2,13 @@
 import Book from "./Book";
 import React, { useRef, useEffect } from "react";
 import { DoubleSide } from "three";
-// import { gsap } from "gsap";
-// import useBookExperienceStore from "../../../stores/experience/useBookExperienceStore";
+import { gsap } from "gsap";
+import { useMenuStore } from "../../../stores/useMenuStore";
 
-const BooksStand = ({position, book}) => {
-  // const groupRef = useRef();
-  // const { isOpenBookVisible } = useBookExperienceStore();
+const BooksStand = ({position, book, index = 0}) => {
+  const groupRef = useRef();
+  // Use Zustand's ReadingNow state
+  const isReadingNow = useMenuStore((s) => s.ReadingNow);
   const glassMaterialProps = {
     color: "#ffffff",
     transparent: true,
@@ -22,57 +23,55 @@ const BooksStand = ({position, book}) => {
     side: DoubleSide,
   };
 
-  // // Animate in/out on open/close
-  // useEffect(() => {
-  //   if (!groupRef.current) return;
-  //   if (isOpenBookVisible) {
-  //     // Animate in
-  //     gsap.to(groupRef.current.position, {
-  //       y: 0,
-  //       duration: 0.7,
-  //       ease: "power3.out"
-  //     });
-  //     gsap.to(groupRef.current.scale, {
-  //       x: 1,
-  //       y: 1,
-  //       z: 1,
-  //       duration: 0.7,
-  //       ease: "power3.out"
-  //     });
-  //   } else {
-  //     // Animate out (move down and shrink)
-  //     gsap.to(groupRef.current.position, {
-  //       y: -2,
-  //       duration: 0.7,
-  //       ease: "power3.in"
-  //     });
-  //     gsap.to(groupRef.current.scale, {
-  //       x: 0.7,
-  //       y: 0.7,
-  //       z: 0.7,
-  //       duration: 0.7,
-  //       ease: "power3.in"
-  //     });
-  //   }
-  // }, [isOpenBookVisible]);
+  // Animate in/out on ReadingNow open/close
+  useEffect(() => {
+    if (!groupRef.current) return;
+    const delay = index * 1; // 1 second per book
+    if (isReadingNow) {
+      // Animate in
+      gsap.to(groupRef.current.position, {
+        y: 0,
+        duration: 0.7,
+        delay,
+        ease: "power3.out"
+      });
+      gsap.to(groupRef.current.scale, {
+        x: 1,
+        y: 1,
+        z: 1,
+        duration: 0.7,
+        delay,
+        ease: "power3.out"
+      });
+    } else {
+      // Animate out (move down and shrink)
+      gsap.to(groupRef.current.position, {
+        y: -2,
+        duration: 0.7,
+        delay,
+        ease: "power3.in"
+      });
+      gsap.to(groupRef.current.scale, {
+        x: 0.7,
+        y: 0.7,
+        z: 0.7,
+        duration: 0.7,
+        delay,
+        ease: "power3.in"
+      });
+    }
+  }, [isReadingNow, index]);
 
   return (
-    <group position={[position[0], -.5, position[2]]}>
+    <group ref={groupRef} position={[position[0], -.5, position[2]]}>
       {/* Stand base */}
-      {/* Pass the book object to Book */}
-      {/* <Book book={book} /> */}
       <mesh position={[0, -1, 0]} rotation={[Math.PI, 0, 0]}>
         <coneGeometry args={[0.2, 1.8, 16]} /> 
         <meshPhysicalMaterial {...glassMaterialProps} />
       </mesh>
 
-      {/* Books demo */}
-      <Book book={book} position={[0, 0.4, 0]} rotation={[Math.PI, 0, 0.45]} readPos={[position[0], -.5, position[2]]} />
-{/* 
-      <mesh position={[0, 0.4, 0]} rotation={[Math.PI, 0, 0.45]}>
-        <boxGeometry args={[0.2, 0.8, 0.5]} />
-        <meshPhysicalMaterial {...glassMaterialProps} />
-      </mesh> */}
+      {/* Books reading */}
+      <Book book={book} position={[0, 0.4, 0]} rotation={[0,0, 0.45]} readPos={[position[0], -.5, position[2]]} />
 
     </group>
   );

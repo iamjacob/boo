@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import BoooksHeart from "../BoooksHeart";
 import { Cast, CastIcon, Fullscreen } from "lucide-react";
 import FullScreen from "../Fullscreen";
+import { useMenuStore } from "../../stores/useMenuStore";
+
 const BottomNav = () => {
   const [share, setShare] = useState(false);
+  const { setReadingNow, ReadingNow, setWishList, WishList } = useMenuStore();
 
   return (
     <>
@@ -108,8 +111,8 @@ const BottomNav = () => {
 
 
 <div className="flex flex-col gap-[2px]">
-  
-        <a href="#readingNowz"  className=" bg-black/20 p-3 backdrop-blur rounded-[44px] border border-1 border-[#ff000050]">
+
+        <a href="#readingNowz" onClick={() => setReadingNow(!ReadingNow)} className={`${ReadingNow ? 'border-[#ff0000]' : 'border-[#ff000050]'} p-3 backdrop-blur bg-black/20 rounded-[44px] border border-1`}>
           <svg
             xmlns="http://www.w3.org/2000/svg"
             height="24px"

@@ -123,10 +123,7 @@ const Login = ({ setLogin }) => {
                   </label>
                 </div>
 
-                {/* Submit Button */}
-                <button className="w-full py-4 bg-gradient-to-r from-blue-500 to-slate-600 text-white rounded-2xl font-medium shadow-lg shadow-blue-500/25 hover:shadow-xl hover:shadow-blue-500/30 transform hover:-translate-y-0.5 transition-all duration-200">
-                  {authMethod === "magic" ? "Send Magic Link" : "Sign In"}
-                </button>
+               
 
                 {/* Footer */}
                 <div className="text-center pt-4 border-t border-slate-200/60">

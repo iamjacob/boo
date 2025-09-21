@@ -14,10 +14,6 @@ const ReadingNow = () => {
     <>
        {/* {toggleReading && */}
       
- {/* {reading.map((book, index) => (
-         <BooksStand key={index} position={book.position} book={book} />
-       ))}  */}
-
        {toggleCones &&
 
         reading.map((book, index)  => {
@@ -31,6 +27,7 @@ const ReadingNow = () => {
               rotation={[0, -angle + Math.PI / 2, 0]}
               active={index === activeBookstand}
               book={book}
+              index={index}
             />
           );
         })} 

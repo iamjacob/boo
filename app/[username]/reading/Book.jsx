@@ -174,7 +174,7 @@ const Book = ({ book, position, rotation, readPos }) => {
         position={[position[0], position[1] - height, position[2]]}
         style={{ pointerEvents: "auto" }}
       >
-        <div className="flex w-[150px] justify-between gap-2 my-2">
+        <div className="flex w-[150px] justify-between gap-2 my-2 hidden">
           <div className="backdrop-blur-sm bg-black/30 text-white rounded-md p-2 text-[12px] text-center">
             <a
               href="#"

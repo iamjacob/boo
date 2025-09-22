@@ -1,13 +1,15 @@
 "use client";
 import { useEffect, useState, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Stars, OrbitControls } from "@react-three/drei";
-import Shelves from "./Shelves";
+import { Stars, OrbitControls, Html } from "@react-three/drei";
+import Shelves from "./shelves/Shelves";
+import ShelvesSquare from "./shelves/ShelvesSquare";
 import { gsap } from "gsap";
 import { useCameraStore } from "../../stores/useCameraStore";
 import Lighting from "./Lighting";
 import OpenBook from "./components/OpenBook";
 import Menu from "./Menu";
+import ConfettiDopamine from './components/ConfettiDopamine'
 
 export const Experience = ({ children, drag, setDrag }) => {
   const zoom = useCameraStore((s) => s.zoom);
@@ -157,6 +159,18 @@ useEffect(() => {
 
         <Shelves />
 
+
+{/* when click on secret book then zoom in and show this group */}
+
+        {/* 
+        <group position={[0, 0, 4]}>
+          <ShelvesSquare />
+        </group> 
+        */}
+
+
+
+
         {children}
 
          {/* <OpenBook bookID={selectedBook} />  */}
@@ -182,6 +196,32 @@ useEffect(() => {
 
       
       <Menu drag={drag} setDrag={setDrag} resetCamera={resetCamera}/>
+{/*
+*
+*
+*           LEVEL STIGNING!
+*
+*
+* */}
+
+{/* Level stigning fra useStore */}
+{/* Hvis i 7 sekunder medmindre lukkes */}
+{/* 
+{
+"newLevel":true,
+"level":useLevelStore().get new level live!,
+"unlocks":[],
+"text":setting[level].leveltekst,
+"status":sidenSidst(this.user from last level to this level (read x, all recordings since lastLevel datetime)),
+"":,
+}
+ */}
+      {/* <ConfettiDopamine
+        // images={[
+        //   "/favicon/apple-touch-icon.png",
+        // ]}
+      /> */}
+
 
     </div>
   );

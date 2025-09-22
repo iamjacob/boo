@@ -42,6 +42,24 @@ const Login = ({ setLogin }) => {
                   />
                 </div>
 
+ {/* Password field (conditional) */}
+                {authMethod === "password" && (
+                  <>
+                  <div className="space-y-2">
+                    <input
+                      placeholder="Password"
+                      type="password"
+                      className="w-full px-4 py-4 bg-slate-50/80 border border-slate-200/60 rounded-2xl text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-500/30 focus:border-slate-500/30 transition-all duration-200 shadow-sm"
+                    />
+                  </div>
+                   <div className="space-y-2">
+                    -- MORE --
+                  </div>
+                  </>
+                )}
+
+
+
                 {/* Authentication Method */}
                 <div className="space-y-3">
                   <p className="text-slate-600 text-sm font-medium text-center">
@@ -71,19 +89,10 @@ const Login = ({ setLogin }) => {
                   </div>
                 </div>
 
-                {/* Password field (conditional) */}
-                {authMethod === "password" && (
-                  <div className="space-y-2">
-                    <input
-                      placeholder="Password"
-                      type="password"
-                      className="w-full px-4 py-4 bg-slate-50/80 border border-slate-200/60 rounded-2xl text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-500/30 focus:border-slate-500/30 transition-all duration-200 shadow-sm"
-                    />
-                  </div>
-                )}
+               
 
-                {/* Stay logged in */}
-                <div className="flex items-center space-x-3">
+                {/* Stay logged in - ASK ON VERIFICATION IF FEEL SAFE*/}
+                {/* <div className="flex items-center space-x-3">
                   <div className="relative">
                     <input
                       type="checkbox"
@@ -121,7 +130,7 @@ const Login = ({ setLogin }) => {
                   >
                     Keep me signed in
                   </label>
-                </div>
+                </div> */}
 
                
 

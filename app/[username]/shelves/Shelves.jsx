@@ -2,8 +2,8 @@ import React, { useMemo, useRef, useState } from "react";
 import { useLoader } from "@react-three/fiber";
 import * as THREE from "three";
 import gsap from "gsap";
-import { useLevelStore } from '../../stores/useLevelStore';
-import { levelSettings } from '../../config/levelConfig';
+import { useLevelStore } from '../../../stores/useLevelStore';
+import { levelSettings } from '../../../config/levelConfig';
 
 const Shelf = ({ position = [0, 0, 0], rotation = [-Math.PI / 2, 0, 0], fraction }) => {
   const meshRef = useRef();

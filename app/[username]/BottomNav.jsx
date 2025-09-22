@@ -6,7 +6,7 @@ import { useMenuStore } from "../../stores/useMenuStore";
 
 const BottomNav = () => {
   const [share, setShare] = useState(false);
-  const { setReadingNow, ReadingNow, setWishList, WishList } = useMenuStore();
+  const { setReadingNow, ReadingNow, setWishList, WishList, Secret, setSecret } = useMenuStore();
 
   return (
     <>
@@ -160,7 +160,7 @@ const BottomNav = () => {
             <circle cx="11" cy="11" r="8" />
           </svg>
         </a>
-    <a href="#secretBooks" onClick={() => setReadingNow(!ReadingNow)} className={`${ReadingNow ? 'border-[#ff0000]' : 'border-[#ff000050]'} border border-1 bg-black/20 p-3 backdrop-blur rounded-[44px]`}>
+    <a href="#secretBooks" onClick={() => setSecret(!Secret)} className={`${Secret ? 'border-[#ff0000]' : 'border-[#ff000050]'} border border-1 bg-black/20 p-3 backdrop-blur rounded-[44px]`}>
 
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-book-key-icon lucide-book-key"><path d="m19 3 1 1"/><path d="m20 2-4.5 4.5"/><path d="M20 7.898V21a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2h7.844"/><circle cx="14" cy="8" r="2"/></svg>
 </a>

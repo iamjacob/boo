@@ -3,13 +3,17 @@ import { useEffect, useState, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Stars, OrbitControls, Html } from "@react-three/drei";
 import Shelves from "./shelves/Shelves";
-import ShelvesSquare from "./shelves/ShelvesSquare";
+import ShelvesSquare from "./secrets/ShelvesSquare";
 import { gsap } from "gsap";
 import { useCameraStore } from "../../stores/useCameraStore";
 import Lighting from "./Lighting";
 import OpenBook from "./components/OpenBook";
 import Menu from "./Menu";
-import ConfettiDopamine from './components/ConfettiDopamine'
+import ConfettiDopamine from "./components/ConfettiDopamine";
+
+import ReadingNow from "./reading/ReadingNow";
+
+import { useMenuStore } from "../../stores/useMenuStore";
 
 export const Experience = ({ children, drag, setDrag }) => {
   const zoom = useCameraStore((s) => s.zoom);
@@ -22,8 +26,8 @@ export const Experience = ({ children, drag, setDrag }) => {
   //const setPosition = useCameraStore((s) => s.setPosition);
   // const setSmooth = useCameraStore((s) => s.setSmooth);
 
-
-  
+  const isReadingNow = useMenuStore((s) => s.ReadingNow);
+  const isSecretShowing = useMenuStore((s) => s.Secret);
 
   useEffect(() => {
     setOrbitRules({
@@ -104,7 +108,7 @@ export const Experience = ({ children, drag, setDrag }) => {
     camera.updateProjectionMatrix();
   }, [position, rotation, zoom]);
 
-useEffect(() => {
+  useEffect(() => {
     const splash = document.getElementById("splash");
 
     if (splash) {
@@ -116,29 +120,73 @@ useEffect(() => {
   return (
     <div style={{ position: "relative", width: "100vw", height: "100vh" }}>
       {/* Testknapper for at ændre position og orbit rules */}
-      <div style={{ position: "absolute", top: 20, left: 20, zIndex: 10, display: "flex", gap: 8 }}>
-        <a href="#" onClick={() => {
-          // Husk at definere readPos i din komponent eller props
-          if (typeof window.readPos !== "undefined") setPosition(window.readPos);
-          setOrbitRules({
-            minPolarAngle: 0,
-            maxPolarAngle: Math.PI,
-            minAzimuthAngle: -Infinity,
-            maxAzimuthAngle: Infinity,
-          });
-        }}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-book-open-icon lucide-book-open"><path d="M12 7v14"/><path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z"/></svg>
+      <div
+        style={{
+          position: "absolute",
+          top: 20,
+          left: 20,
+          zIndex: 10,
+          display: "flex",
+          gap: 8,
+        }}
+      >
+        <a
+          href="#"
+          onClick={() => {
+            // Husk at definere readPos i din komponent eller props
+            if (typeof window.readPos !== "undefined")
+              setPosition(window.readPos);
+            setOrbitRules({
+              minPolarAngle: 0,
+              maxPolarAngle: Math.PI,
+              minAzimuthAngle: -Infinity,
+              maxAzimuthAngle: Infinity,
+            });
+          }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-book-open-icon lucide-book-open"
+          >
+            <path d="M12 7v14" />
+            <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
+          </svg>
         </a>
-        <a href="#" onClick={() => {
-          setPosition([0,0,0]);
-          setOrbitRules({
-            minPolarAngle: Math.PI / 2 - Math.PI / 14,
-            maxPolarAngle: Math.PI / 2 + Math.PI / 14,
-            minAzimuthAngle: -Math.PI / 14,
-            maxAzimuthAngle: Math.PI / 14,
-          });
-        }}>
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-undo2-icon lucide-undo-2"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"/></svg>
+        <a
+          href="#"
+          onClick={() => {
+            setPosition([0, 0, 0]);
+            setOrbitRules({
+              minPolarAngle: Math.PI / 2 - Math.PI / 14,
+              maxPolarAngle: Math.PI / 2 + Math.PI / 14,
+              minAzimuthAngle: -Math.PI / 14,
+              maxAzimuthAngle: Math.PI / 14,
+            });
+          }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-undo2-icon lucide-undo-2"
+          >
+            <path d="M9 14 4 9l5-5" />
+            <path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11" />
+          </svg>
         </a>
       </div>
       {/* <LighterWithControls /> */}
@@ -156,11 +204,16 @@ useEffect(() => {
           camera.updateProjectionMatrix();
         }}
       >
-
         <Shelves />
 
+        {isReadingNow && <ReadingNow />}
+        {isSecretShowing && (
+          <group position={[0, 0, 4]}>
+            <ShelvesSquare />
+          </group>
+        )}
 
-{/* when click on secret book then zoom in and show this group */}
+        {/* when click on secret book then zoom in and show this group */}
 
         {/* 
         <group position={[0, 0, 4]}>
@@ -168,12 +221,9 @@ useEffect(() => {
         </group> 
         */}
 
-
-
-
         {children}
 
-         {/* <OpenBook bookID={selectedBook} />  */}
+        {/* <OpenBook bookID={selectedBook} />  */}
 
         <OrbitControls
           minPolarAngle={minPolarAngle}
@@ -189,24 +239,22 @@ useEffect(() => {
           enableZoom={enableZoom}
         />
 
-
         <Lighting />
         <Stars />
       </Canvas>
 
-      
-      <Menu drag={drag} setDrag={setDrag} resetCamera={resetCamera}/>
-{/*
-*
-*
-*           LEVEL STIGNING!
-*
-*
-* */}
+      <Menu drag={drag} setDrag={setDrag} resetCamera={resetCamera} />
+      {/*
+       *
+       *
+       *           LEVEL STIGNING!
+       *
+       *
+       * */}
 
-{/* Level stigning fra useStore */}
-{/* Hvis i 7 sekunder medmindre lukkes */}
-{/* 
+      {/* Level stigning fra useStore */}
+      {/* Hvis i 7 sekunder medmindre lukkes */}
+      {/* 
 {
 "newLevel":true,
 "level":useLevelStore().get new level live!,
@@ -221,8 +269,6 @@ useEffect(() => {
         //   "/favicon/apple-touch-icon.png",
         // ]}
       /> */}
-
-
     </div>
   );
 };

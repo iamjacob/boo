@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef, useMemo, Suspense, useState } from "react";
+import React, { useRef, useMemo, Suspense, useState, forwardRef, useImperativeHandle } from "react";
 import { useThree } from "@react-three/fiber";
 import { Html, useCursor, PivotControls } from "@react-three/drei";
 import { useDrag } from "@use-gesture/react";
@@ -11,7 +11,7 @@ import useSafeLoader from "./useSafeLoader";
 // import BookDimensionControls from "./Dimensions"
 // import RainbowAurora from './RainbowAurora'
 
-const Book = ({
+const Book = forwardRef(({
   id,
   color = "red",
   scale,
@@ -24,10 +24,13 @@ const Book = ({
   selectedBook = 0, // ✅ Receives the currently selected book ID
   setSelectedBook, // ✅ Function to update selection
   drag,
-  setDrag
-}) => {
+  setDrag,
+}, ref  ) => {
   const { raycaster, camera, size } = useThree();
   const meshRef = useRef();
+
+  useImperativeHandle(ref, () => meshRef.current);
+
   const positionRef = useRef(new THREE.Vector3(...initialPosition));
   //const rotationRef = useRef(initialRotation);
   const rotationRef = useRef(new THREE.Euler(...initialRotation));
@@ -340,6 +343,7 @@ const Book = ({
     <Suspense fallback={"loading"}>
       <mesh
         ref={meshRef}
+        
         //Should I press this 1 second for it to be active or something like??
         // I need something so bind wont be affected by double click
         // {...bind()} // ✅ Enable drag only if selected
@@ -404,5 +408,5 @@ const Book = ({
 
 
   );
-};
+});
 export default Book;

@@ -23,12 +23,12 @@ const Login = ({ setLogin }) => {
                   </div>
                 </div>
                 {/* </div> */}
-                <h1 className="text-2xl font-light text-slate-800 mb-2">
+                <h1 className="text-2xl font-light text-[#999] mb-2">
                   Velkommen
                 </h1>
-                <p className="text-slate-500 text-sm font-light">
+                {/* <p className="text-slate-500 text-sm font-light">
                   Sign in to continue
-                </p>
+                </p> */}
               </div>
 
               {/* Form */}
@@ -52,9 +52,9 @@ const Login = ({ setLogin }) => {
                       className="w-full px-4 py-4 bg-slate-50/80 border border-slate-200/60 rounded-2xl text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-500/30 focus:border-slate-500/30 transition-all duration-200 shadow-sm"
                     />
                   </div>
-                   <div className="space-y-2">
+                   {/* <div className="space-y-2">
                     -- MORE --
-                  </div>
+                  </div> */}
                   </>
                 )}
 

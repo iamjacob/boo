@@ -61,23 +61,24 @@ const Book = ({ book, position, rotation, readPos }) => {
   );
 
   const textures = [
-    useSafeLoader("./books/booktexture.png"),
+    useSafeLoader("./books/booktextureRotated.png"),
     // useSafeLoader(cover?.spine || "./books/covers/000.jpg"),
     useSafeLoader(book.cover.front || "./books/covers/000.jpg"),
-    useSafeLoader("./books/booktexture.png"),
+    useSafeLoader("./books/booktextureRotated.png"),
     useSafeLoader("./books/booktexture.png"),
     // useSafeLoader(cover?.front || "./books/covers/000.jpg"),
     useSafeLoader(book.cover.front || "./books/covers/000.jpg"),
     // useSafeLoader(cover?.back || "./books/covers/000.jpg"),
-    useSafeLoader(book.cover.front || "./books/covers/000.jpg"),
+    // useSafeLoader(book.cover.front || "./books/covers/000.jpg"),
+    useSafeLoader("./books/placeholderPage.jpg"),
   ];
 
   // extrude geometry bruger 3 materialer
-  const pageMaterials = [
-    new THREE.MeshStandardMaterial({ map: textures[1] }), // front
-    new THREE.MeshStandardMaterial({ map: textures[5] }), // back
-    new THREE.MeshStandardMaterial({ color: "white" }), // sider
-  ];
+  // const pageMaterials = [
+  //   new THREE.MeshStandardMaterial({ map: textures[1] }), // front
+  //   new THREE.MeshStandardMaterial({ map: textures[5] }), // back
+  //   new THREE.MeshStandardMaterial({ color: "white" }), // sider
+  // ];
 
   const materials = textures.map(
     (texture) => new THREE.MeshStandardMaterial({ map: texture })
@@ -119,7 +120,7 @@ const Book = ({ book, position, rotation, readPos }) => {
               materials[2], // top
               materials[2], // bottom
               materials[1], // front (cover)
-              materials[2], // back
+              materials[5], // back // page on the
             ].map((mat, i) => (
               <primitive key={i} object={mat} attach={`material-${i}`} />
             ))}
@@ -147,8 +148,8 @@ const Book = ({ book, position, rotation, readPos }) => {
               materials[2], // left
               materials[2], // top
               materials[2], // bottom
-              materials[2], // back
-              materials[5], // back (cover)
+              materials[5], // back // page on the left
+              materials[1], // back (cover)
             ].map((mat, i) => (
               <primitive key={i} object={mat} attach={`material-${i}`} />
             ))}
@@ -174,7 +175,7 @@ const Book = ({ book, position, rotation, readPos }) => {
         position={[position[0], position[1] - height, position[2]]}
         style={{ pointerEvents: "auto" }}
       >
-        <div className="flex w-[150px] justify-between gap-2 my-2 hidden">
+        <div className="flex w-[150px] justify-between gap-2 my-2">
           <div className="backdrop-blur-sm bg-black/30 text-white rounded-md p-2 text-[12px] text-center">
             <a
               href="#"

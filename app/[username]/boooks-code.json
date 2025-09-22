@@ -1,0 +1,93 @@
+[
+  {
+    "id": "book-006",
+    "title": "Social Engineering",
+    "position": { "x": 0.150276, "y": 1.7, "z": -5.998118 },
+
+    "rotation": { "x": 0, "y": 0, "z": 0 }
+  },
+  {
+    "id": "book-007",
+    "title": "Trafficking Data",
+    "pages": null,
+    "position": { "x": 0.168794, "y": -1.3, "z": -5.997625 },
+
+    "rotation": { "x": 0, "y": 0, "z": 0 }
+  },
+  {
+    "id": "book-009",
+    "title": "Permanent Record",
+    "position": { "x": 0.720156, "y": 0.7, "z": -5.956624 },
+    "rotation": { "x": 0, "y": 0, "z": 0 }
+  },
+  {
+    "id": "book-010",
+    "title": "Mastering Blockchain",
+    "position": {"x":-0.848035, "y":-1.43, "z":-6.444442},
+
+    "rotation": { "x": 0, "y": 0, "z": 0 }
+  },
+  {
+    "id": "book-014",
+    "title": "The Art of War",
+    "position": { "x": 0.720156, "y": -0.3, "z": -5.956624 },    
+
+    "rotation": {"x":0, "y":2, "z":0}
+  },
+  {
+    "id": "book-017",
+    "title": "The Art of War",
+    "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
+    "rotation": {"x":0, "y":2, "z":0}
+  }
+  ,
+  {
+    "id": "book-024",
+    "position": {"x":0.023491, "y":0.57, "z":-6.499958},
+    "title": "eloquent javascript 3rd edition",
+    "rotation": {"x":0, "y":2, "z":0}
+  }
+   ,
+    {
+    "id": "book-025",
+    "title": "design",
+    "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
+    "rotation": {"x":0, "y":2, "z":0}
+  },
+  {
+    "id": "book-026",
+    "title": "building microservices",
+    "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
+    "rotation": {"x":0, "y":2, "z":0}
+  },
+    {
+    "id": "book-027",
+    "title": "click",
+    "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
+    "rotation": {"x":0, "y":2, "z":0}
+  },
+  {
+    "id": "book-028",
+    "title": "DDIA",
+    "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
+    "rotation": {"x":0, "y":2, "z":0}
+  },
+    {
+    "id": "book-029",
+    "title": "eloquent javascript 4rd edition",
+    "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
+    "rotation": {"x":0, "y":2, "z":0}
+  },
+  {
+    "id": "book-030",
+    "title": "distributed systems",
+    "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
+    "rotation": {"x":0, "y":2, "z":0}
+  },
+    {
+    "id": "book-031",
+    "title": "hands on machine learning",
+    "position": {"x":1.196352, "y":1.57, "z":-6.388955},
+    "rotation": {"x":0, "y":2, "z":0}
+  }
+]

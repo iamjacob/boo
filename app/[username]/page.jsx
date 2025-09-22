@@ -4,9 +4,9 @@ import { useEffect, useState, useRef } from "react";
 import Experience from "./Experience";
 import Header from "../Header";
 import books from "./boooks.json";
+import newBookPositions from "./boooks-code.json";
 import Book from "./components/Book";
-import ReadingNow from "./reading/ReadingNow";
-import { useMenuStore } from "../../stores/useMenuStore";
+import { gsap } from "gsap";
 
 // import WishList from "./Wishlist/WishList";
 
@@ -25,7 +25,8 @@ export default function Page() {
   const levelUp = useLevelStore((s) => s.levelUp);
   const levelDown = useLevelStore((s) => s.levelDown);
 
-  const isReadingNow = useMenuStore((s) => s.ReadingNow);
+  const bookRefs = useRef({}); // Store refs by book id
+
 
   const [selectedBook, setSelectedBook] = useState(null);
   const [drag, setDrag] = useState(false);
@@ -69,6 +70,21 @@ export default function Page() {
   //   }
   // };
 
+    function animateBooksToNewPositions(newBooks) {
+    newBooks.forEach((newBook) => {
+      const mesh = bookRefs.current[newBook.id];
+      if (mesh) {
+        gsap.to(mesh.position, {
+          x: newBook.position.x,
+          y: newBook.position.y,
+          z: newBook.position.z,
+          duration: 1,
+          ease: "power2.out",
+        });
+      }
+    });
+  }
+
   return (
     <div className="fixed top-0 left-0 w-full h-full">
       {/* <div onPointerDown={handlePointerDown} onPointerUp={handlePointerUp} className="fixed top-0 left-0 w-full h-full"> */}
@@ -80,6 +96,7 @@ export default function Page() {
           return (
             <Book
               key={book.id}
+              ref={el => (bookRefs.current[book.id] = el)}
               {...book}
               scale={[
                 book.scale.width,
@@ -109,7 +126,7 @@ export default function Page() {
         })}
 
 
-        {isReadingNow && <ReadingNow />}
+      
 
 
         {/* <Lighther/> */}
@@ -143,7 +160,13 @@ export default function Page() {
             </a>
           </div>
          ) : null} */}
-
+    <button
+        onClick={() => {animateBooksToNewPositions(newBookPositions);console.log('started animation')}}
+        className="p-2 bg-black/20 backdrop-blur rounded-lg border border-white/30 text-white"
+        style={{ position: "absolute", zIndex: 1000, top: 100, left: 10 }}
+      >
+        Animate Books!
+      </button>
       <BottomNav />
 
       {/* <PointerLightWithControls /> */}

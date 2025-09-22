@@ -4,7 +4,7 @@ import reading from "../Reading.json";
 
 const ReadingNow = () => {
   const BOOK_STAND_COUNT = 8;
-  const RADIUS = 1;
+  const RADIUS = 1.2;
   const [toggleReading, setToggleReading] = useState(true);
   const [toggleCones, setToggleCones] = useState(true);
   const [activeBookstand, setActiveBookstand] = useState(0);

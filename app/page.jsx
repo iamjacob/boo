@@ -47,7 +47,7 @@ export default function Home() {
           <div className="filters flex flex-col items-center w-[80vw] md:w-[50vw]">
             <div className="search-all-inclusive">
               {/* <h1>Discover your next great read!</h1> */}
-<h2>Lets get more enlightened together</h2>
+<p className="anti-hero">Lets get more enlightened together</p>
 {/* <h2>Lad os blive mere oplyste sammen</h2> */}
               <Search />
             </div>

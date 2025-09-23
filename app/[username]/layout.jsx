@@ -16,6 +16,7 @@ export default async function Layout({ children, params }) {
   // Pass username as a prop to client components if needed
   return (
     <div>
+      <h1>{username}'s Books</h1>
       {/* You can add server-side logic or wrappers here */}
       {children}
     </div>

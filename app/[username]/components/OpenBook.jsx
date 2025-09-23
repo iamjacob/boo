@@ -4,50 +4,9 @@ import { Html, OrbitControls } from "@react-three/drei";
 import { gsap } from "gsap";
 import * as THREE from "three";
 import usePDFToImage from "./usePDFToImage";
-import { useCameraStore } from "../../../stores/useCameraStore";
-
-
 
 // book, onBookDoubleClick
-const OpenBook = ({bookID}) => {
-
-  // const zoom = useCameraStore((s) => s.zoom);
-  // const rotation = useCameraStore((s) => s.rotation);
-  // const position = useCameraStore((s) => s.position);
-  // const smooth = useCameraStore((s) => s.smooth);
-   const setOrbitRules = useCameraStore((s) => s.setOrbitRules);
-  // const setZoom = useCameraStore((s) => s.setZoom);
-  // const setRotation = useCameraStore((s) => s.setRotation);
-   const setPosition = useCameraStore((s) => s.setPosition);
-  // const setSmooth = useCameraStore((s) => s.setSmooth);
-
-
-  useEffect(() => {
-    setOrbitRules({
-      minPolarAngle: 0,
-      maxPolarAngle: Math.PI,
-      minAzimuthAngle: -Infinity,
-      maxAzimuthAngle: Infinity,
-    });
-    setPosition([0, 0, 10]);
-
-  }, [setOrbitRules]);
-
-  // const {
-  //   minPolarAngle,
-  //   maxPolarAngle,
-  //   minAzimuthAngle,
-  //   maxAzimuthAngle,
-  //   dampingFactor,
-  //   enablePan,
-  //   minDistance,
-  //   maxDistance,
-  //   enableDamping,
-  //   enableZoom,
-  // } = useCameraStore();
-
-
-
+const OpenBook = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [bookOpen, setBookOpen] = useState(0);
   const [pagesToFlip, setPagesToFlip] = useState(1);
@@ -71,12 +30,12 @@ const OpenBook = ({bookID}) => {
   const pagesGroupRef = useRef();
   const pageRefs = useRef([]);
 
-  const books = {
+    const books = {
     block1book1: {
       cover: {
-        front: "./books/covers/111.jpg",
-        back: "./books/covers/111.jpg",
-        spine: "./books/covers/111.jpg",
+        front: "./books/learningweb.webp",
+        back: "./books/learningweb.webp",
+        spine: "./books/learningweb.webp",
       },
       dimensions: [0.5, 0.7, 0.07],
       position: {
@@ -89,8 +48,8 @@ const OpenBook = ({bookID}) => {
         y: 0.4,
         z: 0,
       },
-      pages: 242,
-      pdf: "./block/1/mit_liv_med_fangekoret/book.pdf",
+      pages: 700,
+      pdf: "./books/webdesign.pdf",
     },
   };
 
@@ -243,24 +202,24 @@ const OpenBook = ({bookID}) => {
   };
 
   // // Function to load texture and apply it to a specific page
-  // const loadPageTexture = (pageIndex, textureUrl) => {
-  //   const loader = new THREE.TextureLoader();
-  //   loader.load(
-  //     textureUrl,
-  //     (texture) => {
-  //       const page = pageRefs.current[pageIndex];
-  //       if (page) {
-  //         page.children[0].material = new THREE.MeshStandardMaterial({
-  //           map: texture,
-  //         });
-  //       }
-  //     },
-  //     undefined,
-  //     (error) => {
-  //       console.error("Error loading texture:", error);
-  //     }
-  //   );
-  // };
+  const loadPageTexture = (pageIndex, textureUrl) => {
+    const loader = new THREE.TextureLoader();
+    loader.load(
+      textureUrl,
+      (texture) => {
+        const page = pageRefs.current[pageIndex];
+        if (page) {
+          page.children[0].material = new THREE.MeshStandardMaterial({
+            map: texture,
+          });
+        }
+      },
+      undefined,
+      (error) => {
+        console.error("Error loading texture:", error);
+      }
+    );
+  };
 
   // Fetch and update page image as texture
   useEffect(() => {
@@ -377,6 +336,8 @@ const OpenBook = ({bookID}) => {
           </span>
         )}
       </Html>
+      <group rotation={[0, Math.PI / 2, 0]}>
+
       <mesh
         rotation={[0, Math.PI, 0.45]}
         position={[0, 0.32, 0]}
@@ -408,6 +369,7 @@ const OpenBook = ({bookID}) => {
                 <meshStandardMaterial
                   color={index % 2 === 0 ? "white" : "lightgray"}
                 />
+
               </mesh>
             </group>
           ))}
@@ -449,6 +411,8 @@ const OpenBook = ({bookID}) => {
           <primitive object={materials[4]} attach="material" />
         </mesh>
       </mesh>
+      </group>
+
     </>
   );
 };

@@ -6,7 +6,7 @@ import { useMenuStore } from "../../stores/useMenuStore";
 
 const BottomNav = () => {
   const [share, setShare] = useState(false);
-  const { setReadingNow, ReadingNow, setWishList, WishList, Secret, setSecret } = useMenuStore();
+  const { setReadingNow, ReadingNow, setWishList, WishList, Secret, setSecret, filter,toggleFilter } = useMenuStore();
 
   return (
     <>
@@ -70,8 +70,11 @@ const BottomNav = () => {
       )}
 
       <nav className="flex w-[fit-content] justify-between items-center gap-1 rounded-[44px] px-6">
-       
-    
+
+       <a href="#filter" className="bg-black/20 p-3 backdrop-blur rounded-[44px]" onClick={()=>{toggleFilter(!filter)}}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-list-filter-plus-icon lucide-list-filter-plus"><path d="M12 5H2"/><path d="M6 12h12"/><path d="M9 19h6"/><path d="M16 5h6"/><path d="M19 8V2"/></svg>
+       </a>
+
         {/* <a href="#align/tune/calibrate">
           <svg
             xmlns="http://www.w3.org/2000/svg"

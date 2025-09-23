@@ -20,17 +20,26 @@ const formatDate = (dateString) => {
   return `${diffInDays} day${diffInDays > 1 ? "s" : ""} ago`;
 };
 
-function skewBoxGeometry(geometry, skew = 0.05) {
-  const m = new THREE.Matrix4();
-  m.set(
-    1, 0, skew, 0, // X skewed by Z
-    0, 1, 0,   0,
-    0, 0, 1,   0,
-    0, 0, 0,   1
-  );
-  geometry.applyMatrix4(m);
+// add this helper above Book()
+function shearXbyZ(geometry, shear, side /* 'left' | 'right' */) {
+  if (!geometry || geometry.userData.__sheared) return;
   geometry.computeBoundingBox();
-  geometry.computeBoundingSphere();
+  const bb = geometry.boundingBox;
+
+  // pin the spine face so it stays in place
+  const zPin = side === "right" ? bb.max.z : bb.min.z;
+
+  const pos = geometry.attributes.position;
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i);
+    const y = pos.getY(i);
+    const z = pos.getZ(i);
+    const dz = z - zPin;      // distance away from the spine face
+    pos.setXYZ(i, x + shear * dz, y, z);
+  }
+  pos.needsUpdate = true;
+  geometry.computeVertexNormals();
+  geometry.userData.__sheared = true; // prevent re-shearing on re-renders
 }
 
 
@@ -39,17 +48,15 @@ const Book = ({ book, position, rotation, readPos }) => {
   const setOrbitRules = useCameraStore((s) => s.setOrbitRules);
   const setPosition = useCameraStore((s) => s.setPosition);
 
+  // const { getPageImage } = usePDFToImage(pdf || "./sample.pdf");
   const { title, author, cover, lastPage, lastRead, pages } = book || {};
+  
   const meshRef = useRef();
   const hoveredRef = useRef(false);
   const draggingRef = useRef(false);
-
   const width = book.scale.width;
   const thickness = book.scale.thickness;
   const height = book.scale.height;
-
-  // const { getPageImage } = usePDFToImage(pdf || "./sample.pdf");
-
   const openDegrees = 1;
   const pageThickness = thickness / pages;
   const rightThickness = pageThickness * (pages - lastPage);
@@ -64,7 +71,7 @@ const Book = ({ book, position, rotation, readPos }) => {
     useSafeLoader("./books/booktextureRotated.png"),
     // useSafeLoader(cover?.spine || "./books/covers/000.jpg"),
     useSafeLoader(book.cover.front || "./books/covers/000.jpg"),
-    useSafeLoader("./books/booktextureRotated.png"),
+    useSafeLoader("./books/booktexture.png"),
     useSafeLoader("./books/booktexture.png"),
     // useSafeLoader(cover?.front || "./books/covers/000.jpg"),
     useSafeLoader(book.cover.front || "./books/covers/000.jpg"),
@@ -84,11 +91,6 @@ const Book = ({ book, position, rotation, readPos }) => {
     (texture) => new THREE.MeshStandardMaterial({ map: texture })
   );
 
-  const skewAmount = useMemo(() => {
-    return thickness / 2 / width;
-  }, [thickness, width]);
-
-  const offsetX = (skewAmount * height) / 2; // half shift at the top
 
   return (
     <Suspense fallback={"loading"}>
@@ -104,19 +106,19 @@ const Book = ({ book, position, rotation, readPos }) => {
           rotation={[0, -openDegrees, 0]}
         >
           <mesh
-            position={[width / 2, 0, -rightThickness / 2]}
+            position={[width / 2, 0, -rightThickness / 4]}
             castShadow
             receiveShadow
           >
             <boxGeometry
+  ref={(g) => g && shearXbyZ(g, Math.tan(openDegrees), "right")}
               // ref={(g) => g && skewBoxGeometry(g, +skewAmount)}
-              args={[width, height, rightThickness]}
+              args={[width, height, rightThickness/2]}
             />
-
             {[
               // right, left, top, bottom, front, back
-              materials[2], // right
-              materials[2], // left
+              materials[0], // right
+              materials[0], // left
               materials[2], // top
               materials[2], // bottom
               materials[1], // front (cover)
@@ -134,18 +136,19 @@ const Book = ({ book, position, rotation, readPos }) => {
           rotation={[0, openDegrees, 0]}
         >
           <mesh
-            position={[width / 2 , 0, leftThickness / 2]}
+            position={[width / 2 , 0, leftThickness / 4]}
             castShadow
             receiveShadow
           >
             <boxGeometry
               // ref={(g) => g && skewBoxGeometry(g, -skewAmount)}
-              args={[width, height, leftThickness]}
+              ref={(g) => g && shearXbyZ(g, Math.tan(-openDegrees), "left")}
+              args={[width, height, leftThickness/2]}
             />
             {[
               // right, left, top, bottom, front, back
-              materials[2], // right
-              materials[2], // left
+              materials[0], // right
+              materials[0], // left
               materials[2], // top
               materials[2], // bottom
               materials[5], // back // page on the left
@@ -158,7 +161,7 @@ const Book = ({ book, position, rotation, readPos }) => {
 
         {/* Spine */}
         <mesh
-          // ref={spinePageRef}
+          //ref={spinePageRef}
           position={[-width * 0.5, 0, 0]}
           rotation={[0, 0, 0]}
           castShadow

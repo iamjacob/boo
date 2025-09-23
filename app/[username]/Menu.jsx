@@ -8,23 +8,6 @@ export const Menu = ({ drag, setDrag, resetCamera }) => {
 
   return (
       <div className="flex fixed bottom-32 right-4 flex-col gap-4 z-50">
-        {/* <div onClick={toggleCones} className="cursor-pointer">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="white"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="lucide lucide-cone-icon lucide-cone"
-          >
-            <path d="m20.9 18.55-8-15.98a1 1 0 0 0-1.8 0l-8 15.98" />
-            <ellipse cx="12" cy="19" rx="9" ry="3" />
-          </svg>
-        </div> */}
 
         <div onClick={resetCamera} className="cursor-pointer">
           <svg
@@ -92,46 +75,6 @@ export const Menu = ({ drag, setDrag, resetCamera }) => {
             </svg>
           )}
         </div>
-
-        {/* <div
-          onClick={() => {
-            setMusic(music ? false : true);
-          }}
-          className="move"
-        >
-          {music ? (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#fff"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-pause-icon lucide-pause"
-            >
-              <rect x="14" y="3" width="5" height="18" rx="1" />
-              <rect x="5" y="3" width="5" height="18" rx="1" />
-            </svg>
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#fff"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="lucide lucide-play-icon lucide-play"
-            >
-              <polygon points="5 3 19 12 5 21 5 3" />
-            </svg>
-          )}
-        </div> */}
 
         <div className="cursor-pointer">
           <FullScreen />

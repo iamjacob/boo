@@ -3,6 +3,17 @@
     "id": "book-001",
     "title": "David & Goliat",
     "author": "Malcolm Gladwell",
+    "categories": {
+      "main": ["Social Sciences", "Economics & Business"],
+      "sub": ["Psychology", "Sociology", "Business", "decision making", "behavioral science"]
+    },
+    "tags": [
+      "psychology",
+      "sociology",
+      "business",
+      "decision making",
+      "behavioral science"
+    ],
     "year": null,
     "pages": null,
     "scale": { "width": 0.3, "height": 0.44, "thickness": 0.07 },
@@ -14,6 +25,11 @@
     "id": "book-002",
     "title": "Afvigere",
     "author": "Malcolm Gladwell",
+    "categories": {
+      "main": ["Social Sciences"],
+      "sub": ["Psychology", "Sociology", "Business"]
+    },
+    "tags": ["psychology", "sociology", "business"],
     "year": null,
     "pages": null,
     "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
@@ -25,6 +41,11 @@
     "id": "book-003",
     "title": "Blink",
     "author": "Malcolm Gladwell",
+    "categories": {
+      "main": ["Social Sciences"],
+      "sub": ["Psychology", "Sociology", "Business"]
+    },
+    "tags": ["psychology", "sociology", "business"],
     "year": null,
     "pages": null,
     "scale": { "width": 0.36, "height": 0.44, "thickness": 0.07 },
@@ -36,6 +57,11 @@
     "id": "book-004",
     "title": "Det Magiske Vendepunkt",
     "author": "Malcolm Gladwell",
+    "categories": {
+      "main": ["Social Sciences"],
+      "sub": ["Psychology", "Sociology", "Business"]
+    },
+    "tags": ["psychology", "sociology", "business"],
     "year": null,
     "pages": null,
     "scale": { "width": 0.26, "height": 0.44, "thickness": 0.07 },
@@ -47,6 +73,11 @@
     "id": "book-005",
     "title": "Nelson Mandela",
     "author": "Nelson Mandela",
+    "categories": {
+      "main": ["Biographies & True Stories", "History & Culture"],
+      "sub": ["Politics"]
+    },
+    "tags": ["biography", "history", "politics"],
     "year": null,
     "pages": null,
     "scale": { "width": 0.28, "height": 0.44, "thickness": 0.07 },
@@ -58,6 +89,11 @@
     "id": "book-006",
     "title": "Social Engineering",
     "author": null,
+    "categories": {
+      "main": ["Science & Technology"],
+      "sub": ["Security", "Psychology", "Hacking"]
+    },
+    "tags": ["security", "psychology", "hacking"],
     "year": null,
     "pages": null,
     "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
@@ -69,6 +105,11 @@
     "id": "book-007",
     "title": "Trafficking Data",
     "author": "Aynne Kokas",
+    "categories": {
+      "main": ["Science & Technology", "Social Sciences"],
+      "sub": ["Security", "Psychology", "Politics", "Data", "Privacy", "Surveillance", "Big Data"]
+    },
+    "tags": ["security", "psychology", "politics", "data", "privacy", "surveillance", "big data"],
     "year": null,
     "pages": null,
     "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
@@ -80,6 +121,11 @@
     "id": "book-008",
     "title": "Think Again",
     "author": "Adam Grant",
+    "categories": {
+      "main": ["Practical Life & Self-Help", "Social Sciences"],
+      "sub": ["Psychology", "Self-help", "Business"]
+    },
+    "tags": ["psychology", "self-help", "business"],
     "year": null,
     "pages": null,
     "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
@@ -91,6 +137,11 @@
     "id": "book-009",
     "title": "Permanent Record",
     "author": "Edward Snowden",
+    "categories": {
+      "main": ["Biographies & True Stories"],
+      "sub": ["Privacy", "Surveillance", "Politics"]
+    },
+    "tags": ["biography", "privacy", "surveillance", "politics"],
     "year": null,
     "pages": null,
     "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
@@ -102,6 +153,11 @@
     "id": "book-010",
     "title": "Mastering Blockchain",
     "author": "Imran Bashir",
+    "categories": {
+      "main": ["Science & Technology"],
+      "sub": ["Blockchain", "Cryptocurrency", "Technology"]
+    },
+    "tags": ["blockchain", "cryptocurrency", "technology"],
     "year": null,
     "pages": null,
     "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
@@ -111,8 +167,13 @@
   },
     {
     "id": "book-011",
-    "title": "The Art of War",
-    "author": "Sun Tzu",
+    "title": "The Art of the impossible",
+    "categories": {
+      "main": ["Philosophy"],
+      "sub": ["strategy", "military"]
+    },
+    "tags": ["strategy", "military", "philosophy"],
+    "author": "Steven Kotler",
     "year": null,
     "pages": null,
 
@@ -123,8 +184,13 @@
   },
   {
     "id": "book-012",
-    "title": "The Art of War",
-    "author": "Sun Tzu",
+    "title": "Tough",
+    "author": "Terry Crews",
+    "categories": {
+      "main": ["Biographies & True Stories", "Practical Life & Self-Help"],
+      "sub": ["motivation"]
+    },
+    "tags": ["biography", "self-help", "motivation"],
     "year": null,
     "pages": null,
     "scale": {"width":0.55, "height":0.7, "thickness":0.2},
@@ -134,8 +200,13 @@
   },
   {
     "id": "book-013",
-    "title": "The Art of War",
-    "author": "Sun Tzu",
+    "title": "Why have nobody told me this before",
+    "author": "Dr. Julie Smith",
+    "categories": {
+      "main": ["Practical Life & Self-Help", "Social Sciences"],
+      "sub": ["mental health", "psychology"]
+    },
+    "tags": ["mental health", "self-help", "psychology"],
     "year": null,
     "pages": null,
     "scale": {"width":0.4, "height":0.6, "thickness":0.15},
@@ -145,8 +216,13 @@
   },
   {
     "id": "book-014",
-    "title": "The Art of War",
-    "author": "Sun Tzu",
+    "title": "Blitzscaling",
+    "author": "Reid Hoffman",
+    "categories": {
+      "main": ["Economics & Business"],
+      "sub": ["entrepreneurship", "strategy"]
+    },
+    "tags": ["business", "entrepreneurship", "strategy"],
     "year": null,
     "pages": null,
     "scale": {"width":0.4, "height":0.65, "thickness":0.18},
@@ -156,8 +232,13 @@
   },
   {
     "id": "book-015",
-    "title": "The Art of War",
-    "author": "Sun Tzu",
+    "title": "Sapiens",
+    "author": "Yuval Noah Harari",
+    "categories": {
+      "main": ["History & Culture", "Social Sciences", "Science & Technology"],
+      "sub": ["anthropology", "science"]
+    },
+    "tags": ["history", "anthropology", "science"],
     "year": null,
     "pages": null,
     "scale": {"width":0.4, "height":0.62, "thickness":0.2},
@@ -167,8 +248,13 @@
   },
   {
     "id": "book-016",
-    "title": "The Art of War",
-    "author": "Sun Tzu",
+    "title": "Vanedyr",
+    "author": "Nicklas Brendborg",
+    "categories": {
+      "main": ["Practical Life & Self-Help", "Social Sciences"],
+      "sub": ["habits"]
+    },
+    "tags": ["psychology", "self-help", "habits"],
     "year": null,
     "pages": null,
     "scale": {"width":0.4, "height":0.71, "thickness":0.15},
@@ -178,8 +264,13 @@
   },
   {
     "id": "book-017",
-    "title": "The Art of War",
-    "author": "Sun Tzu",
+    "title": "Success at scale",
+    "author": "Addy Osmani",
+    "categories": {
+      "main": ["Economics & Business", "Science & Technology"],
+      "sub": ["web development"]
+    },
+    "tags": ["business", "technology", "web development"],
     "year": null,
     "pages": null,
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
@@ -191,6 +282,11 @@
     "id": "book-018",
     "title": "Creativity, Inc.",
     "author": "Ed Catmull",
+    "categories": {
+      "main": ["Economics & Business", "Arts, Design & Creativity"],
+      "sub": ["management"]
+    },
+    "tags": ["business", "creativity", "management"],
     "year": null,
     "pages": null,
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
@@ -200,8 +296,13 @@
   },
   {
     "id": "book-019",
-    "title": "The Art of War",
-    "author": "Sun Tzu",
+    "title": "Nudge",
+    "author": "Richard Thaler",
+    "categories": {
+      "main": ["Social Sciences", "Economics & Business"],
+      "sub": ["behavioral economics", "decision making"]
+    },
+    "tags": ["behavioral economics", "psychology", "decision making"],
     "year": null,
     "pages": null,
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
@@ -211,8 +312,13 @@
   },
   {
     "id": "book-020",
-    "title": "The Art of War",
-    "author": "Sun Tzu",
+    "title": "Grit",
+    "author": "Angela Duckworth",
+    "categories": {
+      "main": ["Practical Life & Self-Help", "Social Sciences"],
+      "sub": ["grit"]
+    },
+    "tags": ["psychology", "self-help", "grit"],
     "year": null,
     "pages": null,
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
@@ -222,8 +328,13 @@
   },
   {
     "id": "book-021",
-    "title": "The Art of War",
-    "author": "Sun Tzu",
+    "title": "The mountain is you",
+    "author": "Brianna Wiest",
+    "categories": {
+      "main": ["Practical Life & Self-Help"],
+      "sub": ["personal development", "motivation"]
+    },
+    "tags": ["self-help", "personal development", "motivation"],
     "year": null,
     "pages": null,
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
@@ -233,8 +344,13 @@
   },
   {
     "id": "book-022",
-    "title": "The Art of War",
-    "author": "Sun Tzu",
+    "title": "Brandwashed",
+    "author": "Martin Lindstrom",
+    "categories": {
+      "main": ["Economics & Business", "Social Sciences"],
+      "sub": ["marketing", "consumer behavior"]
+    },
+    "tags": ["marketing", "psychology", "consumer behavior"],
     "year": null,
     "pages": null,
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
@@ -244,21 +360,31 @@
   },
     {
     "id": "book-023",
-    "title": "The Art of War",
-    "author": "Sun Tzu",
+    "title": "Responsible JavaScript",
+    "author": "Jeremy Wagner",
+    "categories": {
+      "main": ["Science & Technology"],
+      "sub": ["javascript", "web development", "programming"]
+    },
+    "tags": ["javascript", "web development", "programming"],
     "year": null,
     "pages": null,
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
     "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
     "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/111111.webp"}
+    "cover": {"front":"./covers/responsible-js.jpg"}
   }
 
   ,
     {
     "id": "book-024",
     "title": "eloquent javascript 3rd edition",
-    "author": "Sun Tzu",
+    "author": "Marijn Haverbeke",
+    "categories": {
+      "main": ["Science & Technology"],
+      "sub": ["javascript", "web development", "programming"]
+    },
+    "tags": ["javascript", "web development", "programming"],
     "year": null,
     "pages": null,
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
@@ -269,8 +395,13 @@
    ,
     {
     "id": "book-025",
-    "title": "design",
-    "author": "Sun Tzu",
+    "title": "Accesible UX",
+    "author": "Regine Gilbert",
+    "categories": {
+      "main": ["Arts, Design & Creativity"],
+      "sub": ["design", "accessibility", "user experience"]
+    },
+    "tags": ["design", "accessibility", "user experience"],
     "year": null,
     "pages": null,
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
@@ -281,7 +412,12 @@
     {
     "id": "book-026",
     "title": "building microservices",
-    "author": "Sun Tzu",
+    "author": "Sam Newman",
+    "categories": {
+      "main": ["Science & Technology"],
+      "sub": ["microservices", "architecture", "programming"]
+    },
+    "tags": ["microservices", "architecture", "programming"],
     "year": null,
     "pages": null,
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
@@ -292,7 +428,12 @@
     {
     "id": "book-027",
     "title": "click",
-    "author": "Sun Tzu",
+    "author": "Poul Boag",
+    "categories": {
+      "main": ["Arts, Design & Creativity", "Social Sciences"],
+      "sub": ["design", "user experience", "psychology"]
+    },
+    "tags": ["design", "user experience", "psychology"],
     "year": null,
     "pages": null,
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
@@ -302,8 +443,13 @@
   },
     {
     "id": "book-028",
-    "title": "DDIA",
-    "author": "Sun Tzu",
+    "title": "Designing Data-Intensive Applications",
+    "author": "Martin Kleppmann",
+    "categories": {
+      "main": ["Science & Technology"],
+      "sub": ["data", "databases", "distributed systems"]
+    },
+    "tags": ["data", "databases", "distributed systems"],
     "year": null,
     "pages": null,
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
@@ -324,8 +470,9 @@
   },
     {
     "id": "book-030",
-    "title": "distributed systems",
-    "author": "Sun Tzu",
+    "title": "Distributed systems with node.js",
+    "author": "unknown",
+    "tags": ["distributed systems", "node.js", "programming"],
     "year": null,
     "pages": null,
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
@@ -336,7 +483,12 @@
     {
     "id": "book-031",
     "title": "hands on machine learning",
-    "author": "Sun Tzu",
+    "author": "Aurelien Geron",
+    "categories": {
+      "main": ["Science & Technology"],
+      "sub": ["machine learning", "artificial intelligence", "data science"]
+    },
+    "tags": ["machine learning", "artificial intelligence", "data science"],
     "year": null,
     "pages": null,
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},

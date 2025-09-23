@@ -1,9 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
-// import * as pdfjsLib from "pdfjs-dist";
 
-// ✅ Use the correct worker path
-// pdfjsLib.GlobalWorkerOptions.workerSrc = "/pdfjs/pdf.worker.min.mjs";
+// Do not import pdfjs-dist at the top level to avoid ESM/CJS issues in Next.js
 
 
 //THIS needs much more performance testing and optimization
@@ -38,11 +36,35 @@ class LRUCache {
 
 
 const usePDFToImage = (pdfUrl) => {
+
+
   const [pdfDoc, setPdfDoc] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0); // 0-100
   // LRU cache for page images (key: `${pageNum}@${scale}`)
   const cacheRef = useState(() => new LRUCache(12))[0];
+  const [pdfjsReady, setPdfjsReady] = useState(false);
+
+  // Load pdfjs-dist UMD from CDN at runtime
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (window.pdfjsLib) {
+      setPdfjsReady(true);
+      return;
+    }
+    const script = document.createElement("script");
+    script.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.min.mjs";
+    script.async = true;
+    script.onload = () => {
+      window.pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.min.mjs";
+      setPdfjsReady(true);
+    };
+    document.body.appendChild(script);
+    return () => {
+      script.remove();
+    };
+  }, []);
+
 
   useEffect(() => {
     let isCancelled = false;
@@ -58,10 +80,13 @@ const usePDFToImage = (pdfUrl) => {
           setProgress(0);
           return;
         }
-
-        const loadingTask = pdfjsLib.getDocument({
+        if (!window.pdfjsLib) {
+          setIsLoading(false);
+          setProgress(0);
+          return;
+        }
+        const loadingTask = window.pdfjsLib.getDocument({
           url: pdfUrl,
-          // Progress callback for PDF loading
           onProgress: (progressData) => {
             if (progressData && progressData.loaded && progressData.total) {
               setProgress(Math.round((progressData.loaded / progressData.total) * 100));
@@ -84,18 +109,21 @@ const usePDFToImage = (pdfUrl) => {
       }
     };
 
-    loadPDF();
+    if (pdfjsReady) {
+      loadPDF();
+    }
 
     return () => {
       isCancelled = true;
       cacheRef.clear();
     };
-  }, [pdfUrl, cacheRef]);
+  }, [pdfUrl, cacheRef, pdfjsReady]);
+
 
 
   const getPageImage = async (pageNum, scale = 2) => {
     // Prevent requesting a page image before the PDF is loaded
-    if (!pdfDoc || isLoading) {
+    if (!pdfDoc || isLoading || !window.pdfjsLib) {
       // Silently skip if not loaded
       return null;
     }

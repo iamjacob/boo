@@ -2,6 +2,7 @@
   {
     "id": "book-006",
     "title": "Social Engineering",
+    "tags": ["security", "hacking", "psychology"],
     "position": { "x": 0.150276, "y": 1.7, "z": -5.998118 },
 
     "rotation": { "x": 0, "y": 0, "z": 0 }

@@ -15,6 +15,7 @@ export default function Search() {
   const [charIndex, setCharIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
   const [showCursor, setShowCursor] = useState(true);
+  const [keyboard, setKeyboard] = useState(false);
 
   const [inputText, setInputText] = useState("");
 
@@ -236,7 +237,10 @@ const handleSearch = async (e) => {
               </div>
             </div>
 
+
+
             <div className="flex gap-2 justify-right">
+
               <div className="pill">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -252,8 +256,15 @@ const handleSearch = async (e) => {
                 >
                   <circle cx="12.1" cy="12.1" r="1" />
                 </svg>
+
                 {/* <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-ellipsis-icon lucide-ellipsis"><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></svg> */}
               </div>
+
+<div onClick={() => {setKeyboard(!keyboard)}} className="pill">
+  <svg xmlns="http://www.w3.org/2000/svg" height="18px" viewBox="0 -960 960 960" width="18px" fill="#000"><path d="M160-200q-33 0-56.5-23.5T80-280v-400q0-33 23.5-56.5T160-760h640q33 0 56.5 23.5T880-680v400q0 33-23.5 56.5T800-200H160Zm0-80h640v-400H160v400Zm160-40h320v-80H320v80ZM200-440h80v-80h-80v80Zm120 0h80v-80h-80v80Zm120 0h80v-80h-80v80Zm120 0h80v-80h-80v80Zm120 0h80v-80h-80v80ZM200-560h80v-80h-80v80Zm120 0h80v-80h-80v80Zm120 0h80v-80h-80v80Zm120 0h80v-80h-80v80Zm120 0h80v-80h-80v80ZM160-280v-400 400Z"/></svg>
+</div>
+
+
               {results.length < 1 && (
                 <div
                   className="pill"
@@ -276,6 +287,43 @@ const handleSearch = async (e) => {
                   Fiction
                 </div>
               )}
+              <div className="pill">
+ <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#000"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-camera-icon lucide-camera"
+          >
+            <path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" />
+            <circle cx="12" cy="13" r="3" />
+          </svg>
+</div>
+<div className="pill">
+<svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#000"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="lucide lucide-whole-word-icon lucide-whole-word"
+          >
+            <circle cx="7" cy="12" r="3" />
+            <path d="M10 9v6" />
+            <circle cx="17" cy="12" r="3" />
+            <path d="M14 7v8" />
+            <path d="M22 17v1c0 .5-.5 1-1 1H3c-.5 0-1-.5-1-1v-1" />
+          </svg>
+</div>
             </div>
           </div>
 
@@ -305,9 +353,6 @@ const handleSearch = async (e) => {
               </svg>
             </div>
           )} */}
-        </div>
-      </div>
-
       {results.length < 1 && (
         <div className="flex w-full gap-2 flex-wrap justify-center md:justify-around overflow-hidden mt-1">
           {fictionSelected && (
@@ -365,6 +410,16 @@ const handleSearch = async (e) => {
           )}
         </div>
       )}
+
+      {keyboard && (
+        <div className="pill">
+a
+        </div>
+      )}
+
+
+</div>
+      </div>
 
       {/* Sorting buttons with chevron direction and state */}
       {results.length > 1 && (
@@ -538,50 +593,7 @@ const handleSearch = async (e) => {
           ))}
         </div>
       )}
-      <div className="flex gap-2 text-[#ff000050] px-2 hidden">
-        {/* <div className="pill">
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-atom-icon lucide-atom"><circle cx="12" cy="12" r="1"/><path d="M20.2 20.2c2.04-2.03.02-7.36-4.5-11.9-4.54-4.52-9.87-6.54-11.9-4.5-2.04 2.03-.02 7.36 4.5 11.9 4.54 4.52 9.87 6.54 11.9 4.5Z"/><path d="M15.7 15.7c4.52-4.54 6.54-9.87 4.5-11.9-2.03-2.04-7.36-.02-11.9 4.5-4.52 4.54-6.54 9.87-4.5 11.9 2.03 2.04 7.36.02 11.9-4.5Z"/></svg>
-      </div> */}
-        <div className="pil">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#ff0000"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-whole-word-icon lucide-whole-word"
-          >
-            <circle cx="7" cy="12" r="3" />
-            <path d="M10 9v6" />
-            <circle cx="17" cy="12" r="3" />
-            <path d="M14 7v8" />
-            <path d="M22 17v1c0 .5-.5 1-1 1H3c-.5 0-1-.5-1-1v-1" />
-          </svg>
-        </div>
-        <div className="pil">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18"
-            height="18"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="#ff000050"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-camera-icon lucide-camera"
-          >
-            <path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" />
-            <circle cx="12" cy="13" r="3" />
-          </svg>
-        </div>
-       
-        
-      </div>
+      
     </div>
   );
 }

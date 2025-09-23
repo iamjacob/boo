@@ -9,7 +9,9 @@ const useSafeLoader = (url, fallbackUrl = "/covers/test.jpg") => {
 
   useEffect(() => {
     if (!url) {
+      console.log("No URL provided, using fallback.");
       loader.load(fallbackUrl, setTexture);
+
       return;
     }
 
@@ -17,8 +19,11 @@ const useSafeLoader = (url, fallbackUrl = "/covers/test.jpg") => {
       url,
       setTexture, // ✅ Success: Set loaded texture
       undefined,  // ✅ Progress callback (optional)
-      () => {
-        loader.load(fallbackUrl, setTexture); // ✅ Error: Load fallback texture
+      (err) => {
+        console.error(
+          `useSafeLoader: Failed to load texture from ${url}. Using fallback: ${fallbackUrl}`
+        );
+        loader.load(fallbackUrl, setTexture);
       }
     );
   }, [url, fallbackUrl, loader]);

@@ -3,6 +3,19 @@ import { useEffect, useRef } from "react";
 export default function ConfettiDopamine({ images=["/favicon/apple-touch-icon.png"] }) {
   const canvasRef = useRef(null);
 
+
+  // Add in level up + sound? 
+  //     // Vibrate for 200 milliseconds
+
+  //     if (navigator.vibrate) {
+  //       navigator.vibrate(200);
+  //       // Vibrate in a pattern: vibrate, pause, vibrate
+  //       navigator.vibrate([100, 50, 100]);
+  //     }
+  //     // music ? setMusic(false) : setMusic(true);
+  //   }
+  // };
+
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");

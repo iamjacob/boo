@@ -3,13 +3,11 @@ import { Suspense, useEffect, useState, useRef } from "react";
 import Search from "./Search";
 import Loading from "./Loading";
 import Header from "./Header";
-import Footer from "./Footer";
-import HeaderInfo from "./HeaderInfo";
 
 import { useRouter } from "next/navigation"; // eller "next/router" afhængig af version
 
 export default function Home() {
-  const router = useRouter();
+  // const router = useRouter();
 
   useEffect(() => {
     const splash = document.getElementById("splash");
@@ -20,22 +18,22 @@ export default function Home() {
     }
   }, []);
 
-  const lastTap = useRef(0);
+  // const lastTap = useRef(0);
 
-  const handlePointerDown = () => {
-    const now = Date.now();
-    if (now - lastTap.current < 300) {
-      // Double tap detected
-      router.push("/scanner"); // send til scanner
-    }
-    lastTap.current = now;
-  };
+  // const handlePointerDown = () => {
+  //   const now = Date.now();
+  //   if (now - lastTap.current < 300) {
+  //     // Double tap detected
+  //     router.push("/scanner"); // send til scanner
+  //   }
+  //   lastTap.current = now;
+  // };
 
   
   return (
     <Suspense fallback={<Loading progress={50} />}>
       <div
-        onPointerDown={handlePointerDown}
+        // onPointerDown={handlePointerDown}
         style={{ touchAction: "manipulation" }}
         className="font-sans flex flex-col items-center justify-between w-[100dvw] h-[100dvh]"
       >
@@ -43,16 +41,20 @@ export default function Home() {
 
         {/* Denne har nice svg's til min onboarding  */}
         {/* <HeaderInfo/> */}
+
+
         <main className="flex flex-col h-screen w-screen justify-center items-center">
           <div className="filters flex flex-col items-center w-[80vw] md:w-[50vw]">
             <div className="search-all-inclusive">
               {/* <h1>Discover your next great read!</h1> */}
-<p className="anti-hero">Lets get more enlightened together</p>
+{/* <p className="anti-hero">Lets get more enlightened together</p> */}
 {/* <h2>Lad os blive mere oplyste sammen</h2> */}
               <Search />
             </div>
           </div>
         </main>
+
+
 
         {/* {ai/agent/mascot} */}
         {/* <div class='speech-bubble'>Hello!</div> */}

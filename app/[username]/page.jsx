@@ -2,13 +2,14 @@
 
 import { useState, useRef } from "react";
 import { gsap } from "gsap";
-
 import Experience from "./Experience";
 import Header from "../Header";
 import books from "./boooks.json";
 import BottomNav from "./BottomNav";
 // import newBookPositions from "./boooks-code.json";
 import { Menu, Books } from "./boooks/";
+import Search from "../Search";
+import { useMenuStore } from "../../stores/useMenuStore";
 
 // import { useLevelStore } from "../../stores/useLevelStore";
 
@@ -16,23 +17,24 @@ export default function Page() {
   // const level = useLevelStore((s) => s.level);
   // const levelUp = useLevelStore((s) => s.levelUp);
   // const levelDown = useLevelStore((s) => s.levelDown);
-  
-  const bookRefs = useRef({}); // Store refs by book id
 
+  const bookRefs = useRef({}); // Store refs by book id
   const [selectedBook, setSelectedBook] = useState(null);
   const [drag, setDrag] = useState(false);
-
-  const [selectedMainCat, setSelectedMainCat] = useState('All');
+  const [selectedMainCat, setSelectedMainCat] = useState("All");
   const [selectedSubCat, setSelectedSubCat] = useState(null);
+
+  const searchOpen = useMenuStore((s) => s.searchOpen);
 
   // Filtering/animation handler: always animate all books, never filter render
   const handleFilter = (mainCat, subCat) => {
     setSelectedMainCat(mainCat);
     setSelectedSubCat(subCat);
     // Animate all books: matching to filter stay, others fly away
-    const newPositions = books.map(book => {
+    const newPositions = books.map((book) => {
       const basePos = book.position || { x: 0, y: 0, z: 0 };
-      const mainMatch = mainCat === "All" || book.categories?.main?.includes(mainCat);
+      const mainMatch =
+        mainCat === "All" || book.categories?.main?.includes(mainCat);
       const subMatch = !subCat || book.categories?.sub?.includes(subCat);
       if (mainMatch && subMatch) {
         return { id: book.id, position: { ...basePos } };
@@ -43,8 +45,7 @@ export default function Page() {
     animateBooksToNewPositions(newPositions);
   };
 
-
-    function animateBooksToNewPositions(newBooks) {
+  function animateBooksToNewPositions(newBooks) {
     newBooks.forEach((newBook) => {
       const mesh = bookRefs.current[newBook.id];
       if (mesh) {
@@ -62,8 +63,7 @@ export default function Page() {
   return (
     <div className="fixed top-0 left-0 w-full h-full">
       <Header />
-      <Experience drag={drag} setDrag={setDrag} >
-
+      <Experience drag={drag} setDrag={setDrag}>
         <Books
           books={books}
           selectedMainCat={selectedMainCat}
@@ -74,22 +74,26 @@ export default function Page() {
           drag={drag}
           setDrag={setDrag}
         />
-
-
       </Experience>
 
+      {searchOpen && (
+        <div className="flex justify-center items-center absolute top-0 left-0 w-screen h-screen">
+          <Search />
+        </div>
+        )
+      }
 
-         <Menu
+      {/* FilterMenu */}
+      <Menu
         books={books}
         selectedMainCat={selectedMainCat}
         setSelectedMainCat={setSelectedMainCat}
         selectedSubCat={selectedSubCat}
         setSelectedSubCat={setSelectedSubCat}
         onFilter={handleFilter}
-        />
+      />
 
       <BottomNav />
-
     </div>
   );
 }

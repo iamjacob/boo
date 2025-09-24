@@ -135,9 +135,9 @@
  }
 
  .search__field--open {
-   border-top: 2px solid #333;
-   border-left: 2px solid #333;
-   border-right: 2px solid #333;
+   border-top: 2px solid #999;
+   border-left: 2px solid #999;
+   border-right: 2px solid #999;
    border-bottom: none;
    border-radius: 22px 22px 0 0;
    padding: 0 10px;
@@ -145,7 +145,7 @@
 
  .search__field {
    /* padding:8px; */
-   border: 2px solid #333;
+   border: 2px solid #999;
    border-radius: 22px;
    -webkit-box-shadow: 0 11px 34px 0 rgba(0, 0, 0, 0.2);
    box-shadow: 0 11px 34px 0 rgba(0, 0, 0, 0.2);

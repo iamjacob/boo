@@ -14,6 +14,9 @@ import ReadingNow from "./reading/ReadingNow";
 
 import { useMenuStore } from "../../stores/useMenuStore";
 
+import { useOpenBookStore } from "../../stores/useOpenBookStore";
+import Search from "../Search";
+
 export const Experience = ({ children, drag, setDrag }) => {
   const zoom = useCameraStore((s) => s.zoom);
   const rotation = useCameraStore((s) => s.rotation);
@@ -27,8 +30,13 @@ export const Experience = ({ children, drag, setDrag }) => {
 
   const isReadingNow = useMenuStore((s) => s.ReadingNow);
   const isSecretShowing = useMenuStore((s) => s.Secret);
+  const isBookOpen = useMenuStore((s) => s.isBookOpen);
+  const openBookId = useOpenBookStore((s) => s.openBookId);
+  const activeOpenBook = useOpenBookStore((s) => s.activeOpenBook);
+  const animateBack = useOpenBookStore((s) => s.animateBack);
 
   useEffect(() => {
+  // const openBookId = useOpenBookStore((s) => s.openBookId);
     setOrbitRules({
       minPolarAngle: Math.PI / 2 - Math.PI / 14,
       maxPolarAngle: Math.PI / 2 + Math.PI / 14,
@@ -135,14 +143,17 @@ export const Experience = ({ children, drag, setDrag }) => {
         <Shelves />
 
         {isReadingNow && <ReadingNow />}
+
         {isSecretShowing && (
           <group position={[0, 0, 4]}>
             <ShelvesSquare />
           </group>
         )}
 
-        {/* <OpenBook /> */}
-
+        {/* {isBookOpen && <OpenBook />} */}
+        {console.log("openBookId", openBookId)}
+        {activeOpenBook && <OpenBook bookId={openBookId} />}
+        {/* {activeOpenBook && <Html><div onClick={() => animateBack()}>closeBook</div></Html>} */}
 
         {/* {isScannerShowing && } */}
 
@@ -166,6 +177,7 @@ export const Experience = ({ children, drag, setDrag }) => {
         <Stars />
       </Canvas>
 
+
       <Menu drag={drag} setDrag={setDrag} resetCamera={resetCamera} />
       {/*
        *
@@ -187,11 +199,15 @@ export const Experience = ({ children, drag, setDrag }) => {
 "":,
 }
  */}
+
+ 
       {/* <ConfettiDopamine
         // images={[
         //   "/favicon/apple-touch-icon.png",
         // ]}
       /> */}
+
+
     </div>
   );
 };

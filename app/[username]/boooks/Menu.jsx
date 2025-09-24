@@ -30,9 +30,9 @@ export default function Menu({
 
   return (
     <div
-      className={`fixed m-2 z-100 w-[230px] ${
+      className={`fixed m-2 z-100 ${
         filter ? "translate-x-0" : "-translate-x-full"
-      } transition-transform duration-500 ease-in-out z-50 bottom-16 left-0 flex flex-col gap-1 justify-center`}
+      } transition-transform duration-500 ease-in-out z-50 bottom-16 left-0 flex gap-1 justify-center`}
     >
       <button
         key="All"
@@ -54,7 +54,7 @@ export default function Menu({
         return (
           <button
             key={cat}
-            className={`p-1 text-[10px] backdrop-blur rounded-lg border border-white/30 text-white${
+            className={`p-1 text-[12px] h-[40px] backdrop-blur rounded-lg border border-white/30 text-white${
               selectedMainCat === cat ? " ring-2 ring-white" : ""
             }`}
             onClick={() => {
@@ -63,7 +63,7 @@ export default function Menu({
               onFilter(cat, null);
             }}
           >
-            {cat} <span style={{ fontWeight: "bold" }}>({count})</span>
+            {cat} {count}
           </button>
         );
       })}

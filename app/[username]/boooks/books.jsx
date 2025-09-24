@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Book from "../components/Book"; // Adjust path as needed
-// import books from "../boooks.json";
 
-export default function Books({
+const Boooks = ({
   books,
   selectedMainCat,
   selectedSubCat,
@@ -11,28 +10,8 @@ export default function Books({
   setSelectedBook,
   drag,
   setDrag,
-}) {
-
-  // Animate all books to their filtered or fly-away positions
-  useEffect(() => {
-    books.forEach(book => {
-      const mesh = bookRefs.current[book.id];
-      if (mesh) {
-        const mainMatch = selectedMainCat === "All" || book.categories?.main?.includes(selectedMainCat);
-        const subMatch = !selectedSubCat || book.categories?.sub?.includes(selectedSubCat);
-        const targetY = (mainMatch && subMatch) ? book.position.y : 14;
-        window.gsap && window.gsap.to(mesh.position, {
-          x: book.position.x,
-          y: targetY,
-          z: book.position.z,
-          duration: 1,
-          ease: "power2.out",
-        });
-      }
-    });
-  }, [books, selectedMainCat, selectedSubCat, bookRefs]);
-
-  // Always render all books, animate their positions
+}) =>  {
+  // Render all books, let parent animate positions
   return (
     <>
       {books.map((book, index) => (
@@ -63,8 +42,12 @@ export default function Books({
           setSelectedBook={setSelectedBook}
           drag={drag}
           setDrag={setDrag}
+          bookObject={book}
         />
       ))}
     </>
   );
 }
+
+
+export default Boooks

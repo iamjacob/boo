@@ -1,5 +1,6 @@
 "use client";
-import React, { useRef, useMemo, Suspense, useState, forwardRef, useImperativeHandle } from "react";
+import React, { useRef, useEffect, useMemo, Suspense, useState, forwardRef, useImperativeHandle } from "react";
+import { useOpenBookStore } from "../../../stores/useOpenBookStore";
 import { useThree } from "@react-three/fiber";
 import { Html, useCursor, PivotControls } from "@react-three/drei";
 import { useDrag } from "@use-gesture/react";
@@ -25,9 +26,169 @@ const Book = forwardRef(({
   setSelectedBook, // ✅ Function to update selection
   drag,
   setDrag,
+  onDoubleClick,
+  bookObject
+
 }, ref  ) => {
   const { raycaster, camera, size } = useThree();
   const meshRef = useRef();
+
+
+ const { openBookId,setBookObject,closeHandler, animateBackBook, animateBackBookId,loadingBookId, toggleBook ,closeBook,setLoadingBookId, setOpenBookId } = useOpenBookStore();
+
+
+
+// useEffect(() => {
+//   if (animateBackBookId === id) {
+//     animateBackToShelf();
+//     // useOpenBookStore.getState().animateBack(null);
+//   }
+// }, [animateBackBookId, id]);
+
+useEffect(() => {
+  // If this book was open and is now closed, animate back
+  if (openBookId !== id && openBookId !== null) {
+    //closeBook(); // Start loading
+// Call the close handler from Zustand before moving the book
+if (closeHandler) {
+  closeHandler();
+  setTimeout(() => {
+    animateBackToShelf();
+  }, 500); // Adjust the timeout as needed
+}
+}
+
+  // If this book is now open, animate to showcase
+  if (openBookId === id) {
+    animateToShowcase();
+    console.log('bookObject: ', bookObject);
+    setBookObject(bookObject);
+  }
+
+}, [openBookId]);
+
+
+// const handleOpenBook = () => {
+//   setLoadingBookId(id); // Start loading
+//   setTimeout(() => {
+//     animateToShowcase();
+//     setOpenBookId(id); // Show OpenBook after delay
+//   }, 1200); // Use your preferred delay (e.g. 1200ms or 4200ms)
+// };
+
+  // // When double-clicked, set openBookId and trigger animation
+  // const handleOpenBook = () => {
+  //   // if (openBookId == bookID) {
+  //   setOpenBookId(false);
+  //   animateBackToShelf();
+  //   // return;
+  //   // }
+
+  //   if (openBookId) {
+  //     setOpenBookId(null);
+  //   }
+
+  //   animateToShowcase();
+  //   setTimeout(() => {
+  //     // console.log(openBookId);
+  //     setOpenBookId(true);
+  //   }, 4200); // 4.2 seconds after animation starts
+  // };
+
+  // Animation now handled by parent (Books)
+  const animateToShowcase = () => {
+    if (!meshRef.current) return;
+
+    animateBackToShelf(); // Reset first
+    
+    gsap.to(meshRef.current.position, {
+      x:0,
+      y: 0,
+      z: 0,
+      duration: 1.2,
+      ease: "power3.out",
+    });
+
+    // Smooth rotation back to original shelf rotation
+    gsap.to(meshRef.current.rotation, {
+      x: -0.4,
+      y: -Math.PI/2,
+      z: 0,
+      duration: 1.2,
+      ease: "power3.out",
+    });
+
+    gsap.to(meshRef.current.rotation, {
+      x: -0.4,
+      y: Math.PI*1.5,
+      z: 0,
+      duration: 3,
+      delay: 1.2,
+      ease: "power3.out",
+    });
+
+    // Return to original scale
+    gsap.to(meshRef.current.scale, {
+      x: 0,
+      y: 0,
+      z: 0,
+      duration: 0,
+      delay: 4.2,
+      ease: "power3.out",
+      onComplete: () => {
+        //setOpenBookId(id); // Show OpenBook after delay
+      }
+    });
+
+    // send id to open book
+    // onDoubleClick(bookID);
+
+    // gsap.to(meshRef.current.scale, {
+    //   x: scale[0],
+    //   y: scale[1],
+    //   z: scale[2],
+    //   duration: 1.2,
+    //   delay: 5,
+    //   ease: "power3.out",
+    // })
+
+  };
+
+    const animateBackToShelf = () => {
+      if (!meshRef.current) return;
+
+      // Return to original scale
+      gsap.to(meshRef.current.scale, {
+        x: scale[0],
+        y: scale[1],
+        z: scale[2],
+        duration: 0.1,
+        ease: "power3.out",
+      //   beforeStart: () => {
+      //     // closeBook(); // Deselect book when animating back
+      // }
+      });
+
+      // Animate back to original position
+      gsap.to(meshRef.current.position, {
+        x: initialPosition[0],
+        y: initialPosition[1],
+        z: initialPosition[2],
+        duration: 1.2,
+        ease: "power3.out",
+      });
+
+      // Animate back to original rotation
+      gsap.to(meshRef.current.rotation, {
+        x: initialRotation[0],
+        y: initialRotation[1],
+        z: initialRotation[2],
+        duration: 1.2,
+        ease: "power3.out",
+      });
+
+    };
+
 
   useImperativeHandle(ref, () => meshRef.current);
 
@@ -321,7 +482,7 @@ const Book = forwardRef(({
   // console.log("scale[1]/2 on render:", scale[1]/2);
 
   const textures = [
-    useSafeLoader("./books/booktexture.png"),
+    useSafeLoader("./books/booktextureRotated.png"),
     // useSafeLoader(cover?.spine || "./books/covers/000.jpg"),
     useSafeLoader(cover || "./books/covers/000.jpg"),
     useSafeLoader("./books/booktexture.png"),
@@ -349,20 +510,22 @@ const Book = forwardRef(({
         // {...bind()} // ✅ Enable drag only if selected
         {...(drag ? bind() : {})}
         //{...(showPivot ? bind() : {})}
-        onDoubleClick={() => {
-          //meshRef.current.position.set(0, 0, 0);
-          //alert(bookID);
-          handleRotationChange("y", 0);
-          handleRotationChange("x", 0);
-          handleRotationChange("z", 0);
-        }}
+        // onDoubleClick={() => {
+        //   //meshRef.current.position.set(0, 0, 0);
+        //   //alert(bookID);
+        //   handleRotationChange("y", 0);
+        //   handleRotationChange("x", 0);
+        //   handleRotationChange("z", 0);
+        // }}
 
+  onDoubleClick={()=> {toggleBook(id)}}
 
         scale={scale}
         position={positionRef.current}
         rotation={rotationRef.current}
         onPointerEnter={() => (hoveredRef.current = true)}
         onPointerLeave={() => (hoveredRef.current = false)}
+        // onDoubleClick
       >
         <boxGeometry args={[1, 1, 1]} />
         {/* //I need architechture that loads alll books asap, put wireframe till image is loaded and then fade in? */}

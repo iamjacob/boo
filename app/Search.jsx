@@ -8,8 +8,8 @@ export default function Search() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
 
-  const terms = ["boooks", "authors", "genres", "tags", "quotes", "users"];
-  const baseText = "Search ";
+  const terms = ["Lets get more enlightened together...","","Books series..", "users","authors", "genres", "#tags", "quotes","words","Swipe for camera","doubletap for voice"];
+  const baseText = "";
   const [displayText, setDisplayText] = useState("");
   const [termIndex, setTermIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
@@ -65,6 +65,8 @@ useEffect(() => {
     observer.disconnect();
   };
 }, [results]);
+
+
 
 
   useEffect(() => {
@@ -139,7 +141,7 @@ const handleSearch = async (e) => {
     <div className="flex flex-col items-center w-[90vw] md:w-[40vw]">
       <div className="search flex flex-col justify-around w-full">
         <div
-          className={`w-[90vw] md:w-[40vw] p-1 align-left flex flex-col items-center 
+          className={`w-[90vw] md:w-[40vw] p-1 align-left flex flex-col items-center bg-[rgba(255,255,255,.8)] 
               ${results.length < 1 ? "search__field" : "search__field--open"}
               `}
         >
@@ -249,10 +251,10 @@ const handleSearch = async (e) => {
                   viewBox="0 0 24 24"
                   fill="none"
                   stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  class="lucide lucide-dot-icon lucide-dot"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="lucide lucide-dot-icon lucide-dot"
                 >
                   <circle cx="12.1" cy="12.1" r="1" />
                 </svg>
@@ -295,10 +297,10 @@ const handleSearch = async (e) => {
             viewBox="0 0 24 24"
             fill="none"
             stroke="#000"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-camera-icon lucide-camera"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-camera-icon lucide-camera"
           >
             <path d="M13.997 4a2 2 0 0 1 1.76 1.05l.486.9A2 2 0 0 0 18.003 7H20a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h1.997a2 2 0 0 0 1.759-1.048l.489-.904A2 2 0 0 1 10.004 4z" />
             <circle cx="12" cy="13" r="3" />
@@ -312,10 +314,10 @@ const handleSearch = async (e) => {
             viewBox="0 0 24 24"
             fill="none"
             stroke="#000"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="lucide lucide-whole-word-icon lucide-whole-word"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-whole-word-icon lucide-whole-word"
           >
             <circle cx="7" cy="12" r="3" />
             <path d="M10 9v6" />
@@ -472,6 +474,8 @@ a
 
       {/* {results.length}  */}
 
+
+
       {results.length > 1 && (
         <div className="results--open flex flex-col w-[90vw] md:w-[40vw] max-h-[60vh] mb-2 overflow-auto">
           {/* lastResults.map */}
@@ -533,10 +537,10 @@ a
                           viewBox="0 0 24 24"
                           fill="none"
                           stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          class="lucide lucide-share2-icon lucide-share-2"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="lucide lucide-share2-icon lucide-share-2"
                         >
                           <circle cx="18" cy="5" r="3" />
                           <circle cx="6" cy="12" r="3" />

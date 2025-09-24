@@ -1,12 +1,14 @@
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, use } from "react";
 import { Html, OrbitControls } from "@react-three/drei";
 import { gsap } from "gsap";
 import * as THREE from "three";
 import usePDFToImage from "./usePDFToImage";
+import { useOpenBookStore } from "../../../stores/useOpenBookStore";
+import { useMenuStore } from "../../../stores/useMenuStore";
 
 // book, onBookDoubleClick
-const OpenBook = () => {
+const OpenBook = ({ bookId }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [bookOpen, setBookOpen] = useState(0);
   const [pagesToFlip, setPagesToFlip] = useState(1);
@@ -14,6 +16,31 @@ const OpenBook = () => {
 
   //pdf part
   const [pageImage, setPageImage] = useState();
+
+  const { animateBack, openBookId, bookObject, setCloseHandler } =
+    useOpenBookStore();
+
+  // const { closeBookBeforeMoveToShelf } = useMenuStore((s) => s.closeBookBeforeMoveToShelf);
+
+  // useEffect(() => {
+  //   close();
+  // }, [closeBookBeforeMoveToShelf]);
+
+  // // Local zustand close function
+  // const zustandClose = () => {
+  //   setBookOpen(0);
+  //   setCurrentPage(0);
+  //   close();
+  //   // ...any other logic needed to close the book
+  //   console.log('OpenBook closed via zustand handler');
+  // };
+
+  // // Register the local zustandClose function in the zustand store
+  // useEffect(() => {
+  //   setCloseHandler(() => zustandClose);
+  //   // Optionally cleanup on unmount
+  //   return () => setCloseHandler(null);
+  // }, []);
 
   const handleGetPageImage = async (pageNum) => {
     try {
@@ -30,7 +57,10 @@ const OpenBook = () => {
   const pagesGroupRef = useRef();
   const pageRefs = useRef([]);
 
-    const books = {
+  // BOOOOOK IS LOADED HERE VIA
+  // openBookId
+
+  const books = {
     block1book1: {
       cover: {
         front: "./books/learningweb.webp",
@@ -54,10 +84,52 @@ const OpenBook = () => {
   };
 
   //const book, { dimensions, cover, position, pages, pdf } = books["block1book1"];
-  const book = books["block1book1"];
+  let book = books["block1book1"];
+
+  function initBookDataFromObject(bookObject) {
+    return {
+      cover: {
+        front: bookObject.cover?.front || "./test.png",
+        back: bookObject.cover?.back || bookObject.cover?.front || "./test.png",
+        spine:
+          bookObject.cover?.spine || bookObject.cover?.front || "./test.png",
+      },
+      dimensions: [
+        bookObject.scale?.width || 0.5,
+        bookObject.scale?.height || 0.7,
+        bookObject.scale?.thickness || 0.07,
+      ],
+      position: bookObject.position || { x: 0, y: 0.4, z: 0 },
+      rotation: bookObject.rotation || { x: 0, y: 0.4, z: 0 },
+      pages: bookObject.pages || 700,
+      pdf: bookObject.pdf || "./books/webdesign.pdf",
+      // Optionally add other fields you need
+      title: bookObject.title,
+      author: bookObject.author,
+      id: bookObject.id,
+      categories: bookObject.categories,
+      tags: bookObject.tags,
+      year: bookObject.year,
+    };
+  }
+
+  if (bookObject) {
+    console.log("bookObject detected, initializing book data from it");
+    book = initBookDataFromObject(bookObject);
+  } else {
+    console.log("No bookObject found, using default book data");
+  }
+
   const { dimensions, cover, position, pages, pdf } = book;
 
   //console.log(book.book)
+  //console.log('Book id for open book: ' + bookId);
+
+  console.log("Open book id from store in OpenBook: " + openBookId);
+
+  console.log("obj from openBook", bookObject);
+
+  // console.log(book);
   //const { dimensions, cover, position, pages, pdf } = book.book;
 
   /* WORD!!!!!!!! This should be corrected for some reason! Just for for the sake of good order. */
@@ -89,6 +161,13 @@ const OpenBook = () => {
     }, [url, fallbackUrl]);
     return texture;
   };
+
+  
+useEffect(() => {
+  setCloseHandler(() => close);
+  // close()
+  return () => setCloseHandler(null);
+}, [setCloseHandler]);
 
   const textures = [
     useSafeLoader("https://jacobg.me/exam/booktexture.png"), //empty this/whiten it
@@ -318,6 +397,13 @@ const OpenBook = () => {
             <path d="m321-80-71-71 329-329-329-329 71-71 400 400L321-80Z" />
           </svg>
         </button>
+
+         <button
+    onClick={close}
+    style={{ position: "absolute", top: 20, left: 60, zIndex: 100 }}
+  >
+    Close Book
+  </button>
         {/* <input
             type="number"
             min="1"
@@ -336,83 +422,85 @@ const OpenBook = () => {
           </span>
         )}
       </Html>
-      <group rotation={[0, Math.PI / 2, 0]}>
-
-      <mesh
-        rotation={[0, Math.PI, 0.45]}
-        position={[0, 0.32, 0]}
-        bookID={book.bookID}
+      <group
+        onDoubleClick={() => {
+          animateBack();
+        }}
+        rotation={[0, Math.PI / 2, 0]}
       >
-        {/* This will be the first thing to be instanced meshes? :)  */}
-        <group ref={pagesGroupRef} position={[0.001, 1, 0]}>
-          {Array.from({ length: pages }).map((_, index) => (
-            <group
-              key={`page-${index}`}
-              ref={(el) => (pageRefs.current[index] = el)}
-              position={[
-                -width / 2,
-                -1,
-                //index * pageThickness - thickness * 0.5,
-                index * -pageThickness + thickness * 0.5,
-              ]}
-              rotation={[0, 0, 0]}
-            >
-              <mesh
-                castShadow
-                receiveShadow
-                onPointerEnter={() => setHoveredPage(index)}
-                onPointerLeave={() => setHoveredPage(null)}
-                onClick={() => setCurrentPage(index)}
-                position={[width / 2, 0, 0]}
-              >
-                <boxGeometry args={[width, height, pageThickness]} />
-                <meshStandardMaterial
-                  color={index % 2 === 0 ? "white" : "lightgray"}
-                />
-
-              </mesh>
-            </group>
-          ))}
-        </group>
-
-        {/* Front cover */}
-        <group
-          ref={rightPageRef}
-          position={[-width * 0.5, 0, thickness * 0.5]}
-          rotation={[0, 0, 0]}
-        >
-          <mesh position={[width / 2, 0, 0]} castShadow receiveShadow>
-            <boxGeometry args={[width, height, 0.001]} />
-            <primitive object={materials[1]} attach="material" />
-          </mesh>
-        </group>
-
-        {/* Back cover */}
-        <group
-          ref={leftPageRef}
-          position={[-width * 0.5, 0, -thickness * 0.5]}
-          rotation={[0, 0, 0]}
-        >
-          <mesh position={[width / 2, 0, 0]} castShadow receiveShadow>
-            <boxGeometry args={[width, height, 0.001]} />
-            <primitive object={materials[5]} attach="material" />
-          </mesh>
-        </group>
-
-        {/* Spine */}
         <mesh
-          ref={spinePageRef}
-          position={[-width * 0.5, 0, 0]}
-          rotation={[0, 0, 0]}
-          castShadow
-          receiveShadow
+          rotation={[0, Math.PI, 0.45]}
+          position={[0, 0, 0]}
+          bookID={book.bookID}
         >
-          <boxGeometry args={[0.001, height, thickness]} />
-          <primitive object={materials[4]} attach="material" />
-        </mesh>
-      </mesh>
-      </group>
+          {/* This will be the first thing to be instanced meshes? :)  */}
+          <group ref={pagesGroupRef} position={[0.001, 1, 0]}>
+            {Array.from({ length: pages }).map((_, index) => (
+              <group
+                key={`page-${index}`}
+                ref={(el) => (pageRefs.current[index] = el)}
+                position={[
+                  -width / 2,
+                  -1,
+                  //index * pageThickness - thickness * 0.5,
+                  index * -pageThickness + thickness * 0.5,
+                ]}
+                rotation={[0, 0, 0]}
+              >
+                <mesh
+                  castShadow
+                  receiveShadow
+                  onPointerEnter={() => setHoveredPage(index)}
+                  onPointerLeave={() => setHoveredPage(null)}
+                  onClick={() => setCurrentPage(index)}
+                  position={[width / 2, 0, 0]}
+                >
+                  <boxGeometry args={[width, height, pageThickness]} />
+                  <meshStandardMaterial
+                    color={index % 2 === 0 ? "white" : "lightgray"}
+                  />
+                </mesh>
+              </group>
+            ))}
+          </group>
 
+          {/* Front cover */}
+          <group
+            ref={rightPageRef}
+            position={[-width * 0.5, 0, thickness * 0.5]}
+            rotation={[0, 0, 0]}
+          >
+            <mesh position={[width / 2, 0, 0]} castShadow receiveShadow>
+              <boxGeometry args={[width, height, 0.001]} />
+              <primitive object={materials[1]} attach="material" />
+            </mesh>
+          </group>
+
+          {/* Back cover */}
+          <group
+            ref={leftPageRef}
+            position={[-width * 0.5, 0, -thickness * 0.5]}
+            rotation={[0, 0, 0]}
+          >
+            <mesh position={[width / 2, 0, 0]} castShadow receiveShadow>
+              <boxGeometry args={[width, height, 0.001]} />
+              <primitive object={materials[5]} attach="material" />
+            </mesh>
+          </group>
+
+          {/* Spine */}
+          <mesh
+            ref={spinePageRef}
+            position={[-width * 0.5, 0, 0]}
+            rotation={[0, 0, 0]}
+            castShadow
+            receiveShadow
+          >
+            <boxGeometry args={[0.001, height, thickness]} />
+            <primitive object={materials[4]} attach="material" />
+          </mesh>
+        </mesh>
+      </group>
     </>
   );
 };

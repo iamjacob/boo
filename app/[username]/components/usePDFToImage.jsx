@@ -1,11 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
 
-// Do not import pdfjs-dist at the top level to avoid ESM/CJS issues in Next.js
-
-
-//THIS needs much more performance testing and optimization
-
 // Simple LRU cache implementation
 class LRUCache {
   constructor(limit = 12) {
@@ -34,58 +29,59 @@ class LRUCache {
   }
 }
 
-
 const usePDFToImage = (pdfUrl) => {
-
-
   const [pdfDoc, setPdfDoc] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [progress, setProgress] = useState(0); // 0-100
-  // LRU cache for page images (key: `${pageNum}@${scale}`)
+  const [progress, setProgress] = useState(0);
   const cacheRef = useState(() => new LRUCache(12))[0];
-  const [pdfjsReady, setPdfjsReady] = useState(false);
-
-  // Load pdfjs-dist UMD from CDN at runtime
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (window.pdfjsLib) {
-      setPdfjsReady(true);
-      return;
-    }
-    const script = document.createElement("script");
-    script.src = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.min.mjs";
-    script.async = true;
-    script.onload = () => {
-      window.pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.2.67/pdf.min.mjs";
-      setPdfjsReady(true);
-    };
-    document.body.appendChild(script);
-    return () => {
-      script.remove();
-    };
-  }, []);
-
+  const [pdfjsLib, setPdfjsLib] = useState(null);
 
   useEffect(() => {
     let isCancelled = false;
-    cacheRef.clear(); // Clear cache when PDF changes
+    cacheRef.clear();
+
+    const initPDFJS = async () => {
+      if (typeof window === 'undefined') return;
+      
+      try {
+        // ✅ Try loading via script tag method instead of dynamic import
+        if (!window.pdfjsLib) {
+          // Load from CDN first to avoid bundling issues
+          const script = document.createElement('script');
+          script.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+          script.onload = () => {
+            if (window.pdfjsLib) {
+              window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+              setPdfjsLib(window.pdfjsLib);
+            }
+          };
+          document.head.appendChild(script);
+        } else {
+          setPdfjsLib(window.pdfjsLib);
+        }
+      } catch (error) {
+        console.error("Error initializing PDF.js:", error);
+      }
+    };
+
+    initPDFJS();
+  }, []);
+
+  useEffect(() => {
+    let isCancelled = false;
+    cacheRef.clear();
 
     const loadPDF = async () => {
+      if (!pdfjsLib || !pdfUrl) {
+        setIsLoading(false);
+        return;
+      }
+
       setIsLoading(true);
       setProgress(0);
+      
       try {
-        if (!pdfUrl) {
-          console.error("PDF URL is not defined.");
-          setIsLoading(false);
-          setProgress(0);
-          return;
-        }
-        if (!window.pdfjsLib) {
-          setIsLoading(false);
-          setProgress(0);
-          return;
-        }
-        const loadingTask = window.pdfjsLib.getDocument({
+        const loadingTask = pdfjsLib.getDocument({
           url: pdfUrl,
           onProgress: (progressData) => {
             if (progressData && progressData.loaded && progressData.total) {
@@ -93,6 +89,7 @@ const usePDFToImage = (pdfUrl) => {
             }
           },
         });
+        
         const pdf = await loadingTask.promise;
 
         if (!isCancelled) {
@@ -109,36 +106,30 @@ const usePDFToImage = (pdfUrl) => {
       }
     };
 
-    if (pdfjsReady) {
-      loadPDF();
-    }
+    loadPDF();
 
     return () => {
       isCancelled = true;
       cacheRef.clear();
     };
-  }, [pdfUrl, cacheRef, pdfjsReady]);
-
-
+  }, [pdfUrl, pdfjsLib, cacheRef]);
 
   const getPageImage = async (pageNum, scale = 2) => {
-    // Prevent requesting a page image before the PDF is loaded
-    if (!pdfDoc || isLoading || !window.pdfjsLib) {
-      // Silently skip if not loaded
+    if (!pdfDoc || isLoading || !pdfjsLib) {
       return null;
     }
+    
     const cacheKey = `${pageNum}@${scale}`;
     const cached = cacheRef.get(cacheKey);
     if (cached) return cached;
 
     try {
-      // Defensive: PDF pages are 1-based, so clamp pageNum
       const numPages = pdfDoc.numPages;
       if (pageNum < 0 || pageNum >= numPages) {
-        // Silently skip invalid page requests
         return null;
       }
-      const page = await pdfDoc.getPage(pageNum + 1); // pdfjs pages are 1-based
+      
+      const page = await pdfDoc.getPage(pageNum + 1);
       const viewport = page.getViewport({ scale });
       const canvas = document.createElement("canvas");
       const context = canvas.getContext("2d");
@@ -156,7 +147,6 @@ const usePDFToImage = (pdfUrl) => {
       cacheRef.set(cacheKey, dataUrl);
       return dataUrl;
     } catch (error) {
-      // Silently skip errors for invalid page requests
       return null;
     }
   };

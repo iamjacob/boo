@@ -7,6 +7,9 @@ import BoooksHeart from "./BoooksHeart";
 export default function Search() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [books, setBooks] = useState([]);
+  const [isOnline, setIsOnline] = useState(true);
 
   const terms = ["Lets get more enlightened together...","","Books series..", "users","authors", "genres", "#tags", "quotes","words","Swipe for camera","doubletap for voice"];
   const baseText = "";
@@ -72,6 +75,27 @@ useEffect(() => {
   useEffect(() => {
     const detected = document.body.getAttribute("data-lang") || "en";
     setLang(detected);
+    
+    // Load offline data
+    const loadOfflineData = async () => {
+      try {
+        // Load users data
+        const usersResponse = await fetch('/users.json');
+        const userData = await usersResponse.json();
+        setUsers(userData);
+        
+        // Load books/movies data for offline use
+        const booksResponse = await fetch('/movies.json');
+        const booksData = await booksResponse.json();
+        setBooks(booksData);
+        
+        console.log('Offline data loaded successfully');
+      } catch (error) {
+        console.error('Failed to load offline data:', error);
+      }
+    };
+    
+    loadOfflineData();
   }, []);
 
   // Reset typewriter state when user types, and restart when cleared
@@ -124,16 +148,53 @@ const handleSearch = async (e) => {
 
   if (!q) return setResults([]);
 
-  const index = client.index("movies");
-  const searchResults = await index.search(q);
+  // Search users (always works offline)
+  const userResults = users.filter(user => {
+    const searchTerm = q.toLowerCase();
+    return (
+      user.username.toLowerCase().includes(searchTerm) ||
+      user.displayName.toLowerCase().includes(searchTerm) ||
+      user.bio.toLowerCase().includes(searchTerm) ||
+      user.favoriteGenres.some(genre => genre.toLowerCase().includes(searchTerm)) ||
+      user.currentlyReading.toLowerCase().includes(searchTerm)
+    );
+  }).map(user => ({...user, type: 'user'}));
 
-  // Brug View Transitions API hvis muligt
+  let bookResults = [];
+
+  try {
+    // Try MeiliSearch first
+    const index = client.index("movies");
+    const searchResults = await index.search(q);
+    bookResults = searchResults.hits.map(item => ({...item, type: 'book'}));
+    setIsOnline(true);
+  } catch (error) {
+    console.error("MeiliSearch offline, using local search:", error);
+    setIsOnline(false);
+    
+    // Fallback to local book search
+    bookResults = books.filter(book => {
+      const searchTerm = q.toLowerCase();
+      return (
+        book.title?.toLowerCase().includes(searchTerm) ||
+        book.author?.toLowerCase().includes(searchTerm) ||
+        book.description?.toLowerCase().includes(searchTerm) ||
+        book.genre?.toLowerCase().includes(searchTerm) ||
+        book.tags?.some(tag => tag.toLowerCase().includes(searchTerm))
+      );
+    }).slice(0, 20).map(item => ({...item, type: 'book'})); // Limit results similar to MeiliSearch
+  }
+
+  // Combine results - users first, then books/movies
+  const combinedResults = [...userResults, ...bookResults];
+
+  // Use View Transitions API if available
   if (document.startViewTransition) {
     document.startViewTransition(() => {
-      setResults(searchResults.hits);
+      setResults(combinedResults);
     });
   } else {
-    setResults(searchResults.hits);
+    setResults(combinedResults);
   }
 };
 
@@ -156,6 +217,16 @@ const handleSearch = async (e) => {
               //onFocus={}
               placeholder={inputText.length === 0 && displayText}
             />
+            {query && !isOnline && (
+              <div className="offline-indicator flex items-center gap-1 px-2 py-1 bg-yellow-100 text-yellow-800 text-xs rounded-md">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                  <path d="M2 17l10 5 10-5"/>
+                  <path d="M2 12l10 5 10-5"/>
+                </svg>
+                Offline mode
+              </div>
+            )}
             <div className="quick-access-buttons flex gap-2 m-1 justify-center">
               {results.length < 1 && (
                 <div className="top-2 right-2">
@@ -478,121 +549,210 @@ a
 
       {results.length > 1 && (
         <div className="results--open flex flex-col w-[90vw] md:w-[40vw] max-h-[60vh] mb-2 overflow-auto">
-          {/* lastResults.map */}
-{results.map((movie, idx) => (
-  <div
-    key={movie.id}
-    ref={el => resultRefs.current[idx] = el}
-    data-idx={idx}
-    className={`border-top shadow p-1 flex justify-between transition-all duration-500 ${idx === focusedIdx ? "focused-result" : ""}`}
-    style={
-      idx === focusedIdx
-        ? { height: "220px", background: "#fffbe6", zIndex: 2 }
-        : { height: "100px", zIndex: 1 }
-    }
-    {...(idx === focusedIdx
-      ? {
-          id: "focused-result",
-          "data-view-transition-name": "focused-result",
-        }
-      : {})}
-  >
-    <img
-      src={movie.poster}
-      alt={movie.title}
-      className={idx === focusedIdx ? "w-32 h-auto mb-2" : "w-12 h-auto mb-2"}
-      {...(idx === focusedIdx
-        ? { "data-view-transition-name": "focused-image" }
-        : {})}
-    />
-              <div className="flex">
-                <div className="flex flex-col">
-                  <h2 className="font-bold text-lg">{movie.title}</h2>
-                  <p className="text-sm mt-1">
-                    {movie.overview.length > 50
-                      ? movie.overview.substring(0, 50) + "..."
-                      : movie.overview}
-                  </p>
-
-                  <div className="flex">
-                    <p className="text-xs mt-2">
-                      Genres: {movie.genres.join(", ")}
-                    </p>
-                    <p className="text-xs">
-                      Release:{" "}
-                      {new Date(movie.release_date * 1000).getFullYear()}
-                    </p>
+          {results.map((item, idx) => (
+            <div
+              key={`${item.type}-${item.id}`}
+              ref={el => resultRefs.current[idx] = el}
+              data-idx={idx}
+              className={`border-top shadow p-1 flex justify-between transition-all duration-500 ${idx === focusedIdx ? "focused-result" : ""}`}
+              style={
+                idx === focusedIdx
+                  ? { height: "220px", background: "#fffbe6", zIndex: 2 }
+                  : { height: "100px", zIndex: 1 }
+              }
+              {...(idx === focusedIdx
+                ? {
+                    id: "focused-result",
+                    "data-view-transition-name": "focused-result",
+                  }
+                : {})}
+            >
+              {item.type === 'user' ? (
+                // User result layout
+                <>
+                  <img
+                    src={item.avatar}
+                    alt={item.displayName}
+                    className={`rounded-full ${idx === focusedIdx ? "w-20 h-20 mb-2" : "w-12 h-12 mb-2"}`}
+                    {...(idx === focusedIdx
+                      ? { "data-view-transition-name": "focused-image" }
+                      : {})}
+                  />
+                  <div className="flex flex-grow">
+                    <div className="flex flex-col flex-grow">
+                      <div className="flex items-center gap-2">
+                        <h2 className="font-bold text-lg">{item.displayName}</h2>
+                        <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">USER</span>
+                      </div>
+                      <p className="text-sm text-gray-600">@{item.username}</p>
+                      <p className="text-sm mt-1">
+                        {item.bio.length > 50
+                          ? item.bio.substring(0, 50) + "..."
+                          : item.bio}
+                      </p>
+                      {idx === focusedIdx && (
+                        <div className="mt-2">
+                          <p className="text-xs">📚 {item.booksRead} books read</p>
+                          <p className="text-xs">📍 {item.location}</p>
+                          <p className="text-xs">📖 Currently reading: {item.currentlyReading}</p>
+                          <p className="text-xs">👥 {item.followers} followers, {item.following} following</p>
+                        </div>
+                      )}
+                      <div className="flex gap-2 mt-1">
+                        {item.favoriteGenres.slice(0, 3).map(genre => (
+                          <span key={genre} className="text-xs bg-gray-100 px-2 py-1 rounded">
+                            {genre}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                    {/* User action buttons */}
+                    <div className="ml-4 flex justify-between items-center">
+                      <ul className="flex gap-4 justify-around w-full">
+                        <li>
+                          <button className="p-1 hover:bg-gray-100 rounded">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="20"
+                              height="20"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                              <circle cx="9" cy="7" r="4"/>
+                              <path d="m19 8 2 2-2 2"/>
+                              <path d="m17 10h4"/>
+                            </svg>
+                          </button>
+                        </li>
+                        <li>
+                          <button className="p-1 hover:bg-gray-100 rounded">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="20"
+                              height="20"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                            </svg>
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
                   </div>
-                </div>
+                </>
+              ) : (
+                // Book/movie result layout (existing code)
+                <>
+                  <img
+                    src={item.poster}
+                    alt={item.title}
+                    className={idx === focusedIdx ? "w-32 h-auto mb-2" : "w-12 h-auto mb-2"}
+                    {...(idx === focusedIdx
+                      ? { "data-view-transition-name": "focused-image" }
+                      : {})}
+                  />
+                  <div className="flex">
+                    <div className="flex flex-col">
+                      <div className="flex items-center gap-2">
+                        <h2 className="font-bold text-lg">{item.title}</h2>
+                        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">BOOK</span>
+                      </div>
+                      <p className="text-sm mt-1">
+                        {item.overview.length > 50
+                          ? item.overview.substring(0, 50) + "..."
+                          : item.overview}
+                      </p>
 
-                {/* quick action buttons*/}
-                <div className="ml-4 flex justify-between items-center">
-                  <ul className="flex gap-4 justify-around w-full">
-                    <li>
-                      <a href="#">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="lucide lucide-share2-icon lucide-share-2"
-                        >
-                          <circle cx="18" cy="5" r="3" />
-                          <circle cx="6" cy="12" r="3" />
-                          <circle cx="18" cy="19" r="3" />
-                          <line x1="8.59" x2="15.42" y1="13.51" y2="17.49" />
-                          <line x1="15.41" x2="8.59" y1="6.51" y2="10.49" />
-                        </svg>
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <BoooksHeart width="24" height="24" fill="#000000" />
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          class="lucide lucide-cross-icon lucide-cross"
-                        >
-                          <path d="M4 9a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h4a1 1 0 0 1 1 1v4a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-4a1 1 0 0 1 1-1h4a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-4a1 1 0 0 1-1-1V4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4a1 1 0 0 1-1 1z" />
-                        </svg>
-                      </a>
-                    </li>
-                  </ul>
-                </div>
+                      <div className="flex">
+                        <p className="text-xs mt-2">
+                          Genres: {item.genres.join(", ")}
+                        </p>
+                        <p className="text-xs">
+                          Release:{" "}
+                          {new Date(item.release_date * 1000).getFullYear()}
+                        </p>
+                      </div>
+                    </div>
 
-                <div className="arrow bg-red-500 w-4 rounded m-2 flex align-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="32"
-                    height="32"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#fff"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="lucide lucide-chevron-down-icon lucide-chevron-down"
-                  >
-                    <path d="m9 18 6-6-6-6" />
-                  </svg>
-                </div>
-              </div>
+                    {/* quick action buttons*/}
+                    <div className="ml-4 flex justify-between items-center">
+                      <ul className="flex gap-4 justify-around w-full">
+                        <li>
+                          <a href="#">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              className="lucide lucide-share2-icon lucide-share-2"
+                            >
+                              <circle cx="18" cy="5" r="3" />
+                              <circle cx="6" cy="12" r="3" />
+                              <circle cx="18" cy="19" r="3" />
+                              <line x1="8.59" x2="15.42" y1="13.51" y2="17.49" />
+                              <line x1="15.41" x2="8.59" y1="6.51" y2="10.49" />
+                            </svg>
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <BoooksHeart width="24" height="24" fill="#000000" />
+                          </a>
+                        </li>
+                        <li>
+                          <a href="#">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <path d="M4 9a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h4a1 1 0 0 1 1 1v4a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2v-4a1 1 0 0 1 1-1h4a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-4a1 1 0 0 1-1-1V4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4a1 1 0 0 1-1 1z" />
+                            </svg>
+                          </a>
+                        </li>
+                      </ul>
+                    </div>
+
+                    <div className="arrow bg-red-500 w-4 rounded m-2 flex align-center">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="32"
+                        height="32"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="#fff"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="lucide lucide-chevron-down-icon lucide-chevron-down"
+                      >
+                        <path d="m9 18 6-6-6-6" />
+                      </svg>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           ))}
         </div>

@@ -39,7 +39,7 @@ const BookMenu = () => {
     <div className="fixed bottom-0 w-screen inset-0 pointer-events-none z-50">
       <div className="absolute top-4 right-4 flex gap-3 pointer-events-auto">
         <button
-          className="p-3 bg-black/80 backdrop-blur-md text-white rounded-full border border-white/30 hover:bg-white/20 transition-all duration-200"
+          className="p-2 bg-black/80 backdrop-blur-md text-white rounded-full border border-white/30 hover:bg-white/20 transition-all duration-200"
           title="More Options"
           onClick={() => setVisible(!visible)}
         >
@@ -64,7 +64,7 @@ const BookMenu = () => {
         {/* Book Open/Close Toggle */}
         <button
           onClick={bookOpen ? closeBook : openBook}
-          className="p-3 bg-black/80 backdrop-blur-md text-white rounded-full border border-white/30 hover:bg-white/20 transition-all duration-200"
+          className="p-2 bg-black/80 backdrop-blur-md text-white rounded-full border border-white/30 hover:bg-white/20 transition-all duration-200"
         >
           {bookOpen ? (
             <svg
@@ -89,7 +89,7 @@ const BookMenu = () => {
           )}
         </button>
         <button
-          className="p-3 bg-black/80 backdrop-blur-md text-white rounded-full border border-white/30 hover:bg-white/20 transition-all duration-200"
+          className="p-2 bg-black/80 backdrop-blur-md text-white rounded-full border border-white/30 hover:bg-white/20 transition-all duration-200"
           title="More Options"
         >
           <svg
@@ -113,7 +113,7 @@ const BookMenu = () => {
         {/* Right Controls - Close Button */}
         <button
           onClick={handleCloseBook}
-          className="p-3 bg-red-600/80 backdrop-blur-md text-white rounded-full border border-red-400/30 hover:bg-red-500/90 transition-all duration-200"
+          className="p-2 bg-red-600/80 backdrop-blur-md text-white rounded-full border border-red-400/30 hover:bg-red-500/90 transition-all duration-200"
           title="Close Book"
         >
           <svg
@@ -139,7 +139,7 @@ const BookMenu = () => {
         <button
           onClick={flipBackward}
           disabled={currentPage === 0}
-          className={`p-3 rounded-full backdrop-blur-md border transition-all duration-200 ${
+          className={`p-2 rounded-full backdrop-blur-md border transition-all duration-200 ${
             currentPage === 0
               ? "bg-gray-800/50 border-gray-700 text-gray-500 cursor-not-allowed"
               : "bg-black/80 border-white/30 text-white hover:bg-white/20"
@@ -165,7 +165,7 @@ const BookMenu = () => {
         <button
           onClick={flipForward}
           disabled={currentPage >= pages - 1}
-          className={`p-3 rounded-full backdrop-blur-md border transition-all duration-200 ${
+          className={`p-2 rounded-full backdrop-blur-md border transition-all duration-200 ${
             currentPage >= pages - 1
               ? "bg-gray-800/50 border-gray-700 text-gray-500 cursor-not-allowed"
               : "bg-black/80 border-white/30 text-white hover:bg-white/20"

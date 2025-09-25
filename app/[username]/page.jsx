@@ -11,6 +11,7 @@ import Search from "../Search";
 import Add from "./Add";
 import { useMenuStore } from "../../stores/useMenuStore";
 import { useBooksStore } from "../../stores/useBooksStore";
+import Timeline from "./timeline/Timeline";
 
 // import { useLevelStore } from "../../stores/useLevelStore";
 
@@ -39,6 +40,7 @@ export default function Page() {
   const books = useBooksStore((s) => s.books);
   const searchOpen = useMenuStore((s) => s.searchOpen);
   const add = useMenuStore((s) => s.add);
+  const dnaTimeline = useMenuStore((s) => s.dnaTimeline);
 
   // Filtering/animation handler: always animate all books, never filter render
   const handleFilter = (mainCat, subCat) => {
@@ -166,6 +168,8 @@ export default function Page() {
       {searchOpen && (<div className="flex justify-center items-center absolute top-0 left-0 w-screen h-screen"><Search /></div>)}
 
       {add && <Add />}
+
+      {dnaTimeline && <Timeline />}
 
       {/* FilterMenu */}
       <Filter

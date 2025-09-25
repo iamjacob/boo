@@ -12,6 +12,8 @@ export const useMenuStore = create((set) => ({
     searchOpen: false,
     geo: false,
     add: false,
+    dnaTimeline: false,
+    toggleDnaTimeline: () => set((state) => ({ dnaTimeline: !state.dnaTimeline })),
     toggleAdd: () => set((state) => ({ add: !state.add })),
     toggleGeo: () => set((state) => ({ geo: !state.geo })),
     toggleSearch: () => set((state) => ({ searchOpen: !state.searchOpen })),

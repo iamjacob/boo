@@ -21,6 +21,8 @@ const BottomNav = () => {
     toggleGeo,
     add,
     toggleAdd,
+    dnaTimeline,
+    toggleDnaTimeline
   } = useMenuStore();
   const filter = useMenuStore((s) => s.FilterOpen);
 
@@ -147,7 +149,11 @@ const BottomNav = () => {
           {/* <FullScreen/> */}
           <a
             href="#story"
-            className=" bg-black/20 p-3 backdrop-blur rounded-[44px]"
+            onClick={() => toggleDnaTimeline()}
+            className={`${
+              dnaTimeline ? "border-[#ff0000]" : "border-[#ff000050]"
+            } border border-1 bg-black/20 p-3 backdrop-blur rounded-[44px]`}
+
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

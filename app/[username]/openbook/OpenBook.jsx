@@ -1,21 +1,35 @@
 "use client";
-import React, { useState, useRef, useEffect, use } from "react";
+import React, { useState, useRef, useEffect, useMemo } from "react";
 import { Html, OrbitControls } from "@react-three/drei";
 import { gsap } from "gsap";
 import * as THREE from "three";
-import usePDFToImage from "./usePDFToImage";
+import usePDFToImage from "../components/usePDFToImage";
 import { useOpenBookStore } from "../../../stores/useOpenBookStore";
-import { useMenuStore } from "../../../stores/useMenuStore";
+// import { useMenuStore } from "../../../stores/useMenuStore";
+import { useBookMenuStore } from "../../../stores/useBookMenuStore";
 
 // book, onBookDoubleClick
 const OpenBook = ({ bookId }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [bookOpen, setBookOpen] = useState(0);
   const [pagesToFlip, setPagesToFlip] = useState(1);
-  const [hoveredPage, setHoveredPage] = useState(null);
+  // const [hoveredPage, setHoveredPage] = useState(null);
 
   //pdf part
   const [pageImage, setPageImage] = useState();
+
+   const {
+    setMenuVisible,
+    setCurrentPage: setMenuCurrentPage,
+    setPages: setMenuPages,
+    setBookOpen: setMenuBookOpen,
+    // setHoveredPage,
+    setBook: setMenuBook,
+    registerControls,
+    clearControls,
+  } = useBookMenuStore();
+
+ 
 
   const { toggleBook, openBookId, bookObject, setCloseHandler, closeBook,setOpenBookId } =
     useOpenBookStore();
@@ -115,14 +129,18 @@ const OpenBook = ({ bookId }) => {
   }
 
   // Initialize book data properly
-  let book;
-  if (bookObject) {
-    console.log("bookObject detected, initializing book data from it");
-    book = initBookDataFromObject(bookObject);
-  } else {
-    console.log("No bookObject found, using default book data");
-    book = books["block1book1"];
-  }
+
+  // Memoize the book object to prevent infinite loops
+  const book = useMemo(() => {
+    if (bookObject) {
+      console.log("bookObject detected, initializing book data from it");
+      return initBookDataFromObject(bookObject);
+    } else {
+      console.log("No bookObject found, using default book data");
+      return books["block1book1"];
+    }
+  }, [bookObject]); // Only recreate when bookObject changes
+
 
   // Safely destructure with fallbacks
   const dimensions = book?.dimensions || [0.5, 0.7, 0.07];
@@ -131,15 +149,19 @@ const OpenBook = ({ bookId }) => {
   const pages = book?.pages || 700;
   const pdf = book?.pdf || "./books/webdesign.pdf";
 
-  console.log("Final book data:", { dimensions, cover, position, pages, pdf });
+
+
+
+
+  // console.log("Final book data:", { dimensions, cover, position, pages, pdf });
 
   //const { dimensions, cover, position, pages, pdf } = book;
 
   //console.log(book.book)
   //console.log('Book id for open book: ' + bookId);
 
-  console.log("Open book id from store in OpenBook: " + openBookId);
-  console.log("obj from openBook", bookObject);
+  // console.log("Open book id from store in OpenBook: " + openBookId);
+  // console.log("obj from openBook", bookObject);
 
   // Extract dimensions safely
   const [width, height, thickness] = dimensions;
@@ -150,6 +172,57 @@ const OpenBook = ({ bookId }) => {
 
   const openDegrees = 1;
   const pageThickness = thickness / pages;
+
+
+
+
+// Register controls - only run once
+useEffect(() => {
+  registerControls({
+    flipForward,
+    flipBackward,
+    openBook: open,
+    closeBook: close,
+    toggleBook,
+  });
+
+  return () => clearControls();
+}, [currentPage, pages]); // Empty dependency array
+
+// Set menu visible - only run once
+useEffect(() => {
+  setMenuVisible(true);
+  
+  return () => {
+    setMenuVisible(false);
+  };
+}, []); // Empty dependency array
+
+// Sync individual states - separate useEffects
+useEffect(() => {
+  setMenuCurrentPage(currentPage);
+}, [currentPage, setMenuCurrentPage]);
+
+useEffect(() => {
+  setMenuPages(pages);
+}, [pages, setMenuPages]);
+
+useEffect(() => {
+  setMenuBookOpen(bookOpen);
+}, [bookOpen, setMenuBookOpen]);
+
+useEffect(() => {
+  setMenuBook(book);
+}, [book, setMenuBook]);
+
+
+
+
+
+
+
+
+
 
   const useSafeLoader = (url, fallbackUrl = "./test.png") => {
     const [texture, setTexture] = useState(null);
@@ -177,8 +250,8 @@ useEffect(() => {
 }, [setCloseHandler]);
 
   // Debug cover paths
-  console.log("Cover paths:", cover);
-  console.log("Cover front path:", cover.front);
+  // console.log("Cover paths:", cover);
+  // console.log("Cover front path:", cover.front);
 
   const textures = [
     useSafeLoader("https://jacobg.me/exam/booktexture.png"), //empty this/whiten it
@@ -338,7 +411,7 @@ useEffect(() => {
   return (
     <>
       {/* <OrbitControls /> */}
-      <Html>
+      {/* <Html>
         <button
           onClick={flipBackward}
           style={{ position: "absolute", top: 20, left: 20, zIndex: 100 }}
@@ -416,12 +489,16 @@ useEffect(() => {
     Close Book
   </button>
 
-  // Add this close button to your opened book view component
 <button
   className="fixed top-4 right-4 z-50 bg-black/80 backdrop-blur-md text-white p-3 rounded-full border border-white/30 hover:bg-white/20 transition-all duration-200"
   onClick={() => {
     // This will trigger the useEffect in Book.jsx that handles closing
-    toggleBook();
+    close();
+    setTimeout(() => { 
+      setOpenBookId(null); 
+      toggleBook();
+    }, 500); // Delay to allow close animation
+    //
     // closeBook();
   }}
 >
@@ -439,7 +516,7 @@ useEffect(() => {
     <line x1="6" y1="6" x2="18" y2="18"></line>
   </svg>
 </button>
-        {/* <input
+        <input
             type="number"
             min="1"
             max={pages - 1}
@@ -449,14 +526,16 @@ useEffect(() => {
             }
             className="w-20 px-3 py-2 bg-gray-800 text-white rounded-md border border-gray-700
               focus:outline-none focus:ring-2 focus:ring-blue-500"
-          /> */}
+          />
 
         {hoveredPage !== null && (
           <span className="relative px-3 py-2 bg-gray-800 text-white rounded-md w-[150px]">
             Page {hoveredPage + 1}
           </span>
         )}
-      </Html>
+      </Html> */}
+
+
       <group
        
         rotation={[0, Math.PI / 2, 0]}
@@ -483,8 +562,8 @@ useEffect(() => {
                 <mesh
                   castShadow
                   receiveShadow
-                  onPointerEnter={() => setHoveredPage(index)}
-                  onPointerLeave={() => setHoveredPage(null)}
+                  // onPointerEnter={() => setHoveredPage(index)}
+                  // onPointerLeave={() => setHoveredPage(null)}
                   onClick={() => setCurrentPage(index)}
                   position={[width / 2, 0, 0]}
                 >

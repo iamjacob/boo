@@ -13,6 +13,7 @@ import Search from "../Search";
 import Add from "./Add";
 import Timeline from "./timeline/Timeline";
 // import { useLevelStore } from "../../stores/useLevelStore";
+import { useOpenBookStore } from "../../stores/useOpenBookStore";
 
 export default function Page() {
   // const level = useLevelStore((s) => s.level);
@@ -36,6 +37,7 @@ export default function Page() {
   const add = useMenuStore((s) => s.add);
   const dnaTimeline = useMenuStore((s) => s.dnaTimeline);
   const geo = useMenuStore((s) => s.geo);
+  const activeOpenBook = useOpenBookStore((s) => s.activeOpenBook);
   // const filter = useMenuStore((s) => s.FilterOpen);
 
   // Filtering/animation handler: always animate all books, never filter render
@@ -176,7 +178,7 @@ export default function Page() {
         onFilter={handleFilter}
       />
 
-      <BottomNav />
+      {!activeOpenBook && <BottomNav />}
     </div>
   );
 }

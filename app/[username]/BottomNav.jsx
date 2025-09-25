@@ -32,7 +32,7 @@ const BottomNav = () => {
     <>
       <div
         className={`absolute z-50 right-0 w-screen left-0 flex justify-center items-center ${
-          filter ? "bottom-[50px]" : "bottom-0"
+          filter ? "bottom-[50px]" : "bottom-1"
         } transition-all duration-500 ease-in-out`}
       >
         {share && (

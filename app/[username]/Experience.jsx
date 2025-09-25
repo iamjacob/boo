@@ -7,11 +7,12 @@ import ShelvesSquare from "./secrets/ShelvesSquare";
 import { gsap } from "gsap";
 import { useCameraStore } from "../../stores/useCameraStore";
 import Lighting from "./Lighting";
-import OpenBook from "./components/OpenBook";
+import OpenBook from "./openbook/OpenBook";
 import Menu from "./Menu";
 import ReadingNow from "./reading/ReadingNow";
-import Levels from "./Levels";
+import BookMenu from './openbook/BookMenu';
 
+import Levels from "./Levels";
 import FullScreen from '../Fullscreen'
 
 import { useMenuStore } from "../../stores/useMenuStore";
@@ -158,6 +159,7 @@ export const Experience = ({ children, drag, setDrag }) => {
 
         {/* {isBookOpen && <OpenBook />} */}
         {console.log("openBookId", openBookId)}
+
         {activeOpenBook && <OpenBook bookId={openBookId} />}
         {/* {activeOpenBook && <Html><div onClick={() => animateBack()}>closeBook</div></Html>} */}
 
@@ -184,6 +186,8 @@ export const Experience = ({ children, drag, setDrag }) => {
       </Canvas>
 
       <Menu drag={drag} setDrag={setDrag} resetCamera={resetCamera} />
+
+     {activeOpenBook && <BookMenu />}
 
 
         {/* <Levels /> */}

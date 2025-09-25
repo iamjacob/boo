@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-export default function ConfettiDopamine({ images=["/favicon/apple-touch-icon.png"] }) {
+export default function ConfettiDopamine({ images=["/favicon/apple-touch-icon.png"], direction="up" }) {
   const canvasRef = useRef(null);
 
 
@@ -27,15 +27,27 @@ export default function ConfettiDopamine({ images=["/favicon/apple-touch-icon.pn
     function createParticle() {
       const img = new Image();
       img.src = images[Math.floor(Math.random() * images.length)];
-      return {
-        x: Math.random() * canvas.width,
-        y: -20,
-        size: 24 + Math.random() * 20,
-        speedY: 2 + Math.random() * 4,
-        speedX: (Math.random() - 0.5) * 2,
-        rotation: Math.random() * 360,
-        img: img,
-      };
+      if (direction === "up") {
+        return {
+          x: Math.random() * canvas.width,
+          y: canvas.height + 20, // Start at the bottom
+          size: 24 + Math.random() * 20,
+          speedY: -(2 + Math.random() * 4), // Move up
+          speedX: (Math.random() - 0.5) * 2,
+          rotation: Math.random() * 360,
+          img: img,
+        };
+      } else {
+        return {
+          x: Math.random() * canvas.width,
+          y: -20, // Start at the top
+          size: 24 + Math.random() * 20,
+          speedY: 2 + Math.random() * 4, // Move down
+          speedX: (Math.random() - 0.5) * 2,
+          rotation: Math.random() * 360,
+          img: img,
+        };
+      }
     }
 
     function drawParticle(p) {
@@ -56,7 +68,8 @@ export default function ConfettiDopamine({ images=["/favicon/apple-touch-icon.pn
         p.x += p.speedX;
         p.rotation += 3;
         drawParticle(p);
-        if (p.y > canvas.height + 50) particles.splice(i, 1);
+        if (direction === "up" && p.y < -50) particles.splice(i, 1); // Remove when above the top
+        if (direction === "down" && p.y > canvas.height + 50) particles.splice(i, 1); // Remove when below the bottom
       });
       requestAnimationFrame(loop);
     }
@@ -76,8 +89,8 @@ export default function ConfettiDopamine({ images=["/favicon/apple-touch-icon.pn
 
   return (
     <>
-    <div className="flex">
-<div className="absolute top-[50vh] left-[50vw] z-[10000] bg-[#ffffff50] rounded-xl ">
+    <div className="flex justify-center items-center pointer-events-none">
+<div className="w-[300px] h-[300px] z-[10000] bg-[#ffffff50] rounded-xl ">
 <h1 className="text-xl text-black">Level 1</h1>
 <p>Tillykke, du er nu mesterlæser</p>
 <div className="unlocks">

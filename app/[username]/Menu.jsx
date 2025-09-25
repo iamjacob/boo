@@ -1,6 +1,7 @@
 import React from 'react'
 import FullScreen from '../Fullscreen'
 
+
 export const Menu = ({ drag, setDrag, resetCamera }) => {
 
 

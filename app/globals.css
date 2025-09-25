@@ -343,3 +343,31 @@ transform: translateX(0px);
 .sideflow{
   box-shadow: 0 10px 25px #d100f620;
 }
+
+/*categories bar*/
+.category-slider {
+  display: flex;
+  overflow-x: auto;
+  padding: 8px 0;
+  gap: 8px;
+  scrollbar-width: thin;
+  scrollbar-color: #888 #222;
+}
+
+.category-chip {
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding: 8px 16px;
+  border-radius: 16px;
+  background: #22222250;
+  color: #ffffff50;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.category-chip:active,
+.category-chip:focus {
+  background: #444;
+}

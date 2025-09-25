@@ -1,8 +1,8 @@
 import React from "react";
-
+//CHANGE THIS NAME TO FILTERS
 import { useMenuStore } from "../../../stores/useMenuStore";
 
-export default function Menu({
+export default function Filter({
   books,
   selectedMainCat,
   setSelectedMainCat,
@@ -29,16 +29,31 @@ export default function Menu({
   );
 
   return (
+  
+
     <div
-      className={`fixed m-2 z-100 ${
-        filter ? "translate-x-0" : "-translate-x-full"
-      } transition-transform duration-500 ease-in-out z-50 bottom-16 left-0 flex gap-1 justify-center`}
+      className={`category-slider transition-transform fixed bottom-0 left-0 w-full flex p-2 overflow-x-auto z-50 
+        ${filter ? "bottom-[0px]" : "bottom-[-100px]"}
+         transition-transform duration-500 ease-in-out gap-2`} // removed justify-center for natural scroll
+      style={{
+        scrollbarWidth: "thin",
+        scrollbarColor: "#888 #222",
+        WebkitOverflowScrolling: "touch"
+      }}
     >
-      <button
+    <button
         key="All"
-        className={`p-1 text-[10px] bg-black-700/80 backdrop-blur rounded-lg border border-white/30 text-white${
+        className={`category-chip px-4 py-2 text-[13px] bg-black/80 backdrop-blur rounded-full border border-white/30 text-white whitespace-nowrap flex-shrink-0${
           selectedMainCat === "All" ? " ring-2 ring-white" : ""
         }`}
+        style={{
+          fontWeight: "500",
+          lineHeight: "1",
+          maxWidth: "100%",
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap"
+        }}
         onClick={() => {
           setSelectedMainCat("All");
           setSelectedSubCat(null);
@@ -47,6 +62,8 @@ export default function Menu({
       >
         All <span style={{ fontWeight: "bold" }}>({books.length})</span>
       </button>
+
+
       {mainCats.map((cat) => {
         const count = books.filter((book) =>
           book.categories?.main?.includes(cat)
@@ -54,20 +71,30 @@ export default function Menu({
         return (
           <button
             key={cat}
-            className={`p-1 text-[12px] h-[40px] backdrop-blur rounded-lg border border-white/30 text-white${
+            className={`category-chip cursor-pointer px-4 py-2 text-[13px] bg-black/80 backdrop-blur rounded-full border border-white/30 text-white whitespace-nowrap flex-shrink-0${
               selectedMainCat === cat ? " ring-2 ring-white" : ""
             }`}
+            style={{
+              fontWeight: "500",
+              lineHeight: "1",
+              maxWidth: "100%",
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap"
+            }}
             onClick={() => {
               setSelectedMainCat(cat);
               setSelectedSubCat(null);
               onFilter(cat, null);
             }}
           >
-            {cat} {count}
+            {cat} <span style={{ fontWeight: "bold" }}>({count})</span>
           </button>
         );
       })}
-      {/* Subcategory bar */}
+   
+
+           {/* Subcategory bar */}
       {/* {selectedMainCat !== "All" && subCats.length > 0 && (
         <div className="flex flex-row gap-1 mt-2">
           {subCats.map(sub => {
@@ -86,7 +113,7 @@ export default function Menu({
             );
           })}
         </div>
-      )} */}
-    </div>
+      )}  */}
+      </div>
   );
 }

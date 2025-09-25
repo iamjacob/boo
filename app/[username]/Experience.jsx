@@ -9,13 +9,13 @@ import { useCameraStore } from "../../stores/useCameraStore";
 import Lighting from "./Lighting";
 import OpenBook from "./components/OpenBook";
 import Menu from "./Menu";
-import ConfettiDopamine from "./components/ConfettiDopamine";
 import ReadingNow from "./reading/ReadingNow";
+import Levels from "./Levels";
+
+import FullScreen from '../Fullscreen'
 
 import { useMenuStore } from "../../stores/useMenuStore";
-
 import { useOpenBookStore } from "../../stores/useOpenBookStore";
-import Search from "../Search";
 
 export const Experience = ({ children, drag, setDrag }) => {
   const zoom = useCameraStore((s) => s.zoom);
@@ -97,6 +97,7 @@ export const Experience = ({ children, drag, setDrag }) => {
   // Sync camera live with Zustand store
   useEffect(() => {
     const camera = cameraRef.current;
+
     if (!camera) return;
     // Fallback/default if position is not a valid array
     const safePosition =
@@ -111,9 +112,14 @@ export const Experience = ({ children, drag, setDrag }) => {
     camera.updateProjectionMatrix();
   }, [position, rotation, zoom]);
 
+
+  // Splash screen removal
   useEffect(() => {
     const splash = document.getElementById("splash");
-
+    // will be added to a global loader later
+    // header get.content lenghth from fetch 
+    // read length content-length 
+    // const header = document.getElementById("header");
     if (splash) {
       splash.classList.add("fade-out");
       setTimeout(() => splash.remove(), 1200);
@@ -177,36 +183,10 @@ export const Experience = ({ children, drag, setDrag }) => {
         <Stars />
       </Canvas>
 
-
       <Menu drag={drag} setDrag={setDrag} resetCamera={resetCamera} />
-      {/*
-       *
-       *
-       *           LEVEL STIGNING!
-       *
-       *
-       * */}
 
-      {/* Level stigning fra useStore */}
-      {/* Hvis i 7 sekunder medmindre lukkes */}
-      {/* 
-{
-"newLevel":true,
-"level":useLevelStore().get new level live!,
-"unlocks":[],
-"text":setting[level].leveltekst,
-"status":sidenSidst(this.user from last level to this level (read x, all recordings since lastLevel datetime)),
-"":,
-}
- */}
 
- 
-      {/* <ConfettiDopamine
-        // images={[
-        //   "/favicon/apple-touch-icon.png",
-        // ]}
-      /> */}
-
+        {/* <Levels /> */}
 
     </div>
   );

@@ -18,6 +18,27 @@ const Sidenav = ({menu}) => {
             <BoooksFull width="80px" height="30px" />
           </a>
         </div>
+        <div className="profile flex flex-col bg-white/10 backdrop-blur rounded-lg p-2 m-2">
+          <div className="username text-center font-semibold">Username</div>
+          <div className="avatar flex justify-center items-center p-2">
+            <img src="/path/to/avatar.jpg" alt="User Avatar" className="w-12 h-12 rounded-full" />
+          </div>
+          <div className="user-level text-center text-sm text-gray-300">Level 1</div>
+          <div className="user-bio text-center text-sm text-gray-400">Bio goes here...</div>
+            
+          <div className="user-stats flex justify-around text-sm text-gray-300 mt-2">
+            <div className="stat">
+              <span className="font-semibold">Books Read:</span> 12
+            </div>
+            <div className="stat">
+              <span className="font-semibold">Bookmarks:</span> 5
+            </div>
+            <div className="stat">
+              <span className="font-semibold">Notes:</span> 8
+            </div>
+          </div>
+          </div>
+
         <ul className="mt-2 space-y-2 p-4">
           {/* <li>
             <a href="#" className="block p-2 rounded-lg hover:bg-white/10">
@@ -261,6 +282,13 @@ const Sidenav = ({menu}) => {
               Apps
               </a>
           </li>
+          <li>
+              <a href="#" className="block p-2 rounded-lg hover:bg-white/10">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-scroll-text-icon lucide-scroll-text"><path d="M15 12h-5"/><path d="M15 8h-5"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/><path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"/></svg>
+              Scrolls
+              </a>
+
+        </li>
         </ul>
         {/* <h2>Pages</h2>
             <ul> */}

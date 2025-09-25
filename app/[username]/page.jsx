@@ -1,46 +1,42 @@
 "use client";
 
 import { useState, useRef, useMemo,useEffect } from "react";
+import { Filter, Books } from "./boooks/";
+import { useBooksStore } from "../../stores/useBooksStore";
+import { useMenuStore } from "../../stores/useMenuStore";
 import { gsap } from "gsap";
 import Experience from "./Experience";
 import Header from "../Header";
 import init from "./boooks.json";
 import BottomNav from "./BottomNav";
-import { Filter, Books } from "./boooks/";
 import Search from "../Search";
 import Add from "./Add";
-import { useMenuStore } from "../../stores/useMenuStore";
-import { useBooksStore } from "../../stores/useBooksStore";
 import Timeline from "./timeline/Timeline";
-
 // import { useLevelStore } from "../../stores/useLevelStore";
 
 export default function Page() {
   // const level = useLevelStore((s) => s.level);
   // const levelUp = useLevelStore((s) => s.levelUp);
   // const levelDown = useLevelStore((s) => s.levelDown);
-  const {setBooksFromJson} = useBooksStore();
-
-
+  
   const bookRefs = useRef({}); // Store refs by book id
   const [selectedBook, setSelectedBook] = useState(null);
   const [drag, setDrag] = useState(false);
   const [selectedMainCat, setSelectedMainCat] = useState("All");
   const [selectedSubCat, setSelectedSubCat] = useState(null);
-
-
-
+  const {setBooksFromJson} = useBooksStore();
+  
   // // const isInit = 
    useEffect(()=>{
      setBooksFromJson(init)
   },[])
 
-  // console.log('is init ' + isInit)
-
   const books = useBooksStore((s) => s.books);
   const searchOpen = useMenuStore((s) => s.searchOpen);
   const add = useMenuStore((s) => s.add);
   const dnaTimeline = useMenuStore((s) => s.dnaTimeline);
+  const geo = useMenuStore((s) => s.geo);
+  // const filter = useMenuStore((s) => s.FilterOpen);
 
   // Filtering/animation handler: always animate all books, never filter render
   const handleFilter = (mainCat, subCat) => {
@@ -76,7 +72,6 @@ export default function Page() {
     });
   }
 
-  const geo = useMenuStore((s) => s.geo);
 
   // Calculate tornado target positions for each book
   const tornadoPositions = useMemo(() => {
@@ -180,6 +175,7 @@ export default function Page() {
         setSelectedSubCat={setSelectedSubCat}
         onFilter={handleFilter}
       />
+
       <BottomNav />
     </div>
   );

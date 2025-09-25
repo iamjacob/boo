@@ -43,7 +43,7 @@ export default function Filter({
     >
     <button
         key="All"
-        className={`category-chip px-4 py-2 text-[13px] bg-black/80 backdrop-blur rounded-full border border-white/30 text-white whitespace-nowrap flex-shrink-0${
+        className={`category-chip px-4 py-2 text-[10px] bg-black/80 backdrop-blur rounded-full border border-white/30 text-white whitespace-nowrap flex-shrink-0${
           selectedMainCat === "All" ? " ring-2 ring-white" : ""
         }`}
         style={{
@@ -71,7 +71,7 @@ export default function Filter({
         return (
           <button
             key={cat}
-            className={`category-chip cursor-pointer px-4 py-2 text-[13px] bg-black/80 backdrop-blur rounded-full border border-white/30 text-white whitespace-nowrap flex-shrink-0${
+            className={`category-chip cursor-pointer px-4 py-2 text-[10px] bg-black/80 backdrop-blur rounded-full border border-white/30 text-white whitespace-nowrap flex-shrink-0${
               selectedMainCat === cat ? " ring-2 ring-white" : ""
             }`}
             style={{

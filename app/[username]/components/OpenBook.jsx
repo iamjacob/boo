@@ -17,7 +17,7 @@ const OpenBook = ({ bookId }) => {
   //pdf part
   const [pageImage, setPageImage] = useState();
 
-  const { animateBack, openBookId, bookObject, setCloseHandler } =
+  const { toggleBook, openBookId, bookObject, setCloseHandler, closeBook,setOpenBookId } =
     useOpenBookStore();
 
   // const { closeBookBeforeMoveToShelf } = useMenuStore((s) => s.closeBookBeforeMoveToShelf);
@@ -415,6 +415,30 @@ useEffect(() => {
   >
     Close Book
   </button>
+
+  // Add this close button to your opened book view component
+<button
+  className="fixed top-4 right-4 z-50 bg-black/80 backdrop-blur-md text-white p-3 rounded-full border border-white/30 hover:bg-white/20 transition-all duration-200"
+  onClick={() => {
+    // This will trigger the useEffect in Book.jsx that handles closing
+    toggleBook();
+    // closeBook();
+  }}
+>
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <line x1="18" y1="6" x2="6" y2="18"></line>
+    <line x1="6" y1="6" x2="18" y2="18"></line>
+  </svg>
+</button>
         {/* <input
             type="number"
             min="1"
@@ -434,9 +458,7 @@ useEffect(() => {
         )}
       </Html>
       <group
-        onDoubleClick={() => {
-          animateBack();
-        }}
+       
         rotation={[0, Math.PI / 2, 0]}
       >
         <mesh

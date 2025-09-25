@@ -1,7 +1,14 @@
 import { useEffect, useRef } from "react";
 
-export default function ConfettiDopamine({ images=["/favicon/apple-touch-icon.png"], direction="up" }) {
+export default function ConfettiDopamine({ 
+  images=["/favicon/apple-touch-icon.png"], 
+  direction="up",
+  duration = 30000, // Duration in milliseconds (default 30 seconds)
+  onComplete = null // Callback when confetti completes
+}) {
   const canvasRef = useRef(null);
+  const animationRef = useRef(null);
+  const startTimeRef = useRef(null);
 
 
   // Add in level up + sound? 
@@ -23,6 +30,8 @@ export default function ConfettiDopamine({ images=["/favicon/apple-touch-icon.pn
     canvas.height = window.innerHeight;
 
     const particles = [];
+    let isRunning = true;
+    startTimeRef.current = Date.now();
 
     function createParticle() {
       const img = new Image();
@@ -61,6 +70,18 @@ export default function ConfettiDopamine({ images=["/favicon/apple-touch-icon.pn
     }
 
     function loop() {
+      if (!isRunning) return;
+      
+      // Check if duration has elapsed
+      const elapsed = Date.now() - startTimeRef.current;
+      if (elapsed >= duration) {
+        isRunning = false;
+        particles.length = 0; // Clear all particles
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        if (onComplete) onComplete();
+        return;
+      }
+
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       if (Math.random() < 0.6) particles.push(createParticle()); // density
       particles.forEach((p, i) => {
@@ -71,7 +92,7 @@ export default function ConfettiDopamine({ images=["/favicon/apple-touch-icon.pn
         if (direction === "up" && p.y < -50) particles.splice(i, 1); // Remove when above the top
         if (direction === "down" && p.y > canvas.height + 50) particles.splice(i, 1); // Remove when below the bottom
       });
-      requestAnimationFrame(loop);
+      animationRef.current = requestAnimationFrame(loop);
     }
 
     loop();
@@ -83,26 +104,15 @@ export default function ConfettiDopamine({ images=["/favicon/apple-touch-icon.pn
     window.addEventListener("resize", handleResize);
 
     return () => {
+      isRunning = false;
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
       window.removeEventListener("resize", handleResize);
     };
-  }, [images]);
+  }, [images, duration, direction, onComplete]);
 
   return (
-    <>
-    <div className="flex justify-center items-center pointer-events-none">
-<div className="w-[300px] h-[300px] z-[10000] bg-[#ffffff50] rounded-xl ">
-<h1 className="text-xl text-black">Level 1</h1>
-<p>Tillykke, du er nu mesterlæser</p>
-<div className="unlocks">
-  <ul>
-    <li>Bigger shelf</li>
-    <li>Access to maps</li>
-    <li>Public profile</li>
-    <li>Verification level increased</li>
-  </ul>
-</div>
-</div>
-      </div>
     <canvas
       ref={canvasRef}
       style={{
@@ -114,7 +124,6 @@ export default function ConfettiDopamine({ images=["/favicon/apple-touch-icon.pn
         pointerEvents: "none",
         zIndex: 9999,
       }}
-      />
-      </>
+    />
   );
 }

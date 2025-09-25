@@ -12,14 +12,15 @@ import BottomNav from "./BottomNav";
 import Search from "../Search";
 import Add from "./Add";
 import Timeline from "./timeline/Timeline";
-// import { useLevelStore } from "../../stores/useLevelStore";
+import Levels from "./Levels";
+import { useLevelStore } from "../../stores/useLevelStore";
 import { useOpenBookStore } from "../../stores/useOpenBookStore";
 import { useCameraStore } from "../../stores/useCameraStore";
 
 export default function Page() {
-  // const level = useLevelStore((s) => s.level);
-  // const levelUp = useLevelStore((s) => s.levelUp);
-  // const levelDown = useLevelStore((s) => s.levelDown);
+  const level = useLevelStore((s) => s.level);
+  const levelUp = useLevelStore((s) => s.levelUp);
+  const levelDown = useLevelStore((s) => s.levelDown);
   
   const bookRefs = useRef({}); // Store refs by book id
   
@@ -322,21 +323,7 @@ export default function Page() {
         }
       });
     } else {
-      // Reset camera to original settings
-      setZoom(3.5);
-      setPosition([0, 0.0001, 5]);
-      setOrbitRules({
-        minPolarAngle: -Math.PI / 2,
-        maxPolarAngle: Math.PI / 2,
-        minAzimuthAngle: undefined,
-        maxAzimuthAngle: undefined,
-        enablePan: false,
-        minDistance: 0,
-        maxDistance: 16,
-        enableDamping: true,
-        dampingFactor: 0.4,
-        enableZoom: true,
-      });
+      
 
       // Animate back to shelf positions and stop spinning
       books.forEach((book) => {
@@ -364,6 +351,22 @@ export default function Page() {
           }
         }
       });
+// Reset camera to original settings
+      setZoom(3.5);
+      setPosition([0, 0.0001, 5]);
+      setOrbitRules({
+        minPolarAngle: -Math.PI / 2,
+        maxPolarAngle: Math.PI / 2,
+        minAzimuthAngle: undefined,
+        maxAzimuthAngle: undefined,
+        enablePan: false,
+        minDistance: 0,
+        maxDistance: 16,
+        enableDamping: true,
+        dampingFactor: 0.4,
+        enableZoom: true,
+      });
+
     }
   }, [geo, tornadoPositions, books, setZoom, setPosition, setOrbitRules]);
 
@@ -390,6 +393,9 @@ export default function Page() {
       {add && <Add />}
 
       {dnaTimeline && <Timeline />}
+
+      {/* Level system with confetti */}
+      <Levels />
 
       {/* FilterMenu */}
       <Filter

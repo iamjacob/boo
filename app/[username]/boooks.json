@@ -65,7 +65,7 @@
     "year": null,
     "pages": null,
     "scale": { "width": 0.26, "height": 0.44, "thickness": 0.07 },
-    "position": { "x": 0.235908, "y": 1.5, "z": -6.495718 },
+    "position": { "x": -0.018833, "y": 1.5, "z": -6.499973 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
     "cover": { "front": "/covers/vendepunkt.webp" }
   },
@@ -177,7 +177,7 @@
     "year": null,
     "pages": null,
 
-    "scale": {"width":0.52, "height":0.75, "thickness":0.22},
+    "scale": {"width":0.42, "height":0.55, "thickness":0.09},
     "position": {"x":0.724871, "y":-0.43, "z":-6.459455},
     "rotation": {"x":0, "y":0, "z":0},
     "cover": {"front":"./covers/000.webp"}
@@ -194,8 +194,8 @@
     "year": null,
     "pages": null,
     "scale": {"width":0.55, "height":0.7, "thickness":0.2},
-    "position": {"x":-0.08427, "y":-1.43, "z":-6.499454},
-    "rotation": {"x":0, "y":4, "z":0},
+    "position": {"x":-0.178521, "y":-1.37, "z":-6.497548},
+    "rotation": {"x":0, "y":0, "z":0},
     "cover": {"front":"./covers/111.webp"}
   },
   {

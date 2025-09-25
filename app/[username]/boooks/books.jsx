@@ -42,7 +42,7 @@ const Boooks = ({
           setSelectedBook={setSelectedBook}
           drag={drag}
           setDrag={setDrag}
-          book
+          bookObject={book}
         />
       ))}
     </>

@@ -83,16 +83,18 @@ const OpenBook = ({ bookId }) => {
     },
   };
 
-  //const book, { dimensions, cover, position, pages, pdf } = books["block1book1"];
-  let book = books["block1book1"];
-
   function initBookDataFromObject(bookObject) {
+    const normalizePath = (path) => {
+      if (!path) return "./test.png";
+      // Convert ./covers/ to /covers/
+      return path.startsWith('./covers/') ? path.replace('./covers/', '/covers/') : path;
+    };
+
     return {
       cover: {
-        front: bookObject.cover?.front || "./test.png",
-        back: bookObject.cover?.back || bookObject.cover?.front || "./test.png",
-        spine:
-          bookObject.cover?.spine || bookObject.cover?.front || "./test.png",
+        front: normalizePath(bookObject.cover?.front || "./test.png"),
+        back: normalizePath(bookObject.cover?.back || bookObject.cover?.front || "./test.png"),
+        spine: normalizePath(bookObject.cover?.spine || bookObject.cover?.front || "./test.png"),
       },
       dimensions: [
         bookObject.scale?.width || 0.5,
@@ -103,7 +105,6 @@ const OpenBook = ({ bookId }) => {
       rotation: bookObject.rotation || { x: 0, y: 0.4, z: 0 },
       pages: bookObject.pages || 700,
       pdf: bookObject.pdf || "./books/webdesign.pdf",
-      // Optionally add other fields you need
       title: bookObject.title,
       author: bookObject.author,
       id: bookObject.id,
@@ -113,29 +114,35 @@ const OpenBook = ({ bookId }) => {
     };
   }
 
+  // Initialize book data properly
+  let book;
   if (bookObject) {
     console.log("bookObject detected, initializing book data from it");
     book = initBookDataFromObject(bookObject);
   } else {
     console.log("No bookObject found, using default book data");
+    book = books["block1book1"];
   }
 
-  const { dimensions, cover, position, pages, pdf } = book;
+  // Safely destructure with fallbacks
+  const dimensions = book?.dimensions || [0.5, 0.7, 0.07];
+  const cover = book?.cover || { front: "./test.png", back: "./test.png", spine: "./test.png" };
+  const position = book?.position || { x: 0, y: 0.4, z: 0 };
+  const pages = book?.pages || 700;
+  const pdf = book?.pdf || "./books/webdesign.pdf";
+
+  console.log("Final book data:", { dimensions, cover, position, pages, pdf });
+
+  //const { dimensions, cover, position, pages, pdf } = book;
 
   //console.log(book.book)
   //console.log('Book id for open book: ' + bookId);
 
   console.log("Open book id from store in OpenBook: " + openBookId);
-
   console.log("obj from openBook", bookObject);
 
-  // console.log(book);
-  //const { dimensions, cover, position, pages, pdf } = book.book;
-
-  /* WORD!!!!!!!! This should be corrected for some reason! Just for for the sake of good order. */
-  const width = dimensions[0];
-  const thickness = dimensions[2];
-  const height = dimensions[1];
+  // Extract dimensions safely
+  const [width, height, thickness] = dimensions;
 
   //const [height, thickness, width] = dimensions;
 
@@ -168,6 +175,10 @@ useEffect(() => {
   // close()
   return () => setCloseHandler(null);
 }, [setCloseHandler]);
+
+  // Debug cover paths
+  console.log("Cover paths:", cover);
+  console.log("Cover front path:", cover.front);
 
   const textures = [
     useSafeLoader("https://jacobg.me/exam/booktexture.png"), //empty this/whiten it

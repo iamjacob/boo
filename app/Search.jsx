@@ -33,6 +33,7 @@ export default function Search() {
   const [showCursor, setShowCursor] = useState(true);
   const [keyboard, setKeyboard] = useState(false);
   const [inputText, setInputText] = useState("");
+  const [isPrivate, setPrivate] = useState(false);
 
   const [more, setMore] = useState(false);
   const [lang, setLang] = useState("en");
@@ -226,6 +227,7 @@ export default function Search() {
         <div
           className={`w-[90vw] md:w-[40vw] p-1 align-left flex flex-col items-center bg-[rgba(255,255,255,.8)] 
               ${results.length < 1 ? "search__field" : "search__field--open"}
+              ${isPrivate && `search__field--private bg-black`}
               `}
         >
           <div className="flex w-full justify-between">
@@ -239,30 +241,40 @@ export default function Search() {
               //onFocus={}
               placeholder={inputText.length === 0 && displayText}
             />
-            <svg
+              {/* <div className="flex">
+            <div 
+              onClick={() => {
+                setPrivate(!isPrivate);
+              }}
+              className="private-ghost-indicator flex items-center gap-1 text-xs rounded-md">
+
+
+<svg
               xmlns="http://www.w3.org/2000/svg"
               width="18"
               height="18"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="lucide lucide-ghost-icon lucide-ghost"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-ghost-icon lucide-ghost"
             >
               <path d="M9 10h.01" />
               <path d="M15 10h.01" />
               <path d="M12 2a8 8 0 0 0-8 8v12l3-3 2.5 2.5L12 19l2.5 2.5L17 19l3 3V10a8 8 0 0 0-8-8z" />
             </svg>
+</div>
 
             {query && !isOnline ? (
+
               <div className="offline-indicator flex items-center gap-1 text-yellow-800 text-xs rounded-md">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  height="24px"
+                  height="18"
                   viewBox="0 -960 960 960"
-                  width="24px"
+                  width="18"
                   fill="#1f1f1f"
                 >
                   <path d="M819-28 701-146q-48 32-103.5 49T480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-62 17-117.5T146-701L27-820l57-57L876-85l-57 57ZM440-162v-78q-33 0-56.5-23.5T360-320v-40L168-552q-3 18-5.5 36t-2.5 36q0 121 79.5 212T440-162Zm374-99-58-58q21-37 32.5-77.5T800-480q0-98-54.5-179T600-776v16q0 33-23.5 56.5T520-680h-80v45L261-814q48-31 103-48.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 61-17.5 116T814-261Z" />
@@ -272,17 +284,19 @@ export default function Search() {
               <div className="online-indicator flex items-center gap-1 text-green-800 text-xs rounded-md">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
-                  height="24px"
+                  height="18px"
                   viewBox="0 -960 960 960"
-                  width="24px"
+                  width="18"
                   fill="#1f1f1f"
                 >
                   <path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm-40-82v-78q-33 0-56.5-23.5T360-320v-40L168-552q-3 18-5.5 36t-2.5 36q0 121 79.5 212T440-162Zm276-102q41-45 62.5-100.5T800-480q0-98-54.5-179T600-776v16q0 33-23.5 56.5T520-680h-80v80q0 17-11.5 28.5T400-560h-80v80h240q17 0 28.5 11.5T600-440v120h40q26 0 47 15.5t29 40.5Z" />
                 </svg>
               </div>
             )}
+            </div> */}
+                  
           </div>
-          <div className="flex w-full items-right">
+          <div className="flex w-full justify-end">
             <div
               onClick={() => {
                 setMore(!more);
@@ -293,9 +307,9 @@ export default function Search() {
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   height="24px"
-                  viewBox="0 -960 960 960"
                   width="24px"
-                  fill="#1f1f1f"
+                  viewBox="0 -960 960 960"
+                  fill="#999 "
                 >
                   <path d="M440-440v240h-80v-160H200v-80h240Zm160-320v160h160v80H520v-240h80Z" />
                 </svg>
@@ -305,7 +319,8 @@ export default function Search() {
                   height="24px"
                   viewBox="0 -960 960 960"
                   width="24px"
-                  fill="#1f1f1f"
+                  fill="#999 "
+                  
                 >
                   <path d="M200-200v-240h80v160h160v80H200Zm480-320v-160H520v-80h240v240h-80Z" />
                 </svg>

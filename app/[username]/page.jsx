@@ -18,6 +18,9 @@ import { useOpenBookStore } from "../../stores/useOpenBookStore";
 import { useCameraStore } from "../../stores/useCameraStore";
 import TornadoSystem from "./TornadoSystem";
 
+// import Map from "../maps/";
+
+
 export default function Page() {
   const level = useLevelStore((s) => s.level);
   const levelUp = useLevelStore((s) => s.levelUp);
@@ -354,6 +357,7 @@ export default function Page() {
             bookRefs={bookRefs}
           />
         )}
+
       </Experience>
 
       {searchOpen && (<div className="flex justify-center items-center absolute top-0 left-0 w-screen h-screen"><Search /></div>)}

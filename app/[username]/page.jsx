@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useMemo,useEffect } from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import { Filter, Books } from "./boooks/";
 import { useBooksStore } from "../../stores/useBooksStore";
 import { useMenuStore } from "../../stores/useMenuStore";
@@ -16,6 +16,7 @@ import Levels from "./Levels";
 import { useLevelStore } from "../../stores/useLevelStore";
 import { useOpenBookStore } from "../../stores/useOpenBookStore";
 import { useCameraStore } from "../../stores/useCameraStore";
+import TornadoSystem from "./TornadoSystem";
 
 export default function Page() {
   const level = useLevelStore((s) => s.level);
@@ -23,6 +24,8 @@ export default function Page() {
   const levelDown = useLevelStore((s) => s.levelDown);
   
   const bookRefs = useRef({}); // Store refs by book id
+  const tornadoRef = useRef(null);
+  const [tornadoActive, setTornadoActive] = useState(false);
   
   // Shelf configuration with calculated heights
   const SHELF_CONFIG = useMemo(() => ({
@@ -229,109 +232,50 @@ export default function Page() {
   }
 
 
-  // Calculate tornado target positions for each book - enhanced with better spiral
-  const tornadoPositions = useMemo(() => {
+  // Tornado configuration
+  const tornadoConfig = useMemo(() => {
     const bookCount = books.length;
-    const height = Math.max(15, Math.min(25, bookCount * 0.15)); // Taller tornado
-    const radius = Math.max(6, Math.min(12, bookCount * 0.08)); // Wider tornado
-    return books.map((book, i) => {
-      const t = i / (bookCount - 1);
-      const r = radius * (1 - Math.pow(t, 0.8)); // Less aggressive taper
-      const angle = t * Math.PI * 20; // More spiral turns
-      const x = r * Math.cos(angle);
-      const y = height * (1 - t);
-      const z = r * Math.sin(angle);
-      return {
-        id: book.id,
-        position: [x, y, z],
-        rotation: [
-          Math.sin(angle) * 0.3, // Add some tilt
-          Math.atan2(Math.cos(angle), -Math.sin(angle)) + (t * Math.PI * 2), // More rotation
-          t * Math.PI * 0.8 // More dramatic spiral rotation
-        ],
-      };
-    });
+    return {
+      bookCount,
+      height: Math.max(15, Math.min(25, bookCount * 0.05)) / 1.5,
+      radius: Math.max(6, Math.min(12, bookCount * 0.025)) / 3,
+      rotationSpeed: 8 // Duration for one full rotation
+    };
   }, [books]);
 
-  // Animate books to tornado positions when geo changes to true
+  // Handle tornado activation/deactivation
   useEffect(() => {
     if (geo) {
-      // Configure camera for tornado view - zoom out and enable free orbit
-      setZoom(0.8); // Zoom out significantly
-      setPosition([0, 12, 25]); // Position to see full tornado
+      // Configure camera for tornado view
+      setZoom(0.8);
+      setPosition([0, 12, 25]);
       setOrbitRules({
-        minPolarAngle: 0, // Allow full vertical rotation
-        maxPolarAngle: Math.PI, // Allow full vertical rotation
-        minAzimuthAngle: undefined, // Allow full horizontal rotation
-        maxAzimuthAngle: undefined, // Allow full horizontal rotation
-        enablePan: true, // Enable panning
-        minDistance: 8, // Allow closer zoom
-        maxDistance: 100, // Allow much farther zoom
+        minPolarAngle: 0,
+        maxPolarAngle: Math.PI,
+        minAzimuthAngle: undefined,
+        maxAzimuthAngle: undefined,
+        enablePan: true,
+        minDistance: 8,
+        maxDistance: 100,
         enableDamping: true,
-        dampingFactor: 0.05, // Smoother camera movement
+        dampingFactor: 0.05,
         enableZoom: true,
       });
 
-      // Animate books to tornado positions with continuous spinning
-      tornadoPositions.forEach((tp, index) => {
-        const mesh = bookRefs.current[tp.id];
-        if (mesh) {
-          const randomDelay = Math.random() * 1.5; // Staggered entry
-          
-          // Position animation
-          gsap.to(mesh.position, {
-            x: tp.position[0],
-            y: tp.position[1],
-            z: tp.position[2],
-            duration: 3,
-            delay: randomDelay,
-            ease: "power2.out",
-          });
-          
-          // Initial rotation setup
-          gsap.to(mesh.rotation, {
-            x: tp.rotation[0],
-            y: tp.rotation[1],
-            z: tp.rotation[2],
-            duration: 3,
-            delay: randomDelay,
-            ease: "power2.out",
-          });
-          
-          // Continuous spinning animation - 360 degrees wuhuuuu! :D
-          gsap.to(mesh.rotation, {
-            y: `+=${Math.PI * 8}`, // Multiple full rotations
-            duration: 4,
-            delay: randomDelay + 1,
-            repeat: -1, // Infinite spinning
-            ease: "none", // Linear rotation
-            modifiers: {
-              y: (y) => parseFloat(y) % (Math.PI * 2) // Keep rotation values manageable
-            }
-          });
-          
-          // Add some wobble for extra dynamics
-          gsap.to(mesh.rotation, {
-            x: `+=${Math.sin(index) * 0.5}`,
-            z: `+=${Math.cos(index) * 0.3}`,
-            duration: 2 + Math.random() * 2,
-            delay: randomDelay + 2,
-            repeat: -1,
-            yoyo: true,
-            ease: "sine.inOut"
-          });
-        }
-      });
+      // Activate tornado
+      setTornadoActive(true);
     } else {
+      // Deactivate tornado and return books to original positions
+      setTornadoActive(false);
       
-
-      // Animate back to shelf positions and stop spinning
+      // Animate back to shelf positions
       books.forEach((book) => {
         const mesh = bookRefs.current[book.id];
         if (mesh && book.position) {
           // Kill all ongoing animations for this mesh
           gsap.killTweensOf(mesh.rotation);
           gsap.killTweensOf(mesh.position);
+          gsap.killTweensOf(mesh.scale);
           
           gsap.to(mesh.position, {
             x: book.position.x,
@@ -340,6 +284,8 @@ export default function Page() {
             duration: 2,
             ease: "power2.out",
           });
+          
+          // Reset rotation
           if (book.rotation) {
             gsap.to(mesh.rotation, {
               x: book.rotation.x,
@@ -349,9 +295,19 @@ export default function Page() {
               ease: "power2.out",
             });
           }
+
+          // Reset scale
+          gsap.to(mesh.scale, {
+            x: book.scale?.width || 1,
+            y: book.scale?.height || 1.5,
+            z: book.scale?.thickness || 0.2,
+            duration: 2,
+            ease: "power2.out",
+          });
         }
       });
-// Reset camera to original settings
+
+      // Reset camera to original settings
       setZoom(3.5);
       setPosition([0, 0.0001, 5]);
       setOrbitRules({
@@ -366,9 +322,8 @@ export default function Page() {
         dampingFactor: 0.4,
         enableZoom: true,
       });
-
     }
-  }, [geo, tornadoPositions, books, setZoom, setPosition, setOrbitRules]);
+  }, [geo, books, setZoom, setPosition, setOrbitRules]);
 
 
   return (
@@ -386,6 +341,19 @@ export default function Page() {
           drag={drag}
           setDrag={setDrag}
         />
+        
+        {/* Tornado System - only active when geo is true */}
+        {tornadoActive && (
+          <TornadoSystem
+            ref={tornadoRef}
+            bookCount={tornadoConfig.bookCount}
+            height={tornadoConfig.height}
+            radius={tornadoConfig.radius}
+            rotationSpeed={tornadoConfig.rotationSpeed}
+            books={books}
+            bookRefs={bookRefs}
+          />
+        )}
       </Experience>
 
       {searchOpen && (<div className="flex justify-center items-center absolute top-0 left-0 w-screen h-screen"><Search /></div>)}

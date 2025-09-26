@@ -109,50 +109,6 @@ export default function Search() {
     };
 
     loadOfflineData();
-
-    // Mobile keyboard detection
-    const handleViewportChange = () => {
-      if (window.innerWidth <= 768) {
-        const vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-        
-        // Detect keyboard open/close by viewport height change
-        const isKeyboardOpen = window.innerHeight < window.screen.height * 0.75;
-        if (isKeyboardOpen) {
-          document.body.classList.add('keyboard-open');
-        } else {
-          document.body.classList.remove('keyboard-open');
-        }
-      }
-    };
-
-    // iOS Safari specific handling
-    const handleVisualViewportChange = () => {
-      if (window.visualViewport && window.innerWidth <= 768) {
-        const vh = window.visualViewport.height * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-      }
-    };
-
-    // Initial viewport setup
-    handleViewportChange();
-    
-    // Listen for viewport changes
-    window.addEventListener('resize', handleViewportChange);
-    window.addEventListener('orientationchange', handleViewportChange);
-    
-    // iOS Safari visual viewport support
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', handleVisualViewportChange);
-    }
-
-    return () => {
-      window.removeEventListener('resize', handleViewportChange);
-      window.removeEventListener('orientationchange', handleViewportChange);
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', handleVisualViewportChange);
-      }
-    };
   }, []);
 
   // Reset typewriter state when user types, and restart when cleared
@@ -267,22 +223,24 @@ export default function Search() {
 
   return (
     <div className="flex flex-col items-center w-[90vw] md:w-[40vw]">
-      <div className="search flex flex-col justify-around w-full sticky top-0 z-50 md:static">
+      <div className="search flex flex-col justify-around w-full">
         <div
-          className={`w-[90vw] md:w-[40vw] p-1 align-left flex flex-col items-center bg-[rgba(255,255,255,.9)] md:bg-[rgba(255,255,255,.8)]
+          className={`w-[90vw] md:w-[40vw] p-1 align-left flex flex-col items-center bg-[rgba(255,255,255,.8)] 
               ${results.length < 1 ? "search__field" : "search__field--open"}
               ${isPrivate && `search__field--private bg-black`}
               `}
         >
           <div className="flex w-full justify-between">
             <input
-              className={`search__field--input pl-2 py-1 flex-grow w-full outline-none ${
+              className={`m-1p-[8px] search__field--input pl-2 py-1 flex-grow w-full outline-none ${
                 isPrivate ? 'placeholder-gray-300' : 'placeholder-gray-500'
               }`}
               type="text"
               value={query}
               onChange={handleSearch}
+              //placeholder="Search Boooks"
               autoFocus
+              //onFocus={}
               placeholder={inputText.length === 0 && displayText}
             />
              <div className="flex">
@@ -290,7 +248,7 @@ export default function Search() {
               onClick={() => {
                 setPrivate(!isPrivate);
               }}
-              className={`private-ghost-indicator flex items-center gap-1 p-1 text-xs rounded-md`}>
+              className={`private-ghost-indicator flex items-center gap-1 p-1 text-xs `}>
 
 
 <svg

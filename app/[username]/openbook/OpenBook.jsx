@@ -34,28 +34,6 @@ const OpenBook = ({ bookId }) => {
   const { toggleBook, openBookId, bookObject, setCloseHandler, closeBook,setOpenBookId } =
     useOpenBookStore();
 
-  // const { closeBookBeforeMoveToShelf } = useMenuStore((s) => s.closeBookBeforeMoveToShelf);
-
-  // useEffect(() => {
-  //   close();
-  // }, [closeBookBeforeMoveToShelf]);
-
-  // // Local zustand close function
-  // const zustandClose = () => {
-  //   setBookOpen(0);
-  //   setCurrentPage(0);
-  //   close();
-  //   // ...any other logic needed to close the book
-  //   console.log('OpenBook closed via zustand handler');
-  // };
-
-  // // Register the local zustandClose function in the zustand store
-  // useEffect(() => {
-  //   setCloseHandler(() => zustandClose);
-  //   // Optionally cleanup on unmount
-  //   return () => setCloseHandler(null);
-  // }, []);
-
   const handleGetPageImage = async (pageNum) => {
     try {
       const imageUrl = await getPageImage(pageNum);
@@ -70,9 +48,6 @@ const OpenBook = ({ bookId }) => {
   const spinePageRef = useRef();
   const pagesGroupRef = useRef();
   const pageRefs = useRef([]);
-
-  // BOOOOOK IS LOADED HERE VIA
-  // openBookId
 
   const books = {
     block1book1: {
@@ -149,20 +124,6 @@ const OpenBook = ({ bookId }) => {
   const pages = book?.pages || 700;
   const pdf = book?.pdf || "./books/webdesign.pdf";
 
-
-
-
-
-  // console.log("Final book data:", { dimensions, cover, position, pages, pdf });
-
-  //const { dimensions, cover, position, pages, pdf } = book;
-
-  //console.log(book.book)
-  //console.log('Book id for open book: ' + bookId);
-
-  // console.log("Open book id from store in OpenBook: " + openBookId);
-  // console.log("obj from openBook", bookObject);
-
   // Extract dimensions safely
   const [width, height, thickness] = dimensions;
 
@@ -172,9 +133,6 @@ const OpenBook = ({ bookId }) => {
 
   const openDegrees = 1;
   const pageThickness = thickness / pages;
-
-
-
 
 // Register controls - only run once
 useEffect(() => {
@@ -214,13 +172,6 @@ useEffect(() => {
 useEffect(() => {
   setMenuBook(book);
 }, [book, setMenuBook]);
-
-
-
-
-
-
-
 
 
 
@@ -411,131 +362,7 @@ useEffect(() => {
   return (
     <>
       {/* <OrbitControls /> */}
-      {/* <Html>
-        <button
-          onClick={flipBackward}
-          style={{ position: "absolute", top: 20, left: 20, zIndex: 100 }}
-          disabled={currentPage === 0}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="24px"
-            viewBox="0 -960 960 960"
-            width="24px"
-            fill={currentPage === 0 ? "rgba(255,0,0,0.1)" : "red"}
-          >
-            <path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z" />
-          </svg>
-        </button>
-
-        <div
-          style={{
-            width: "fit",
-            position: "absolute",
-            top: 20,
-            left: 60,
-            zIndex: 100,
-          }}
-        >
-          <div className="rotate-45">
-            {bookOpen ? (
-              <button onClick={close}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="24px"
-                  viewBox="0 -960 960 960"
-                  width="24px"
-                  fill="#e8eaed"
-                >
-                  <path d="M440-440v240h-80v-160H200v-80h240Zm160-320v160h160v80H520v-240h80Z" />
-                </svg>
-              </button>
-            ) : (
-              <button onClick={open}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  height="24px"
-                  viewBox="0 -960 960 960"
-                  width="24px"
-                  fill="#e8eaed"
-                >
-                  <path d="M200-200v-240h80v160h160v80H200Zm480-320v-160H520v-80h240v240h-80Z" />
-                </svg>
-              </button>
-            )}
-          </div>
-        </div>
-
-        <button
-          onClick={flipForward}
-          disabled={currentPage === pages}
-          style={{ position: "absolute", top: 20, left: 120, zIndex: 100 }}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="24px"
-            viewBox="0 -960 960 960"
-            width="24px"
-            fill={currentPage === pages ? "rgba(255,0,0,0.1)" : "red"}
-          >
-            <path d="m321-80-71-71 329-329-329-329 71-71 400 400L321-80Z" />
-          </svg>
-        </button>
-
-         <button
-    onClick={close}
-    style={{ position: "absolute", top: 20, left: 60, zIndex: 100 }}
-  >
-    Close Book
-  </button>
-
-<button
-  className="fixed top-4 right-4 z-50 bg-black/80 backdrop-blur-md text-white p-3 rounded-full border border-white/30 hover:bg-white/20 transition-all duration-200"
-  onClick={() => {
-    // This will trigger the useEffect in Book.jsx that handles closing
-    close();
-    setTimeout(() => { 
-      setOpenBookId(null); 
-      toggleBook();
-    }, 500); // Delay to allow close animation
-    //
-    // closeBook();
-  }}
->
-  <svg
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <line x1="18" y1="6" x2="6" y2="18"></line>
-    <line x1="6" y1="6" x2="18" y2="18"></line>
-  </svg>
-</button>
-        <input
-            type="number"
-            min="1"
-            max={pages - 1}
-            value={currentPage}
-            onChange={(e) =>
-              setPagesToFlip(Math.min(e.target.value, pages - 1))
-            }
-            className="w-20 px-3 py-2 bg-gray-800 text-white rounded-md border border-gray-700
-              focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-
-        {hoveredPage !== null && (
-          <span className="relative px-3 py-2 bg-gray-800 text-white rounded-md w-[150px]">
-            Page {hoveredPage + 1}
-          </span>
-        )}
-      </Html> */}
-
-
+      
       <group
        
         rotation={[0, Math.PI / 2, 0]}

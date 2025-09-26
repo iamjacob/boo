@@ -25,7 +25,7 @@ export default function ConfettiDopamine({
 
   useEffect(() => {
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 

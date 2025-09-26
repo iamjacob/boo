@@ -110,7 +110,7 @@ const BookPhysics = ({
                   // Fallback to a basic texture
                   const canvas = document.createElement('canvas');
                   canvas.width = canvas.height = 256;
-                  const ctx = canvas.getContext('2d');
+                  const ctx = canvas.getContext('2d', { willReadFrequently: true });
                   ctx.fillStyle = color || '#8B4513';
                   ctx.fillRect(0, 0, 256, 256);
                   const texture = new THREE.CanvasTexture(canvas);

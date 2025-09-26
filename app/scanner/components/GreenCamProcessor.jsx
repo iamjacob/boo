@@ -17,7 +17,7 @@ export default function GreenCamProcessor({ isCameraOpen }) {
 
     function processFrame() {
       const canvas = canvasRef.current;
-      const ctx = canvas.getContext("2d");
+      const ctx = canvas.getContext("2d", { willReadFrequently: true });
 
       ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
 

@@ -109,6 +109,50 @@ export default function Search() {
     };
 
     loadOfflineData();
+
+    // Mobile keyboard detection
+    const handleViewportChange = () => {
+      if (window.innerWidth <= 768) {
+        const vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+        
+        // Detect keyboard open/close by viewport height change
+        const isKeyboardOpen = window.innerHeight < window.screen.height * 0.75;
+        if (isKeyboardOpen) {
+          document.body.classList.add('keyboard-open');
+        } else {
+          document.body.classList.remove('keyboard-open');
+        }
+      }
+    };
+
+    // iOS Safari specific handling
+    const handleVisualViewportChange = () => {
+      if (window.visualViewport && window.innerWidth <= 768) {
+        const vh = window.visualViewport.height * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+      }
+    };
+
+    // Initial viewport setup
+    handleViewportChange();
+    
+    // Listen for viewport changes
+    window.addEventListener('resize', handleViewportChange);
+    window.addEventListener('orientationchange', handleViewportChange);
+    
+    // iOS Safari visual viewport support
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleVisualViewportChange);
+    }
+
+    return () => {
+      window.removeEventListener('resize', handleViewportChange);
+      window.removeEventListener('orientationchange', handleViewportChange);
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', handleVisualViewportChange);
+      }
+    };
   }, []);
 
   // Reset typewriter state when user types, and restart when cleared
@@ -223,40 +267,40 @@ export default function Search() {
 
   return (
     <div className="flex flex-col items-center w-[90vw] md:w-[40vw]">
-      <div className="search flex flex-col justify-around w-full">
+      <div className="search flex flex-col justify-around w-full sticky top-0 z-50 md:static">
         <div
-          className={`w-[90vw] md:w-[40vw] p-1 align-left flex flex-col items-center bg-[rgba(255,255,255,.8)] 
+          className={`w-[90vw] md:w-[40vw] p-1 align-left flex flex-col items-center bg-[rgba(255,255,255,.9)] md:bg-[rgba(255,255,255,.8)]
               ${results.length < 1 ? "search__field" : "search__field--open"}
               ${isPrivate && `search__field--private bg-black`}
               `}
         >
           <div className="flex w-full justify-between">
             <input
-              className="m-1p-[8px] search__field--input pl-2 py-1 flex-grow w-full outline-none"
+              className={`search__field--input pl-2 py-1 flex-grow w-full outline-none ${
+                isPrivate ? 'placeholder-gray-300' : 'placeholder-gray-500'
+              }`}
               type="text"
               value={query}
               onChange={handleSearch}
-              //placeholder="Search Boooks"
               autoFocus
-              //onFocus={}
               placeholder={inputText.length === 0 && displayText}
             />
-              {/* <div className="flex">
+             <div className="flex">
             <div 
               onClick={() => {
                 setPrivate(!isPrivate);
               }}
-              className="private-ghost-indicator flex items-center gap-1 text-xs rounded-md">
+              className={`private-ghost-indicator flex items-center gap-1 p-1 text-xs rounded-md`}>
 
 
 <svg
               xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
+              width="24"
+              height="24"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
+              stroke={!isPrivate ? "#999" : "white"}
+              strokeWidth="1"
               strokeLinecap="round"
               strokeLinejoin="round"
               className="lucide lucide-ghost-icon lucide-ghost"
@@ -266,7 +310,8 @@ export default function Search() {
               <path d="M12 2a8 8 0 0 0-8 8v12l3-3 2.5 2.5L12 19l2.5 2.5L17 19l3 3V10a8 8 0 0 0-8-8z" />
             </svg>
 </div>
-
+</div>
+ {/* 
             {query && !isOnline ? (
 
               <div className="offline-indicator flex items-center gap-1 text-yellow-800 text-xs rounded-md">
@@ -296,12 +341,15 @@ export default function Search() {
             </div> */}
                   
           </div>
+
+
+          
           <div className="flex w-full justify-end">
             <div
               onClick={() => {
                 setMore(!more);
               }}
-              className="flex"
+              className="rotate-90 p-1"
             >
               {more ? (
                 <svg
@@ -649,6 +697,12 @@ export default function Search() {
 a
         </div>
       )} */}
+
+
+
+
+
+
       {/* Sorting buttons with chevron direction and state */}
       {results.length > 1 && (
         <div className="sorting w-full h-[40px] flex">

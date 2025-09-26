@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 
 // Simple LRU cache implementation
 class LRUCache {
-  constructor(limit = 12) {
+  constructor(limit = 28) {
     this.limit = limit;
     this.cache = new Map();
   }
@@ -132,7 +132,7 @@ const usePDFToImage = (pdfUrl) => {
       const page = await pdfDoc.getPage(pageNum + 1);
       const viewport = page.getViewport({ scale });
       const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
+      const context = canvas.getContext("2d", { willReadFrequently: true });
 
       canvas.width = viewport.width;
       canvas.height = viewport.height;
@@ -143,7 +143,7 @@ const usePDFToImage = (pdfUrl) => {
       };
 
       await page.render(renderContext).promise;
-      const dataUrl = canvas.toDataURL("image/png");
+      const dataUrl = canvas.toDataURL("image/webp");
       cacheRef.set(cacheKey, dataUrl);
       return dataUrl;
     } catch (error) {

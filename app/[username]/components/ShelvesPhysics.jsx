@@ -2,8 +2,11 @@ import React, { useMemo } from "react";
 import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import { useLoader } from "@react-three/fiber";
 import * as THREE from "three";
+import { useShelfZoomStore } from "../../../stores/useShelfZoomStore";
 
 const Shelves = () => {
+  const { zoomToShelf } = useShelfZoomStore();
+  
   const Shelf = ({
     position = [0, 0, 0],
     rotation = [(Math.PI / 180) * 90, 0, 0],
@@ -55,6 +58,12 @@ const Shelves = () => {
       });
     }, [segments, innerRadius, outerRadius, depth]);
 
+    const handleShelfClick = (event) => {
+      event.stopPropagation();
+      console.log('🔍 Shelf clicked:', index);
+      zoomToShelf(index);
+    };
+
     return (
       <RigidBody
         type="fixed"
@@ -83,8 +92,13 @@ const Shelves = () => {
         ))} */}
         </group>
 
-        {/* The visible curved shelf */}
-        <mesh position={[0, 0, 0]}>
+        {/* The visible curved shelf with click handler */}
+        <mesh 
+          position={[0, 0, 0]} 
+          onClick={handleShelfClick}
+          onPointerEnter={() => document.body.style.cursor = 'pointer'}
+          onPointerLeave={() => document.body.style.cursor = 'auto'}
+        >
           <primitive object={geometry} attach="geometry" />
           <meshStandardMaterial
             map={colorMap}

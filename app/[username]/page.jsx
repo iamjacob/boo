@@ -27,6 +27,7 @@ export default function Page() {
   const level = useLevelStore((s) => s.level);
   const levelUp = useLevelStore((s) => s.levelUp);
   const levelDown = useLevelStore((s) => s.levelDown);
+
   
   const bookRefs = useRef({}); // Store refs by book id
   const tornadoRef = useRef(null);
@@ -334,7 +335,9 @@ export default function Page() {
 
   return (
     <div className="fixed top-0 left-0 w-full h-full">
-      <Header />
+
+      {!activeOpenBook && <Header />}
+
       <Experience drag={drag} setDrag={setDrag}>
         {/* Tornado System - only active when geo is true */}
         {tornadoActive && (

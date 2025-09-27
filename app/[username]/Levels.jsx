@@ -67,7 +67,7 @@ const Levels = () => {
         <>
           {/* Level up celebration display */}
           <div className="fixed inset-0 z-[10000] flex justify-center items-center pointer-events-none">
-            <div className="w-[350px] h-auto p-6 z-[10001] bg-white/90 backdrop-blur rounded-xl shadow-2xl border-2 border-yellow-400">
+            <div className="w-[350px] h-auto p-6 z-[10001] bg-white/50 backdrop-blur rounded-xl shadow-2xl border-2 border-yellow-400">
               <h1 className="text-3xl font-bold text-center text-black mb-4">Level {level}!</h1>
               <p className="text-lg text-center text-gray-800 mb-4">🎉 Tillykke, du er nu på level {level}! 🎉</p>
               
@@ -94,8 +94,10 @@ const Levels = () => {
           
           {/* Confetti animation - runs for 30 seconds - memoized to prevent rerenders */}
           {confettiComponent}
+          <a onClick={() => stopConfetti()} href="#closeLevelUp" className="fixed z-[1000] bg-gray/50 border-1 border p-2  top-10 right-2 text-gray-500 hover:text-gray-800">X</a>
         </>
       )}
+
 
     </>
   )

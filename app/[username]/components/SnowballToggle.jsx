@@ -1,6 +1,6 @@
 import React from "react";
 import { Html } from "@react-three/drei";
-import useProjectileSettingsStore from "../../stores/projectiles/useProjectileSettingsStore";
+import useProjectileSettingsStore from "../../../stores/projectiles/useProjectileSettingsStore";
 
 const SnowballToggle = () => {
   const { 

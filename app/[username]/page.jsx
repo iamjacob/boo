@@ -16,7 +16,9 @@ import Levels from "./Levels";
 import { useLevelStore } from "../../stores/useLevelStore";
 import { useOpenBookStore } from "../../stores/useOpenBookStore";
 import { useCameraStore } from "../../stores/useCameraStore";
+
 import TornadoSystem from "./TornadoSystem";
+import ThrowCoins from "./ThrowCoins";
 
 // import Map from "../maps/";
 
@@ -154,6 +156,7 @@ export default function Page() {
   const geo = useMenuStore((s) => s.geo);
   const activeOpenBook = useOpenBookStore((s) => s.activeOpenBook);
   const { setZoom, setPosition, setOrbitRules } = useCameraStore();
+  const throwCoins = useMenuStore((s) => s.throwCoins);
   // const filter = useMenuStore((s) => s.FilterOpen);
 
   // Main filtering handler - clean and simple
@@ -333,29 +336,46 @@ export default function Page() {
     <div className="fixed top-0 left-0 w-full h-full">
       <Header />
       <Experience drag={drag} setDrag={setDrag}>
-        {/* Always render Books, animate positions with GSAP */}
-        <Books
-          books={books}
-          selectedMainCat={selectedMainCat}
-          selectedSubCat={selectedSubCat}
-          bookRefs={bookRefs}
-          selectedBook={selectedBook}
-          setSelectedBook={setSelectedBook}
-          drag={drag}
-          setDrag={setDrag}
-        />
-        
         {/* Tornado System - only active when geo is true */}
         {tornadoActive && (
+          <group position={[0, -8, 0]}>    {/* Center (current) */}
           <TornadoSystem
             ref={tornadoRef}
             bookCount={tornadoConfig.bookCount}
-            height={tornadoConfig.height}
+            height={8}
             radius={tornadoConfig.radius}
             rotationSpeed={tornadoConfig.rotationSpeed}
             books={books}
             bookRefs={bookRefs}
           />
+        </group>
+        )}
+
+        {throwCoins ? (
+          <ThrowCoins 
+            books={books}
+            bookRefs={bookRefs}
+            selectedBook={selectedBook}
+            setSelectedBook={setSelectedBook}
+            selectedMainCat={selectedMainCat}
+            selectedSubCat={selectedSubCat}
+            drag={drag}
+            setDrag={setDrag}
+          />
+        ) : (
+          <>
+            {/* Regular Books without physics */}
+            <Books
+              books={books}
+              selectedMainCat={selectedMainCat}
+              selectedSubCat={selectedSubCat}
+              bookRefs={bookRefs}
+              selectedBook={selectedBook}
+              setSelectedBook={setSelectedBook}
+              drag={drag}
+              setDrag={setDrag}
+            />
+          </>
         )}
 
       </Experience>

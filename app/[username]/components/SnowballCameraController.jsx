@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useThree } from "@react-three/fiber";
 import * as THREE from "three";
-import useProjectileSettingsStore from "./../../stores/projectiles/useProjectileSettingsStore";
+import useProjectileSettingsStore from "../../../stores/projectiles/useProjectileSettingsStore";
 
 const SnowballCameraController = ({ onSnowballThrow }) => {
   const { camera, pointer, raycaster } = useThree();
@@ -13,7 +13,14 @@ const SnowballCameraController = ({ onSnowballThrow }) => {
 
   useEffect(() => {
     const handleClick = (event) => {
-      if (!isSnowballMode) return;
+      console.log('🎯 Click detected! isSnowballMode:', isSnowballMode, 'projectileType:', projectileType);
+      
+      if (!isSnowballMode) {
+        console.log('❌ Throwing mode disabled');
+        return;
+      }
+      
+      console.log('🪙 Throwing projectile!');
       
       // Update raycaster with current pointer position
       raycaster.setFromCamera(pointer, camera);

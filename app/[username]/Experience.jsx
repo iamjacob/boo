@@ -35,6 +35,7 @@ export const Experience = ({ children, drag, setDrag }) => {
   const openBookId = useOpenBookStore((s) => s.openBookId);
   const activeOpenBook = useOpenBookStore((s) => s.activeOpenBook);
   const animateBack = useOpenBookStore((s) => s.animateBack);
+  const throwCoins = useMenuStore((s) => s.throwCoins);
 
   useEffect(() => {
   // const openBookId = useOpenBookStore((s) => s.openBookId);
@@ -147,7 +148,7 @@ export const Experience = ({ children, drag, setDrag }) => {
       >
 
 
-        <Shelves />
+        {!throwCoins && <Shelves />}
 
         {isReadingNow && <ReadingNow />}
 

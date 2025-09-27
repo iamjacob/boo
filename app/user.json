@@ -1,0 +1,94 @@
+[{
+  "id": "usr_123456789",
+  "name": "InSideYou",
+  "email": "insideyou@example.com",
+  "password": "2310",
+  "role": "admin",
+  "coins": 1000,
+  "profile": {
+    "firstName": "John",
+    "lastName": "Doe",
+    "displayName": "InSideYou",
+    "avatar": "https://example.com/avatars/user123.jpg",
+    "bio": "Full-stack developer with 10+ years experience",
+    "location": "Seattle, WA",
+    "website": "https://johndoe.dev",
+    "socialLinks": {
+      "twitter": "@insideyou",
+      "github": "insideyou",
+      "linkedin": "john-doe-dev"
+    }
+  },
+  "preferences": {
+    "theme": "dark",
+    "notifications": true,
+    "language": "en",
+    "timezone": "America/Los_Angeles",
+    "dateFormat": "MM/dd/yyyy",
+    "emailFrequency": "daily",
+    "pushNotifications": {
+      "messages": true,
+      "updates": false,
+      "marketing": false
+    }
+  },
+  "subscription": {
+    "plan": "premium",
+    "status": "active",
+    "startDate": "2024-01-15T00:00:00Z",
+    "endDate": "2025-01-15T00:00:00Z",
+    "autoRenew": true,
+    "paymentMethod": "stripe_pm_123456"
+  },
+  "activity": {
+    "lastLogin": "2024-09-27T14:30:00Z",
+    "loginCount": 247,
+    "createdAt": "2023-06-10T10:15:00Z",
+    "updatedAt": "2024-09-27T14:30:00Z",
+    "streakDays": 15,
+    "totalTimeSpent": 125420
+  },
+  "achievements": [
+    {
+      "id": "early_adopter",
+      "name": "Early Adopter",
+      "description": "Joined in the first month",
+      "unlockedAt": "2023-06-10T10:15:00Z"
+    },
+    {
+      "id": "power_user",
+      "name": "Power User",
+      "description": "Used the app for 100+ hours",
+      "unlockedAt": "2024-03-15T09:22:00Z"
+    }
+  ],
+  "friends": [
+    "usr_987654321",
+    "usr_456789123",
+    "usr_789123456"
+  ],
+  "settings": {
+    "privacy": {
+      "profileVisibility": "public",
+      "showEmail": false,
+      "showLastSeen": true,
+      "allowFriendRequests": true
+    },
+    "security": {
+      "twoFactorEnabled": true,
+      "loginAlerts": true,
+      "sessionTimeout": 1440
+    }
+  },
+  "metadata": {
+    "ipAddress": "192.168.1.100",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "deviceInfo": {
+      "type": "desktop",
+      "os": "Windows 11",
+      "browser": "Chrome 118.0"
+    },
+    "experiments": ["feature_a", "new_ui_v2"],
+    "tags": ["power_user", "developer", "beta_tester"]
+  }
+}]

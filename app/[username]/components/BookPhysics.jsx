@@ -4,11 +4,7 @@ import { Html, useCursor, PivotControls } from "@react-three/drei";
 import { RigidBody, CuboidCollider } from "@react-three/rapier";
 import * as THREE from "three";
 import gsap from "gsap";
-import useBookExperienceStore from "../../../stores/experience/useBookExperienceStore";
-import useShelvesStore from "../../../stores/shelves/useShelvesStore";
-import { useBookDragHandler, isShelfOwner } from "./BookDragHandler";
-import { authService } from "../../../lib/auth";
-import { getBookCoverUrl, getBookImageByType } from "../../../lib/image-utils";
+import useSafeLoader from "./useSafeLoader";
 
 import {
   X,
@@ -54,157 +50,42 @@ const BookPhysics = ({
   const [currentShelf, setCurrentShelf] = useState(null);
   
   const { camera, gl } = useThree();
-  const { selectedShelf } = useShelvesStore();
-  const { isBookOpen, isTransitioning } = useBookExperienceStore();
-
-  // Load book textures with fallback - same as regular Book component
-  const [textures, setTextures] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Get the best available cover images for different book faces (same as regular Book)
-  const bookImages = useMemo(() => {
-    console.log(`📸 BookPhysics ${bookID} processing images. Book data:`, book);
-    
-    if (book) {
-      const images = {
-        front: getBookImageByType(book, 'front', 'medium'),
-        spine: getBookImageByType(book, 'spine', 'medium'),
-        back: getBookImageByType(book, 'back', 'medium'),
-      };
-      console.log(`📸 BookPhysics ${bookID} images:`, images);
-      return images;
-    }
-    // Fallback to the cover prop or default
-    const fallbackCover = cover || "./books/covers/000.jpg";
-    console.log(`📸 BookPhysics ${bookID} using fallback cover:`, fallbackCover);
-    return {
-      front: fallbackCover,
-      spine: fallbackCover,
-      back: fallbackCover,
-    };
-  }, [book, cover, bookID]);
-
-  useEffect(() => {
-    const loader = new THREE.TextureLoader();
-    
-    // Use the same texture URLs as regular Book component
-    const textureUrls = [
-      bookImages.spine, // right
-      bookImages.spine, // left
-      "./books/booktexture.png", // top
-      "./books/booktexture.png", // bottom
-      bookImages.front, // front
-      bookImages.back, // back
-    ];
-
-    const loadTextures = async () => {
-      try {
-        const loadedTextures = await Promise.all(
-          textureUrls.map(url => 
-            new Promise((resolve) => {
-              loader.load(
-                url,
-                resolve,
-                undefined,
-                () => {
-                  // Fallback to a basic texture
-                  const canvas = document.createElement('canvas');
-                  canvas.width = canvas.height = 256;
-                  const ctx = canvas.getContext('2d', { willReadFrequently: true });
-                  ctx.fillStyle = color || '#8B4513';
-                  ctx.fillRect(0, 0, 256, 256);
-                  const texture = new THREE.CanvasTexture(canvas);
-                  resolve(texture);
-                }
-              );
-            })
-          )
-        );
-        setTextures(loadedTextures);
-        setIsLoading(false);
-      } catch (error) {
-        console.error('Error loading textures:', error);
-        setIsLoading(false);
-      }
-    };
-
-    loadTextures();
-  }, [bookImages, color]);
-
-  // Configure textures
-  const configureredTextures = useMemo(() => {
-    if (!textures || !Array.isArray(textures)) return [];
-    
-    return textures.map((texture) => {
-      if (texture) {
-        texture.flipY = false;
-        texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
-        texture.generateMipmaps = false;
-        texture.minFilter = THREE.LinearFilter;
-        texture.magFilter = THREE.LinearFilter;
-      }
-      return texture;
-    });
-  }, [textures]);
+  
+  // Use same texture loading approach as regular Book component
+  const textures = [
+    useSafeLoader("./books/booktextureRotated.png"),
+    useSafeLoader(cover || "./books/covers/000.jpg"),
+    useSafeLoader("./books/booktexture.png"),
+    useSafeLoader("./books/booktexture.png"),
+    useSafeLoader(cover || "./books/covers/000.jpg"),
+    useSafeLoader(cover || "./books/covers/000.jpg"),
+  ];
 
   // Update cursor on hover
-  useCursor(isHovered && !isDragging && !isTransitioning);
+  useCursor(isHovered && !isDragging);
 
   // Handle book selection
   const handleBookClick = (e) => {
     e.stopPropagation();
-    if (isTransitioning) return;
     
     if (selectedBook === bookID) {
       // Double-click behavior: open book
-      onBookOpen(bookID);
+      if (onBookOpen) onBookOpen(bookID);
     } else {
       // Single-click behavior: select book
       setSelectedBook(bookID);
     }
   };
 
-  // Create book geometry
+  // Create book geometry (unit size, scale applied to mesh)
   const bookGeometry = useMemo(() => {
-    const [width, height, depth] = scale;
-    return new THREE.BoxGeometry(width, height, depth);
-  }, [scale]);
+    return new THREE.BoxGeometry(1, 1, 1);
+  }, []);
 
-  // Create book materials - same order as regular Book component
-  const bookMaterials = useMemo(() => {
-    if (!configureredTextures || configureredTextures.length === 0) {
-      // Fallback materials if textures fail to load
-      return [
-        new THREE.MeshStandardMaterial({ color: color }), // right (spine)
-        new THREE.MeshStandardMaterial({ color: color }), // left (spine)
-        new THREE.MeshStandardMaterial({ color: "#f5f5f5" }), // top (pages)
-        new THREE.MeshStandardMaterial({ color: "#f5f5f5" }), // bottom (pages)
-        new THREE.MeshStandardMaterial({ color: color }), // front
-        new THREE.MeshStandardMaterial({ color: color }), // back
-      ];
-    }
-    
-    const [spineRightTex, spineLeftTex, topTex, bottomTex, frontTex, backTex] = configureredTextures;
-    
-    return [
-      new THREE.MeshStandardMaterial({ map: spineRightTex || null }), // right (spine)
-      new THREE.MeshStandardMaterial({ map: spineLeftTex || null }), // left (spine)
-      new THREE.MeshStandardMaterial({ map: topTex || null }), // top (pages)
-      new THREE.MeshStandardMaterial({ map: bottomTex || null }), // bottom (pages)
-      new THREE.MeshStandardMaterial({ map: frontTex || null }), // front
-      new THREE.MeshStandardMaterial({ map: backTex || null }), // back
-    ];
-  }, [configureredTextures, color]);
-
-  // Debug: Log textures being loaded (same as regular Book)
-  useEffect(() => {
-    console.log(`📸 BookPhysics ${bookID} textures:`, {
-      spine: bookImages.spine,
-      front: bookImages.front,
-      back: bookImages.back,
-      texturesLoaded: textures.length
-    });
-  }, [bookImages, textures, bookID]);
+  // Create book materials - same approach as regular Book component
+  const materials = textures.map(
+    (texture) => new THREE.MeshStandardMaterial({ map: texture })
+  );
 
   // Handle selection state
   useEffect(() => {
@@ -230,24 +111,7 @@ const BookPhysics = ({
     });
   }, [isSelected, initialPosition]);
 
-  // Show loading only if textures are still loading
-  if (isLoading) {
-    return (
-      <RigidBody
-        type="dynamic"
-        position={initialPosition}
-        rotation={initialRotation}
-        colliders={false}
-        mass={1}
-        name={`book-${bookID}`}
-      >
-        <CuboidCollider args={[scale[0] / 2, scale[1] / 2, scale[2] / 2]} />
-        <mesh geometry={bookGeometry}>
-          <meshStandardMaterial color={color} />
-        </mesh>
-      </RigidBody>
-    );
-  }
+
 
   return (
     <RigidBody
@@ -268,8 +132,7 @@ const BookPhysics = ({
       <group ref={groupRef}>
         <mesh
           ref={bookRef}
-          geometry={bookGeometry}
-          material={bookMaterials}
+          scale={scale}
           onClick={handleBookClick}
           onPointerOver={(e) => {
             e.stopPropagation();
@@ -282,15 +145,21 @@ const BookPhysics = ({
           castShadow
           receiveShadow
           {...props}
-        />
+        >
+          <boxGeometry args={[1, 1, 1]} />
+          <meshBasicMaterial color={color} />
+          {materials.map((material, i) => (
+            <primitive key={`${bookID}-material-${i}`} object={material} attach={`material-${i}`} />
+          ))}
+        </mesh>
         
-        {/* Selection indicator */}
+        {/* Selection indicator
         {isSelected && (
           <mesh position={[0, 0, 0]}>
             <boxGeometry args={[scale[0] * 1.1, scale[1] * 1.1, scale[2] * 1.1]} />
             <meshBasicMaterial color="yellow" transparent opacity={0.2} />
           </mesh>
-        )}
+        )} */}
       </group>
     </RigidBody>
   );

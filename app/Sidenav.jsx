@@ -1,46 +1,64 @@
-import React from 'react'
+import React from "react";
+import Image from "next/image";
 import Footer from "./Footer";
-import BoooksFull from './BoooksFull';
+import BoooksFull from "./BoooksFull";
+import { useAuthStore } from "../stores/useAuthStore";
+import {useLevelStore} from "../stores/useLevelStore";
+import {useUserStore} from "../stores/useUserStore";
+import user from "./user.json";
 
-const Sidenav = ({menu}) => {
+const Sidenav = ({ menu }) => {
+  let { isLoggedIn, setLogin } = useAuthStore();
+  let level = useLevelStore((s) => s.level);
+  let coins = useUserStore((s) => s.coins);
+
+
   return (
     <aside
-        className={`absolute left-0 top-0 h-screen w-60 z-[100] flex flex-col rounded-lg border p-[8px] border-white/30 bg-black/70 text-white backdrop-blur shadow-lg
+      className={`absolute left-0 top-0 h-screen w-60 z-[100] flex flex-col rounded-lg border p-[8px] border-white/30 bg-black/70 text-white backdrop-blur shadow-lg
       transform transition-transform duration-300
       ${menu ? "open-menu" : "closed-menu"}`}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="logo flex p-[8px] cursor-pointer items-center">
-          {/* <a onClick={() => setMenu(!menu)} href="#menu" className="h-[40px]">
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="logo flex p-[8px] cursor-pointer items-center">
+        {/* <a onClick={() => setMenu(!menu)} href="#menu" className="h-[40px]">
             <BookMenuButton />
           </a> */}
-          <a href="/">
-            <BoooksFull width="80px" height="30px" />
-          </a>
+        <a href="/">
+          <BoooksFull width="80px" height="30px" />
+        </a>
+      </div>
+      {/* <div className="profile flex flex-col bg-white/10 backdrop-blur rounded-lg p-2 m-2">
+        <div className="username text-center font-semibold">Username</div>
+        <div className="avatar flex justify-center items-center p-2">
+          <img
+            src="./covers/111.webp"
+            alt="User Avatar"
+            className="w-12 h-12 rounded-full"
+          />
         </div>
-        <div className="profile flex flex-col bg-white/10 backdrop-blur rounded-lg p-2 m-2">
-          <div className="username text-center font-semibold">Username</div>
-          <div className="avatar flex justify-center items-center p-2">
-            <img src="/path/to/avatar.jpg" alt="User Avatar" className="w-12 h-12 rounded-full" />
-          </div>
-          <div className="user-level text-center text-sm text-gray-300">Level 1</div>
-          <div className="user-bio text-center text-sm text-gray-400">Bio goes here...</div>
-            
-          <div className="user-stats flex justify-around text-sm text-gray-300 mt-2">
-            <div className="stat">
-              <span className="font-semibold">Books Read:</span> 12
-            </div>
-            <div className="stat">
-              <span className="font-semibold">Bookmarks:</span> 5
-            </div>
-            <div className="stat">
-              <span className="font-semibold">Notes:</span> 8
-            </div>
-          </div>
-          </div>
+        <div className="user-level text-center text-sm text-gray-300">
+          Level 1
+        </div>
+        <div className="user-bio text-center text-sm text-gray-400">
+          Bio goes here...
+        </div>
 
-        <ul className="mt-2 space-y-2 p-4">
-          {/* <li>
+        <div className="user-stats flex justify-around text-sm text-gray-300 mt-2">
+          <div className="stat">
+            <span className="font-semibold">Books Read:</span> 12
+          </div>
+          <div className="stat">
+            <span className="font-semibold">Bookmarks:</span> 5
+          </div>
+          <div className="stat">
+            <span className="font-semibold">Notes:</span> 8
+          </div>
+        </div>
+      </div> */}
+
+      <ul className="mt-2 space-y-2 p-4">
+        {/* <li>
             <a href="#" className="block p-2 rounded-lg hover:bg-white/10">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -152,147 +170,176 @@ const Sidenav = ({menu}) => {
             </a>
           </li> */}
 
-          <li>
-            <a
-              href="#section1"
-              className="block p-2 rounded-lg hover:bg-white/10"
+        <li>
+          <a
+            href="#section1"
+            className="block p-2 rounded-lg hover:bg-white/10"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-gift-icon lucide-gift"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="lucide lucide-gift-icon lucide-gift"
-              >
-                <rect x="3" y="8" width="18" height="4" rx="1" />
-                <path d="M12 8v13" />
-                <path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7" />
-                <path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5" />
-              </svg>{" "}
-              Wishlist
-            </a>
-            <a href="plus">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="lucide lucide-plus-icon lucide-plus"
-              >
-                <path d="M5 12h14" />
-                <path d="M12 5v14" />
-              </svg>
-            </a>
-          </li>
-          <li>
-            <a
-              href="#section2"
-              className="block p-2 rounded-lg hover:bg-white/10"
+              <rect x="3" y="8" width="18" height="4" rx="1" />
+              <path d="M12 8v13" />
+              <path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7" />
+              <path d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5" />
+            </svg>{" "}
+            Wishlist
+          </a>
+          <a href="plus">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-plus-icon lucide-plus"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="lucide lucide-circle-icon lucide-circle"
-              >
-                <circle cx="12" cy="12" r="10" />
-              </svg>{" "}
-              Shelves
-            </a>
-            <a href="plus">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="lucide lucide-plus-icon lucide-plus"
-              >
-                <path d="M5 12h14" />
-                <path d="M12 5v14" />
-              </svg>
-            </a>
-          </li>
-          <li>
-            <a
-              href="#section3"
-              className="block p-2 rounded-lg hover:bg-white/10"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="lucide lucide-library-icon lucide-library"
-              >
-                <path d="m16 6 4 14" />
-                <path d="M12 6v14" />
-                <path d="M8 8v12" />
-                <path d="M4 4v16" />
-              </svg>{" "}
-              Collections
-            </a>
-            <a href="plus">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="lucide lucide-plus-icon lucide-plus"
-              >
-                <path d="M5 12h14" />
-                <path d="M12 5v14" />
-              </svg>
-            </a>
-          </li>
-          <li>
-              <a href="#"
-              className="block p-2 rounded-lg hover:bg-white/10"
-              ><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-shapes-icon lucide-shapes"><path d="M8.3 10a.7.7 0 0 1-.626-1.079L11.4 3a.7.7 0 0 1 1.198-.043L16.3 8.9a.7.7 0 0 1-.572 1.1Z"/><rect x="3" y="14" width="7" height="7" rx="1"/><circle cx="17.5" cy="17.5" r="3.5"/></svg>
-              Apps
-              </a>
-          </li>
-          <li>
-              <a href="#" className="block p-2 rounded-lg hover:bg-white/10">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-scroll-text-icon lucide-scroll-text"><path d="M15 12h-5"/><path d="M15 8h-5"/><path d="M19 17V5a2 2 0 0 0-2-2H4"/><path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3"/></svg>
-              Scrolls
-              </a>
-
+              <path d="M5 12h14" />
+              <path d="M12 5v14" />
+            </svg>
+          </a>
         </li>
-        </ul>
-        {/* <h2>Pages</h2>
+        <li>
+          <a
+            href="#section2"
+            className="block p-2 rounded-lg hover:bg-white/10"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-circle-icon lucide-circle"
+            >
+              <circle cx="12" cy="12" r="10" />
+            </svg>{" "}
+            Shelves
+          </a>
+          <a href="plus">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-plus-icon lucide-plus"
+            >
+              <path d="M5 12h14" />
+              <path d="M12 5v14" />
+            </svg>
+          </a>
+        </li>
+        <li>
+          <a
+            href="#section3"
+            className="block p-2 rounded-lg hover:bg-white/10"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-library-icon lucide-library"
+            >
+              <path d="m16 6 4 14" />
+              <path d="M12 6v14" />
+              <path d="M8 8v12" />
+              <path d="M4 4v16" />
+            </svg>{" "}
+            Collections
+          </a>
+          <a href="plus">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-plus-icon lucide-plus"
+            >
+              <path d="M5 12h14" />
+              <path d="M12 5v14" />
+            </svg>
+          </a>
+        </li>
+        <li>
+          <a href="#" className="block p-2 rounded-lg hover:bg-white/10">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#fff"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-shapes-icon lucide-shapes"
+            >
+              <path d="M8.3 10a.7.7 0 0 1-.626-1.079L11.4 3a.7.7 0 0 1 1.198-.043L16.3 8.9a.7.7 0 0 1-.572 1.1Z" />
+              <rect x="3" y="14" width="7" height="7" rx="1" />
+              <circle cx="17.5" cy="17.5" r="3.5" />
+            </svg>
+            Apps
+          </a>
+        </li>
+        <li>
+          <a href="#" className="block p-2 rounded-lg hover:bg-white/10">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-scroll-text-icon lucide-scroll-text"
+            >
+              <path d="M15 12h-5" />
+              <path d="M15 8h-5" />
+              <path d="M19 17V5a2 2 0 0 0-2-2H4" />
+              <path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3" />
+            </svg>
+            Scrolls
+          </a>
+        </li>
+      </ul>
+      {/* <h2>Pages</h2>
             <ul> */}
-        {/* <li>
+      {/* <li>
               <a href="#">Tracks</a>
               <ul>
                 <li>
@@ -358,32 +405,38 @@ const Sidenav = ({menu}) => {
                     Author
                   </a>
                 </li>
-                ¨
-                <li>
-                  <a href="#last">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      class="lucide lucide-book-open-icon lucide-book-open"
-                    >
-                      <path d="M12 7v14" />
-                      <path d="M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z" />
-                    </svg>
-                  </a>
-                </li>
+                
+                
               </ul>
             </li> */}
-        {/* </ul> */}
-        <Footer />
-      </aside>
-  )
-}
+      {/* </ul> */}
 
-export default Sidenav
+      {isLoggedIn && (
+        <div className="p-4">
+          <h2 className="text-sm font-semibold">Welcome back {user[0].name}!</h2>
+        </div>
+      )}
+
+      {isLoggedIn && (<Image src={'/assets/image.png'} alt="User Avatar" width={300} height={150} className="rounded h-[150px] mx-auto m-2"/>)}
+      
+      {isLoggedIn && <>you have {coins} coins<br/></>}
+      {isLoggedIn && <>you are level {level}</>}
+      
+      {isLoggedIn && (
+        <div
+          onClick={() => {
+            setLogin(false);
+          }}
+          className="pill login bg-white/70 cursor-pointer border border-2 border-red-500 rounded-full px-2 my-2 text-[12px]"
+        >
+          logout
+        </div>
+      )}
+      
+
+      <Footer />
+    </aside>
+  );
+};
+
+export default Sidenav;

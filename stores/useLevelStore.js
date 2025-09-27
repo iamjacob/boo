@@ -1,7 +1,7 @@
 import { create } from "zustand";
 
 export const useLevelStore = create((set, get) => ({
-  level: 4, // Starting level -> set on loading user!
+  level: 10, // Starting level -> set on loading user!
   showConfetti: false, // Track if confetti should be shown
   confettiStartTime: null, // Track when confetti started
   setLevel: (level) => set({ level }),

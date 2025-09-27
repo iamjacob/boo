@@ -54,7 +54,7 @@ export default function TornadoSystem({ bookCount, height, radius, rotationSpeed
           const spiralPosition = i / bookCount;
           const r = radius * (1 - Math.pow(spiralPosition, 1.2)); // Single spiral
           const baseAngle = spiralPosition * Math.PI * 80; // MUCH more spiraling
-          const rotatedAngle = baseAngle + centerRotation.rotation;
+          const rotatedAngle = baseAngle - centerRotation.rotation; // Reversed rotation direction
           
           const x = r * Math.cos(rotatedAngle);
           const z = r * Math.sin(rotatedAngle);

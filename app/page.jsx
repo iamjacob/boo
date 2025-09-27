@@ -35,7 +35,7 @@ export default function Home() {
       <div
         // onPointerDown={handlePointerDown}
         style={{ touchAction: "manipulation" }}
-        className="font-sans flex flex-col items-center justify-between w-[100dvw] h-[100dvh]"
+        className="font-sans flex flex-col items-center justify-between w-[100vw] h-[100vh]"
       >
         <Header />
 

@@ -374,7 +374,6 @@
     "rotation": {"x":0, "y":2, "z":0},
     "cover": {"front":"./covers/responsible-js.jpg"}
   }
-
   ,
     {
     "id": "book-024",
@@ -411,19 +410,19 @@
   },
     {
     "id": "book-026",
-    "title": "building microservices",
-    "author": "Sam Newman",
+    "title": "Learning web design",
+    "author": "Jennifer Niederst Robbins",
     "categories": {
       "main": ["Science & Technology"],
-      "sub": ["microservices", "architecture", "programming"]
+      "sub": ["web design", "user experience", "programming"]
     },
-    "tags": ["microservices", "architecture", "programming"],
+    "tags": ["web design", "user experience", "programming"],
     "year": null,
     "pages": null,
-    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "scale": {"width":0.55, "height":0.77, "thickness":0.2},
     "position": {"x":-1.242111, "y":0.655, "z":-6.380216},
     "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/buildingmicroservices.webp"}
+    "cover": {"front":"./covers/learningweb.webp"}
   },
     {
     "id": "book-027",

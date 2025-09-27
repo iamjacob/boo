@@ -14,9 +14,9 @@ const Shelves = () => {
     segments = 32, // number of collider segments
   }) => {
     const textures = useLoader(THREE.TextureLoader, [
-      "/experience/shelf/Wood051_1K-JPG_Color.jpg",
-      "/experience/shelf/Wood051_1K-JPG_NormalDX.jpg",
-      "/experience/shelf/Wood051_1K-JPG_Roughness.jpg",
+      "/experience/shelf/Wood051_1K-JPG_Color.webp",
+      "/experience/shelf/Wood051_1K-JPG_NormalDX.webp",
+      "/experience/shelf/Wood051_1K-JPG_Roughness.webp",
     ]);
 
     const [colorMap, normalMap, roughnessMap] = textures;

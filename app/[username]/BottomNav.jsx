@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Image from "next/image";
 import BoooksHeart from "../BoooksHeart";
 // import { Cast, CastIcon, Fullscreen } from "lucide-react";
 // import FullScreen from "../Fullscreen";
@@ -8,6 +9,8 @@ import { useLevelStore } from "../../stores/useLevelStore";
 const BottomNav = () => {
   const [share, setShare] = useState(false);
   const {
+    throwCoins,
+    setThrowCoins,
     setReadingNow,
     ReadingNow,
     setWishList,
@@ -260,7 +263,20 @@ const BottomNav = () => {
             </svg>
           </a>
 
-          <a
+          {level >= 5 && (
+            <a
+              href="#donate"
+              onClick={() => setThrowCoins(!throwCoins)}
+              className={`${
+                throwCoins ? "border-[#ff0000]" : "border-[#ff000050]"
+              } border border-1 bg-black/20 p-3 backdrop-blur rounded-[44px]`}
+            > <Image src={'/assets/coin.svg'} alt="Coin to donations" width={24} height={24} className="rounded"/>
+            </a>
+          )}
+  
+
+{level >= 10 && (
+<a
             href="#geo"
             onClick={() => (geo ? toggleGeo(false) : toggleGeo(true))}
             className={` ${
@@ -286,7 +302,10 @@ const BottomNav = () => {
               <path d="M11 20H9" />
             </svg>
           </a>
+)}
 
+          
+          
           {/* <a href="#share" onClick={() => share ? setShare(false) : setShare(true)}> */}
           {/* <a href="#share" onClick={() => setShare(!share)}>
           <svg
@@ -309,30 +328,31 @@ const BottomNav = () => {
         </a> */}
 
           {/* Level navigation buttons */}
-          <div className="flex flex-col fixed right-[8px] top-[30vh] p-1 rounded-full">
+          <div className="flex flex-col gap-1 fixed right-[8px] top-[30vh] p-1 rounded-full ">
             <button
               onClick={levelDown}
-              className="px-3 py-1 rounded bg-black/40 text-white"
+              className="px-3 py-1 rounded bg-black/40 text-white border border-1 bg-black/20 p-3 backdrop-blur rounded-[44px]"
             >
-              Level -
+              -
             </button>
-            <span className="px-2 text-white">Level: {level}</span>
+            <span className="px-3 py-1 rounded bg-black/40 text-white border border-1 bg-black/20 p-3 backdrop-blur rounded-[44px]">{level}</span>
             <button
               onClick={levelUp}
-              className="px-3 py-1 rounded bg-black/40 text-white"
+              className="px-3 py-1 rounded bg-black/40 text-white border border-1 bg-black/20 p-3 backdrop-blur rounded-[44px]"
             >
-              Level +
+              +
             </button>
           </div>
         </nav>
       </div>
 
       {/* bg-[#d100f645]  */}
-      <div className="sideflow fixed right-[8px] top-[50vh] p-1 rounded-full bg-[#d100f610]">
+
+      {/* <div className="sideflow fixed right-[8px] top-[50vh] p-1 rounded-full bg-[#d100f610]">
         <a href="#menu-profile">
           <BoooksHeart />
         </a>
-      </div>
+      </div> */}
     </>
   );
 };

@@ -10,28 +10,30 @@ export const useShelfZoomStore = create((set, get) => ({
   defaultCameraPosition: [0, 0.0001, 5],
   defaultCameraTarget: [0, 0, 0],
   
-  // Shelf-specific zoom positions (positioned to look at each shelf optimally)
+  // Shelf-specific zoom positions (optimized for clean transitions)
+  // Shelves are at: group[0, -0.8, 0] + individual[0, i-1, 0]
+  // So: shelf0=[-1.8], shelf1=[-0.8], shelf2=[0.2], shelf3=[1.2]
   shelfZoomPositions: {
     0: { 
-      position: [0, -1.8, 3], 
+      position: [0, -1.8, 2.5], 
       target: [0, -1.8, 0],
-      fov: 45 
-    }, // Bottom shelf
+      fov: 60 
+    }, // Bottom shelf - closer camera, wider FOV
     1: { 
-      position: [0, -0.8, 3], 
+      position: [0, -0.8, 2.5], 
       target: [0, -0.8, 0],
-      fov: 45 
-    }, // Second shelf
+      fov: 60 
+    }, // Second shelf - consistent positioning
     2: { 
-      position: [0, 0.2, 3], 
+      position: [0, 0.2, 2.5], 
       target: [0, 0.2, 0],
-      fov: 45 
-    }, // Third shelf  
+      fov: 60 
+    }, // Third shelf - consistent positioning
     3: { 
-      position: [0, 1.2, 3], 
+      position: [0, 1.2, 2.5], 
       target: [0, 1.2, 0],
-      fov: 45 
-    }, // Top shelf
+      fov: 60 
+    }, // Top shelf - consistent positioning
   },
   
   // Actions
@@ -54,7 +56,7 @@ export const useShelfZoomStore = create((set, get) => ({
       // Reset transition state after animation
       setTimeout(() => {
         set({ isTransitioning: false });
-      }, 1500); // Match animation duration
+      }, 800); // Match faster animation duration
       
       return;
     }
@@ -69,7 +71,7 @@ export const useShelfZoomStore = create((set, get) => ({
     // Reset transition state after animation
     setTimeout(() => {
       set({ isTransitioning: false });
-    }, 1500); // Match animation duration
+    }, 800); // Match animation duration
   },
   
   zoomOut: () => {
@@ -84,7 +86,7 @@ export const useShelfZoomStore = create((set, get) => ({
     
     setTimeout(() => {
       set({ isTransitioning: false });
-    }, 1500);
+    }, 800);
   },
   
   // Get current camera settings based on zoom state

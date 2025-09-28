@@ -6,7 +6,6 @@ import { ThrowableHeart } from "./components/ThrowableHeart";
 import { Snowball } from "./components/Snowball";
 import SnowballCameraController from "./components/SnowballCameraController";
 
-import ShelfZoom from "./components/ShelfZoom";
 import ShelvesPhysics from "./components/ShelvesPhysics";
 import Floor from "./components/Floor";
 import BackgroundWall from "./components/BackgroundWall";
@@ -142,16 +141,12 @@ const ThrowCoins = ({
   };
 
   return (
-    <>
-      {/* Shelf Zoom System (independent of physics) */}
-      <ShelfZoom />
-      
-      <Physics 
-        gravity={[0, -9.81, 0]} 
-        debug={false} // Set to true for physics debugging
-      >
-        {/* Physics Environment */}
-        <ShelvesPhysics />
+    <Physics 
+      gravity={[0, -9.81, 0]} 
+      debug={false} // Set to true for physics debugging
+    >
+      {/* Physics Environment */}
+      <ShelvesPhysics />
       <Floor />
       <BackgroundWall debug={false} />
       
@@ -259,8 +254,7 @@ const ThrowCoins = ({
           </div>
         </Html>
       )} */}
-      </Physics>
-    </>
+    </Physics>
   );
 };
 

@@ -4,9 +4,11 @@ import * as THREE from "three";
 import gsap from "gsap";
 import { useLevelStore } from '../../../stores/useLevelStore';
 import { levelSettings } from '../../../config/levelConfig';
+import { useShelfZoomStore } from '../../../stores/useShelfZoomStore';
 
-const Shelf = ({ position = [0, 0, 0], rotation = [-Math.PI / 2, 0, 0], fraction }) => {
+const Shelf = ({ position = [0, 0, 0], rotation = [-Math.PI / 2, 0, 0], fraction, index }) => {
   const meshRef = useRef();
+  const { zoomToShelf } = useShelfZoomStore();
 
   const textures = useLoader(THREE.TextureLoader, [
     "/experience/shelf/Wood051_1K-JPG_Color.webp",
@@ -44,16 +46,50 @@ const Shelf = ({ position = [0, 0, 0], rotation = [-Math.PI / 2, 0, 0], fraction
     });
   }, [fraction]);
 
+  const handleShelfClick = (event) => {
+    event.stopPropagation();
+    
+    const actualY = position[1] + (-0.8); // group offset
+    console.log('🔍 Shelf clicked:', {
+      visualIndex: index,
+      shelfPosition: position,
+      actualWorldY: actualY,
+      fraction: fraction,
+      clickPoint: event.point
+    });
+    
+    // The index directly corresponds to the shelf number
+    // index 0 = bottom shelf, index 1 = second shelf, etc.
+    console.log(`� Shelf ${index} clicked - zooming to shelf ${index}`);
+    
+    zoomToShelf(index);
+  };
+
   return (
-    <mesh ref={meshRef} position={position} rotation={rotation}>
-      <primitive object={geometry} attach="geometry" />
-      <meshStandardMaterial
-        map={colorMap}
-        normalMap={normalMap}
-        roughnessMap={roughnessMap}
-        side={THREE.DoubleSide}
-      />
-    </mesh>
+    <group position={position} rotation={rotation} name={`shelf-group-${index}`}>
+      {/* Visible shelf */}
+      <mesh ref={meshRef}>
+        <primitive object={geometry} attach="geometry" />
+        <meshStandardMaterial
+          map={colorMap}
+          normalMap={normalMap}
+          roughnessMap={roughnessMap}
+          side={THREE.DoubleSide}
+        />
+      </mesh>
+      
+      {/* Invisible click area - covers the shelf area */}
+      <mesh 
+        position={[0, 0, 0]}
+        onClick={handleShelfClick}
+        onPointerEnter={() => document.body.style.cursor = 'pointer'}
+        onPointerLeave={() => document.body.style.cursor = 'auto'}
+        name={`shelf-click-${index}`}
+      >
+        <cylinderGeometry args={[6.5, 6.5, 0.2, 32]} />
+        <meshBasicMaterial transparent opacity={0} />
+      </mesh>
+    </group>
   );
 };
 
@@ -93,7 +129,7 @@ const Shelves = () => {
     <group position={[0, -0.8, 0]} rotation={[0, Math.PI / 2, 0]} onDoubleClick={toggle}>
       {fractions.map((fraction, i) => {
         if(fraction == 0) return null;
-        return <Shelf key={i} position={[0, i - 1, 0]} fraction={fraction} />;
+        return <Shelf key={i} position={[0, i - 1, 0]} fraction={fraction} index={i} />;
       })}
     </group>
   );

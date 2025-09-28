@@ -4,8 +4,13 @@ import { Canvas } from "@react-three/fiber";
 import { Stars, OrbitControls, Html } from "@react-three/drei";
 import Shelves from "./shelves/Shelves";
 import ShelvesSquare from "./secrets/ShelvesSquare";
+import ShelfZoom from "./components/ShelfZoom";
+import ShelfCameraController from "./components/ShelfCameraController";
+import ShelfHighlight from "./components/ShelfHighlight";
+import ShelfZoomUI from "./components/ShelfZoomUI";
 import { gsap } from "gsap";
 import { useCameraStore } from "../../stores/useCameraStore";
+import { useShelfZoomStore } from "../../stores/useShelfZoomStore";
 import Lighting from "./Lighting";
 import OpenBook from "./openbook/OpenBook";
 import Menu from "./Menu";
@@ -96,11 +101,12 @@ export const Experience = ({ children, drag, setDrag }) => {
     }
   };
 
-  // Sync camera live with Zustand store
+  // Sync camera live with Zustand store (but skip during shelf zoom transitions)
+  const { isTransitioning } = useShelfZoomStore();
   useEffect(() => {
     const camera = cameraRef.current;
 
-    if (!camera) return;
+    if (!camera || isTransitioning) return; // Skip camera sync during transitions
     // Fallback/default if position is not a valid array
     const safePosition =
       Array.isArray(position) && position.length === 3
@@ -112,7 +118,7 @@ export const Experience = ({ children, drag, setDrag }) => {
     camera.rotation.set(...safeRotation);
     camera.zoom = typeof zoom === "number" ? zoom : 3.5;
     camera.updateProjectionMatrix();
-  }, [position, rotation, zoom]);
+  }, [position, rotation, zoom, isTransitioning]);
 
 
   // Splash screen removal
@@ -148,7 +154,14 @@ export const Experience = ({ children, drag, setDrag }) => {
       >
 
 
-        {!throwCoins && <Shelves />}
+        {!throwCoins && (
+          <>
+            <Shelves />
+            {/* <ShelfCameraController /> */}
+            {/* <ShelfHighlight /> */}
+            {/* <ShelfZoomUI /> */}
+          </>
+        )}
 
         {isReadingNow && <ReadingNow />}
 

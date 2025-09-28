@@ -43,26 +43,62 @@ const ShelvesClickable = () => {
 
     const handleShelfClick = (event) => {
       event.stopPropagation();
-      console.log('🔍 Shelf clicked:', index);
-      zoomToShelf(index);
+      
+      const actualY = position[1] + (-0.8); // group offset
+      console.log('🔍 Shelf clicked:', {
+        visualIndex: index,
+        shelfPosition: position,
+        actualWorldY: actualY,
+        isTopShelf: actualY > 1,
+        isBottomShelf: actualY < -1.5,
+        clickPoint: event.point
+      });
+      
+      // Determine which shelf this actually is based on Y position
+      let targetShelfIndex = index;
+      
+      if (actualY > 1) {
+        console.log('🔝 Top shelf clicked - should go to shelf 3');
+        targetShelfIndex = 3;
+      } else if (actualY > 0) {
+        console.log('🔼 Third shelf clicked - should go to shelf 2');  
+        targetShelfIndex = 2;
+      } else if (actualY > -1) {
+        console.log('🔽 Second shelf clicked - should go to shelf 1');
+        targetShelfIndex = 1;
+      } else {
+        console.log('🔻 Bottom shelf clicked - should go to shelf 0');
+        targetShelfIndex = 0;
+      }
+      
+      zoomToShelf(targetShelfIndex);
     };
 
     return (
-      <mesh 
-        position={position} 
-        rotation={rotation}
-        onClick={handleShelfClick}
-        onPointerEnter={() => document.body.style.cursor = 'pointer'}
-        onPointerLeave={() => document.body.style.cursor = 'auto'}
-      >
-        <primitive object={geometry} attach="geometry" />
-        <meshStandardMaterial
-          map={colorMap}
-          normalMap={normalMap}
-          roughnessMap={roughnessMap}
-          side={THREE.DoubleSide}
-        />
-      </mesh>
+      <group position={position} rotation={rotation} name={`shelf-group-${index}`}>
+        {/* Visible shelf */}
+        <mesh>
+          <primitive object={geometry} attach="geometry" />
+          <meshStandardMaterial
+            map={colorMap}
+            normalMap={normalMap}
+            roughnessMap={roughnessMap}
+            side={THREE.DoubleSide}
+          />
+        </mesh>
+        
+        {/* Invisible click area - smaller and more precise */}
+        <mesh 
+          position={[0, 0, 0]}
+          onClick={handleShelfClick}
+          onPointerEnter={() => document.body.style.cursor = 'pointer'}
+          onPointerLeave={() => document.body.style.cursor = 'auto'}
+          name={`shelf-click-${index}`}
+        >
+          <cylinderGeometry args={[6.5, 6.5, 0.2, 32]} />
+          <meshBasicMaterial transparent opacity={0} />
+        </mesh>
+      </group>
     );
   };
 

@@ -4,6 +4,74 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 
+// Camera Permission Modal Component
+const CameraPermissionModal = ({ isOpen, onAllow, onDeny }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.8)',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 9999,
+      fontFamily: 'system-ui, -apple-system, sans-serif'
+    }}>
+      <div style={{
+        backgroundColor: 'white',
+        padding: '2rem',
+        borderRadius: '12px',
+        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
+        maxWidth: '400px',
+        textAlign: 'center'
+      }}>
+        <h3 style={{ margin: '0 0 1rem 0', color: '#333' }}>
+          📹 Camera Access Required
+        </h3>
+        <p style={{ margin: '0 0 2rem 0', color: '#666', lineHeight: '1.5' }}>
+          This feature requires access to your camera to display live video. 
+          Your privacy is important - the video is only processed locally on your device.
+        </p>
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+          <button
+            onClick={onDeny}
+            style={{
+              padding: '0.75rem 1.5rem',
+              border: '2px solid #ddd',
+              backgroundColor: 'white',
+              color: '#666',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '1rem'
+            }}
+          >
+            Cancel
+          </button>
+          <button
+            onClick={onAllow}
+            style={{
+              padding: '0.75rem 1.5rem',
+              border: 'none',
+              backgroundColor: '#007bff',
+              color: 'white',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              fontSize: '1rem'
+            }}
+          >
+            Allow Camera
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function CameraTexturePlane({
   width = 2,              // world units for the plane
   height,                 // auto from video aspect if not provided
@@ -18,6 +86,8 @@ export default function CameraTexturePlane({
   const meshRef = useRef();
   const [videoEl, setVideoEl] = useState(null);
   const [videoReady, setVideoReady] = useState(false);
+  const [showCameraModal, setShowCameraModal] = useState(false);
+  const [userApprovedCamera, setUserApprovedCamera] = useState(false);
 
   // Create a hidden <video> element once on mount
   useEffect(() => {
@@ -38,9 +108,18 @@ export default function CameraTexturePlane({
     };
   }, [muted, playsInline]);
 
+  // Check if we need to show camera permission modal
+  useEffect(() => {
+    if (!useLocalVideo && videoEl && !userApprovedCamera) {
+      setShowCameraModal(true);
+    }
+  }, [useLocalVideo, videoEl, userApprovedCamera]);
+
   // Start the camera or load local video
   useEffect(() => {
     if (!videoEl) return;
+    if (!useLocalVideo && !userApprovedCamera) return; // Wait for user approval for camera
+    
     let canceled = false;
 
     (async () => {
@@ -57,6 +136,11 @@ export default function CameraTexturePlane({
           await videoEl.play().catch(() => {});
         } else {
           // Use camera
+          if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            console.error("Camera not supported in this browser");
+            return;
+          }
+          
           const constraints = {
             audio: false,
             video: {
@@ -66,15 +150,19 @@ export default function CameraTexturePlane({
             }
           };
           const stream = await navigator.mediaDevices.getUserMedia(constraints);
+          console.log("Camera stream obtained:", stream);
           if (canceled) return;
           videoEl.srcObject = stream;
-          // ensure play() is called (may need a user gesture in some browsers)
-          await videoEl.play().catch(() => {});
+          
           const onCanPlay = () => {
+            console.log("Camera video ready, dimensions:", videoEl.videoWidth, "x", videoEl.videoHeight);
             setVideoReady(true);
             onReady?.(videoEl, stream);
           };
           videoEl.addEventListener("loadedmetadata", onCanPlay, { once: true });
+          
+          // ensure play() is called (may need a user gesture in some browsers)
+          await videoEl.play().catch(() => {});
         }
       } catch (err) {
         console.error(useLocalVideo ? "Local video error:" : "getUserMedia error:", err);
@@ -84,11 +172,28 @@ export default function CameraTexturePlane({
     return () => {
       canceled = true;
     };
-  }, [videoEl, facingMode, onReady, useLocalVideo, videoSrc]);
+  }, [videoEl, facingMode, onReady, useLocalVideo, videoSrc, userApprovedCamera]);
+
+  // Handle camera permission modal actions
+  const handleAllowCamera = () => {
+    setShowCameraModal(false);
+    setUserApprovedCamera(true);
+  };
+
+  const handleDenyCamera = () => {
+    setShowCameraModal(false);
+    setUserApprovedCamera(false);
+    // Optionally fallback to local video or show a message
+    console.log("User denied camera access");
+  };
 
   // Build a THREE.VideoTexture when the <video> is ready
   const texture = useMemo(() => {
-    if (!videoReady || !videoEl) return null;
+    if (!videoReady || !videoEl) {
+      console.log("Texture not ready:", { videoReady, videoEl: !!videoEl });
+      return null;
+    }
+    console.log("Creating texture for video:", videoEl.videoWidth, "x", videoEl.videoHeight);
     const tex = new THREE.VideoTexture(videoEl);
     tex.colorSpace = THREE.SRGBColorSpace; // correct color
     tex.minFilter = THREE.LinearFilter;
@@ -117,13 +222,20 @@ export default function CameraTexturePlane({
     return [width, h];
   }, [videoReady, videoEl, width, height]);
 
-  if (!texture) return null;
-
   return (
-    <mesh ref={meshRef}>
-      <planeGeometry args={planeSize} />
-      {/* Use a basic material so the video isn't affected by lights */}
-      <meshBasicMaterial map={texture} toneMapped={false} />
-    </mesh>
+    <>
+      <CameraPermissionModal
+        isOpen={showCameraModal}
+        onAllow={handleAllowCamera}
+        onDeny={handleDenyCamera}
+      />
+      {texture && (
+        <mesh ref={meshRef}>
+          <planeGeometry args={planeSize} />
+          {/* Use a basic material so the video isn't affected by lights */}
+          <meshBasicMaterial map={texture} toneMapped={false} />
+        </mesh>
+      )}
+    </>
   );
 }

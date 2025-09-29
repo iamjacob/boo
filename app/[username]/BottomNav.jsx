@@ -29,6 +29,9 @@ const BottomNav = () => {
   } = useMenuStore();
   const filter = useMenuStore((s) => s.FilterOpen);
 
+  const scanner = useMenuStore((s) => s.scannerActive);
+  const toggleScanner = useMenuStore((s) => s.setScannerActive);
+
   const { levelUp, level, levelDown } = useLevelStore();
 
   return (
@@ -97,6 +100,30 @@ const BottomNav = () => {
         )}
 
         <nav className="flex w-[fit-content] justify-between items-center gap-1 rounded-[44px] px-6">
+<a href="#scanner"
+          onClick={() => toggleScanner(!scanner)}
+          className={` ${
+            scanner ? "border-[#ff0000]" : "border-[#ff000050]"
+          } border border-1 bg-black/20 p-3 backdrop-blur rounded-[44px]`}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="#fff"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="lucide lucide-camera-icon lucide-camera"
+          >
+            <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+            <path d="M12 10a2 2 0 1 1-2-2 2 2 0 0 1 2 2z" />
+            <path d="M16 4h2a2 2 0 0 1 2 2v2" />
+          </svg>
+          </a>
+
           <a
             href="#filter"
             className={` ${

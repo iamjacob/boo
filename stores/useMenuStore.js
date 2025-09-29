@@ -15,6 +15,8 @@ export const useMenuStore = create((set) => ({
     dnaTimeline: false,
     loginScreen:false,
     throwCoins: false,
+    scannerActive: false,
+    setScannerActive: (value) => set({ scannerActive: value }),
     setThrowCoins: (value) => set({ throwCoins: value }),
     toggleLoginScreen: () => set((state) => ({ loginScreen: !state.loginScreen })),
     toggleDnaTimeline: () => set((state) => ({ dnaTimeline: !state.dnaTimeline })),

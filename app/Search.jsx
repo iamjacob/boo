@@ -35,6 +35,9 @@ export default function Search() {
   const [inputText, setInputText] = useState("");
   const [isPrivate, setPrivate] = useState(false);
 
+  const [uploadModal, setUploadModal] = useState(false);
+  const [uploadType, setUploadType] = useState("");
+
   const [more, setMore] = useState(false);
   const [lang, setLang] = useState("en");
 
@@ -221,8 +224,33 @@ export default function Search() {
     }
   };
 
+  const handleUpload = (type) => {
+    setUploadType(type);
+    setUploadModal(true);
+  };
+
   return (
-    <div className="flex flex-col items-center w-[90vw] md:w-[40vw]">
+    <div className="relative flex flex-col items-center w-[90vw] md:w-[40vw]">
+
+
+
+      {uploadModal && 
+      <div className="absolute text-white bottom-1 left-1 border border-1 p-4 rounded bg-black/80 backdrop-blur-md shadow-lg z-50 rounded-[1rem] w-[210px] ">
+        <h1>Upload Modal</h1>
+        <ol>
+          <li className={`py-1 flex ${uploadType == "file" ? "bg-gray-200" : ""}`}><a onClick={() => handleUpload("file")} className="flex" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-file-icon lucide-file"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg> Upload a file</a></li>
+          <li className={`py-1 flex ${uploadType == "url" ? "bg-gray-200" : ""}`}><a onClick={() => handleUpload("url")} className="flex" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-link-icon lucide-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Import from URL</a></li>
+          <li className={`py-1 flex ${uploadType == "image" ? "bg-gray-200" : ""}`}><a onClick={() => handleUpload("image")} className="flex" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-file-image-icon lucide-file-image"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><circle cx="10" cy="12" r="2"/><path d="m20 17-1.296-1.296a2.41 2.41 0 0 0-3.408 0L9 22"/></svg>Upload image</a></li>
+          <li className={`py-1 flex ${uploadType == "camera" ? "bg-gray-200" : ""}`}><a onClick={() => handleUpload("camera")} className="flex" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-aperture-icon lucide-aperture"><circle cx="12" cy="12" r="10"/><path d="m14.31 8 5.74 9.94"/><path d="M9.69 8h11.48"/><path d="m7.38 12 5.74-9.94"/><path d="M9.69 16 3.95 6.06"/><path d="M14.31 16H2.83"/><path d="m16.62 12-5.74 9.94"/></svg> Use camera</a></li>
+        </ol>
+        
+      </div>
+
+        
+        }
+
+
+
       <div className="search flex flex-col justify-around w-full">
         <div
           className={`w-[90vw] md:w-[40vw] p-1 align-left flex flex-col items-center bg-[rgba(255,255,255,.8)] 
@@ -231,6 +259,10 @@ export default function Search() {
               `}
         >
           <div className="flex w-full justify-between">
+            <div onClick={() => setUploadModal(!uploadModal)} className="p-1 cursor-pointer">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#333" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-plus-icon lucide-plus"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+            </div>
+
             <input
               className={`m-1p-[8px] search__field--input pl-2 py-1 flex-grow w-full outline-none ${
                 isPrivate ? 'placeholder-gray-300' : 'placeholder-gray-500'
@@ -248,9 +280,8 @@ export default function Search() {
               onClick={() => {
                 setPrivate(!isPrivate);
               }}
-              className={`private-ghost-indicator flex items-center gap-1 p-1 text-xs `}>
-
-
+              className={` private-ghost-indicator cursor-pointer flex items-center gap-1 p-1 text-xs 
+               ${isPrivate ? "animate-bounce" : ""}`}>
 <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"

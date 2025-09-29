@@ -36,7 +36,7 @@ const ReadingNow = () => {
         rotation: -Math.PI/2 // Starting angle
       },
       {
-        rotation: Math.PI * 2 + Math.PI / 2, // 360° + 90° more
+        rotation: Math.PI * 2, // 360°
         duration: 5,
         ease: "power2.inOut",
         onUpdate: function() {
@@ -58,26 +58,40 @@ const ReadingNow = () => {
 
   return (
     <>
-      {/* {toggleReading && */}
-
       {toggleCones && (
-        <group rotation={[0,-Math.PI/2,0]}>
-          {reading.map((book, index) => {
-            const angle = (index / BOOK_STAND_COUNT) * 2 * Math.PI;
-            const x = Math.cos(angle) * RADIUS;
-            const z = Math.sin(angle) * RADIUS;
-            return (
-              <BooksStand
-                key={index}
-                position={[x, 0, z]}
-                rotation={[0, -angle + Math.PI / 2, 0]}
-                active={index === activeBookstand}
-                book={book}
-                index={index}
+        <>
+          <group rotation={[0, -Math.PI / 2, 0]}>
+            {reading.map((book, index) => {
+              const angle = (index / BOOK_STAND_COUNT) * 2 * Math.PI;
+              const x = Math.cos(angle) * RADIUS;
+              const z = Math.sin(angle) * RADIUS;
+              return (
+                <BooksStand
+                  key={index}
+                  position={[x, 0, z]}
+                  rotation={[0, -angle + Math.PI / 2, 0]}
+                  active={index === activeBookstand}
+                  book={book}
+                  index={index}
+                />
+              );
+            })}
+          </group>
+          <group position={[0, -1, 0]}>
+            {/* Big reflexive screen */}
+            <mesh>
+              <planeGeometry args={[5, 3]} />
+              <meshPhysicalMaterial
+                color="lightblue"
+                roughness={0.1}
+                metalness={0.9}
+                clearcoat={1}
+                clearcoatRoughness={0.05}
+                reflectivity={1}
               />
-            );
-          })}
-        </group>
+            </mesh>
+          </group>
+        </>
       )}
     </>
   );

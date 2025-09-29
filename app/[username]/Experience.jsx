@@ -23,12 +23,17 @@ import FullScreen from '../Fullscreen'
 import { useMenuStore } from "../../stores/useMenuStore";
 import { useOpenBookStore } from "../../stores/useOpenBookStore";
 
+import LiveScanner from "./LiveScanner";
+
 export const Experience = ({ children, drag, setDrag }) => {
   const zoom = useCameraStore((s) => s.zoom);
   const rotation = useCameraStore((s) => s.rotation);
   const position = useCameraStore((s) => s.position);
   const smooth = useCameraStore((s) => s.smooth);
   const setOrbitRules = useCameraStore((s) => s.setOrbitRules);
+  const scannerActive = useMenuStore((s) => s.scannerActive);
+  // const isScannerShowing = useMenuStore((s) => s.Scanner);
+  // const isShelfZoomed = useShelfZoomStore((s) => s.isShelfZoomed);
   // const setZoom = useCameraStore((s) => s.setZoom);
   // const setRotation = useCameraStore((s) => s.setRotation);
   //const setPosition = useCameraStore((s) => s.setPosition);
@@ -162,6 +167,8 @@ export const Experience = ({ children, drag, setDrag }) => {
             {/* <ShelfZoomUI /> */}
           </>
         )}
+
+        {scannerActive && <LiveScanner />}
 
         {isReadingNow && <ReadingNow />}
 

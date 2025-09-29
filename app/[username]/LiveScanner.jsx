@@ -10,7 +10,7 @@ const LiveScanner = ({}) => {
 
 <>
 
-    <CameraTexturePlane useLocalVideo={faslse}  width={2} />
+    <CameraTexturePlane useLocalVideo={false}  width={2} />
     <group position={[0, 0, 1]} rotation={[0, -Math.PI / 2, 0]}>
     <ScannerOverlay isBookOpen={true} isDJOpen={true} isDJ={true} />
     </group>

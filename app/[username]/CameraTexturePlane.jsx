@@ -4,9 +4,86 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
 
-// Camera Permission Modal Component
-const CameraPermissionModal = ({ isOpen, onAllow, onDeny }) => {
+// Mobile detection utility
+const isMobile = () => {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+};
+
+// Single smart modal that handles all cases
+const SmartModal = ({ 
+  isOpen, 
+  mode, // 'camera-permission', 'mobile-play', 'choose-source'
+  onCameraAllow, 
+  onCameraDeny, 
+  onMobilePlay,
+  onChooseCamera,
+  onChooseVideo 
+}) => {
   if (!isOpen) return null;
+
+  const buttonStyle = (type) => ({
+    padding: '0.75rem 1.5rem',
+    border: type === 'primary' ? 'none' : '2px solid #ddd',
+    backgroundColor: type === 'primary' ? '#007bff' : 'white',
+    color: type === 'primary' ? 'white' : '#666',
+    borderRadius: '8px',
+    cursor: 'pointer',
+    fontSize: '1rem',
+    fontWeight: type === 'primary' ? 'bold' : 'normal'
+  });
+
+  const modalContent = () => {
+    switch (mode) {
+      case 'choose-source':
+        return {
+          title: '📹 Choose Video Source',
+          content: 'Would you like to use your camera or play a sample video?',
+          buttons: (
+            <>
+              <button onClick={onChooseVideo} style={buttonStyle('secondary')}>
+                📁 Sample Video
+              </button>
+              <button onClick={onChooseCamera} style={buttonStyle('primary')}>
+                � Use Camera
+              </button>
+            </>
+          )
+        };
+      
+      case 'camera-permission':
+        return {
+          title: '📹 Camera Access Required',
+          content: 'This feature requires access to your camera. Your privacy is important - the video is only processed locally on your device.',
+          buttons: (
+            <>
+              <button onClick={onCameraDeny} style={buttonStyle('secondary')}>
+                Cancel
+              </button>
+              <button onClick={onCameraAllow} style={buttonStyle('primary')}>
+                Allow Camera
+              </button>
+            </>
+          )
+        };
+      
+      case 'mobile-play':
+        return {
+          title: '▶️ Tap to Play Video',
+          content: 'Mobile browsers require user interaction to play videos',
+          buttons: (
+            <button onClick={onMobilePlay} style={buttonStyle('primary')}>
+              Play Video
+            </button>
+          )
+        };
+      
+      default:
+        return null;
+    }
+  };
+
+  const content = modalContent();
+  if (!content) return null;
 
   return (
     <div style={{
@@ -31,41 +108,13 @@ const CameraPermissionModal = ({ isOpen, onAllow, onDeny }) => {
         textAlign: 'center'
       }}>
         <h3 style={{ margin: '0 0 1rem 0', color: '#333' }}>
-          📹 Camera Access Required
+          {content.title}
         </h3>
         <p style={{ margin: '0 0 2rem 0', color: '#666', lineHeight: '1.5' }}>
-          This feature requires access to your camera to display live video. 
-          Your privacy is important - the video is only processed locally on your device.
+          {content.content}
         </p>
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-          <button
-            onClick={onDeny}
-            style={{
-              padding: '0.75rem 1.5rem',
-              border: '2px solid #ddd',
-              backgroundColor: 'white',
-              color: '#666',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontSize: '1rem'
-            }}
-          >
-            Cancel
-          </button>
-          <button
-            onClick={onAllow}
-            style={{
-              padding: '0.75rem 1.5rem',
-              border: 'none',
-              backgroundColor: '#007bff',
-              color: 'white',
-              borderRadius: '8px',
-              cursor: 'pointer',
-              fontSize: '1rem'
-            }}
-          >
-            Allow Camera
-          </button>
+          {content.buttons}
         </div>
       </div>
     </div>
@@ -79,15 +128,33 @@ export default function CameraTexturePlane({
   muted = true,
   playsInline = true,
   mirror = false,         // flip X for front camera selfies
-  useLocalVideo = false,  // switch to use local video instead of camera
+  useLocalVideo = null,   // null = ask user, true = force video, false = force camera
   videoSrc = "./assets/video/sampleVideo.mp4", // local video file path
   onReady,                // (video, stream) => void
 }) {
   const meshRef = useRef();
   const [videoEl, setVideoEl] = useState(null);
   const [videoReady, setVideoReady] = useState(false);
-  const [showCameraModal, setShowCameraModal] = useState(false);
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    mode: null
+  });
+  const [actualVideoSource, setActualVideoSource] = useState(useLocalVideo);
   const [userApprovedCamera, setUserApprovedCamera] = useState(false);
+
+  // Determine what to show on mount
+  useEffect(() => {
+    if (useLocalVideo === null) {
+      // Ask user to choose
+      setModalState({ isOpen: true, mode: 'choose-source' });
+    } else if (useLocalVideo === false) {
+      // Camera mode - show permission modal
+      setModalState({ isOpen: true, mode: 'camera-permission' });
+    } else {
+      // Video mode - proceed directly
+      setActualVideoSource(true);
+    }
+  }, [useLocalVideo]);
 
   // Create a hidden <video> element once on mount
   useEffect(() => {
@@ -96,6 +163,13 @@ export default function CameraTexturePlane({
     v.muted = muted;
     v.playsInline = playsInline; // iOS Safari needs this
     v.setAttribute("webkit-playsinline", "true");
+    v.setAttribute("playsinline", "true");
+    
+    if (isMobile()) {
+      v.controls = false;
+      v.preload = "metadata";
+    }
+    
     setVideoEl(v);
     return () => {
       // stop all tracks on unmount (for camera streams)
@@ -108,34 +182,40 @@ export default function CameraTexturePlane({
     };
   }, [muted, playsInline]);
 
-  // Check if we need to show camera permission modal
-  useEffect(() => {
-    if (!useLocalVideo && videoEl && !userApprovedCamera) {
-      setShowCameraModal(true);
-    }
-  }, [useLocalVideo, videoEl, userApprovedCamera]);
-
-  // Start the camera or load local video
+  // Start video/camera after all approvals
   useEffect(() => {
     if (!videoEl) return;
-    if (!useLocalVideo && !userApprovedCamera) return; // Wait for user approval for camera
+    if (actualVideoSource === null) return; // Still deciding
+    if (actualVideoSource === false && !userApprovedCamera) return; // Camera not approved
     
     let canceled = false;
 
     (async () => {
       try {
-        if (useLocalVideo) {
-          // Use local video file
+        if (actualVideoSource) {
+          // Local video
           videoEl.src = videoSrc;
-          videoEl.loop = true; // Loop local video by default
-          const onCanPlay = () => {
+          videoEl.loop = true;
+          
+          const onVideoReady = () => {
+            console.log("Video ready, dimensions:", videoEl.videoWidth, "x", videoEl.videoHeight);
             setVideoReady(true);
-            onReady?.(videoEl, null); // no stream for local video
+            onReady?.(videoEl, null);
           };
-          videoEl.addEventListener("loadedmetadata", onCanPlay, { once: true });
-          await videoEl.play().catch(() => {});
+          
+          videoEl.addEventListener("loadedmetadata", onVideoReady, { once: true });
+          
+          try {
+            await videoEl.play();
+            console.log("Video playing successfully");
+          } catch (playError) {
+            console.log("Autoplay failed, likely needs user interaction:", playError);
+            if (isMobile()) {
+              setModalState({ isOpen: true, mode: 'mobile-play' });
+            }
+          }
         } else {
-          // Use camera
+          // Camera
           if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
             console.error("Camera not supported in this browser");
             return;
@@ -144,7 +224,7 @@ export default function CameraTexturePlane({
           const constraints = {
             audio: false,
             video: {
-              facingMode,         // try rear camera
+              facingMode,
               width: { ideal: 1920 },
               height: { ideal: 1080 }
             }
@@ -152,39 +232,67 @@ export default function CameraTexturePlane({
           const stream = await navigator.mediaDevices.getUserMedia(constraints);
           console.log("Camera stream obtained:", stream);
           if (canceled) return;
+          
           videoEl.srcObject = stream;
           
-          const onCanPlay = () => {
+          const onCameraReady = () => {
             console.log("Camera video ready, dimensions:", videoEl.videoWidth, "x", videoEl.videoHeight);
             setVideoReady(true);
             onReady?.(videoEl, stream);
           };
-          videoEl.addEventListener("loadedmetadata", onCanPlay, { once: true });
+          videoEl.addEventListener("loadedmetadata", onCameraReady, { once: true });
           
-          // ensure play() is called (may need a user gesture in some browsers)
-          await videoEl.play().catch(() => {});
+          try {
+            await videoEl.play();
+            console.log("Camera playing successfully");
+          } catch (playError) {
+            console.log("Camera autoplay failed:", playError);
+            if (isMobile()) {
+              setModalState({ isOpen: true, mode: 'mobile-play' });
+            }
+          }
         }
       } catch (err) {
-        console.error(useLocalVideo ? "Local video error:" : "getUserMedia error:", err);
+        console.error("Video/Camera error:", err);
       }
     })();
 
-    return () => {
-      canceled = true;
+    return () => { 
+      canceled = true; 
     };
-  }, [videoEl, facingMode, onReady, useLocalVideo, videoSrc, userApprovedCamera]);
+  }, [videoEl, actualVideoSource, userApprovedCamera, facingMode, videoSrc, onReady]);
 
-  // Handle camera permission modal actions
-  const handleAllowCamera = () => {
-    setShowCameraModal(false);
+  // Modal handlers
+  const handleChooseCamera = () => {
+    setModalState({ isOpen: true, mode: 'camera-permission' });
+    setActualVideoSource(false);
+  };
+
+  const handleChooseVideo = () => {
+    setModalState({ isOpen: false, mode: null });
+    setActualVideoSource(true);
+  };
+
+  const handleCameraAllow = () => {
+    setModalState({ isOpen: false, mode: null });
     setUserApprovedCamera(true);
   };
 
-  const handleDenyCamera = () => {
-    setShowCameraModal(false);
-    setUserApprovedCamera(false);
-    // Optionally fallback to local video or show a message
-    console.log("User denied camera access");
+  const handleCameraDeny = () => {
+    setModalState({ isOpen: false, mode: null });
+    setActualVideoSource(true); // Fallback to video
+  };
+
+  const handleMobilePlay = async () => {
+    if (videoEl) {
+      try {
+        await videoEl.play();
+        console.log("Mobile video playing after user interaction");
+        setModalState({ isOpen: false, mode: null });
+      } catch (error) {
+        console.error("Failed to play after user interaction:", error);
+      }
+    }
   };
 
   // Build a THREE.VideoTexture when the <video> is ready
@@ -224,10 +332,14 @@ export default function CameraTexturePlane({
 
   return (
     <>
-      <CameraPermissionModal
-        isOpen={showCameraModal}
-        onAllow={handleAllowCamera}
-        onDeny={handleDenyCamera}
+      <SmartModal
+        isOpen={modalState.isOpen}
+        mode={modalState.mode}
+        onChooseCamera={handleChooseCamera}
+        onChooseVideo={handleChooseVideo}
+        onCameraAllow={handleCameraAllow}
+        onCameraDeny={handleCameraDeny}
+        onMobilePlay={handleMobilePlay}
       />
       {texture && (
         <mesh ref={meshRef}>

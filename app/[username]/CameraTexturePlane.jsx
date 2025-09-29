@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { useFrame } from "@react-three/fiber";
+import { Html } from "@react-three/drei";
 
 // Mobile detection utility
 const isMobile = () => {
@@ -86,6 +87,8 @@ const SmartModal = ({
   if (!content) return null;
 
   return (
+    <Html>
+
     <div style={{
       position: 'fixed',
       top: 0,
@@ -118,6 +121,8 @@ const SmartModal = ({
         </div>
       </div>
     </div>
+    </Html>
+
   );
 };
 

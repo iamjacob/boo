@@ -327,13 +327,10 @@ export default function ScannerUI() {
 
 useEffect(() => {
   const splash = document.getElementById("splash");
-
     if (splash) {
       splash.classList.add("fade-out");
       setTimeout(() => splash.remove(), 800);
     }
-  
-
 }, []);
 
 
@@ -422,11 +419,13 @@ useEffect(() => {
                   pointerEvents: 'none',
                   zIndex: 5
                 }}
+                viewBox="0 0 100 100"
+                preserveAspectRatio="none"
               >
                 {/* Semi-transparent overlay to dim outside area */}
                 <defs>
                   <mask id="cropMask">
-                    <rect width="100%" height="100%" fill="white"/>
+                    <rect width="100" height="100" fill="white"/>
                     <polygon
                       points={`${dotPositions['dot-1'].x},${dotPositions['dot-1'].y} ${dotPositions['dot-2'].x},${dotPositions['dot-2'].y} ${dotPositions['dot-4'].x},${dotPositions['dot-4'].y} ${dotPositions['dot-3'].x},${dotPositions['dot-3'].y}`}
                       fill="black"
@@ -436,9 +435,9 @@ useEffect(() => {
                 
                 {/* Dark overlay outside the crop area */}
                 <rect 
-                  width="100%" 
-                  height="100%" 
-                  fill="rgba(0, 0, 0, 0.4)" 
+                  width="100" 
+                  height="100" 
+                  fill="rgba(0, 0, 0, 0.7)" 
                   mask="url(#cropMask)"
                 />
                 
@@ -447,20 +446,20 @@ useEffect(() => {
                   points={`${dotPositions['dot-1'].x},${dotPositions['dot-1'].y} ${dotPositions['dot-2'].x},${dotPositions['dot-2'].y} ${dotPositions['dot-4'].x},${dotPositions['dot-4'].y} ${dotPositions['dot-3'].x},${dotPositions['dot-3'].y}`}
                   fill="none"
                   stroke="#ff0000"
-                  strokeWidth="3"
-                  strokeDasharray="8,4"
+                  strokeWidth="0.5"
+                  strokeDasharray="2,1"
                 />
                 
                 {/* Corner indicators */}
                 {Object.entries(dotPositions).map(([dotId, pos]) => (
                   <circle
                     key={dotId}
-                    cx={`${pos.x}%`}
-                    cy={`${pos.y}%`}
-                    r="8"
+                    cx={pos.x}
+                    cy={pos.y}
+                    r="1.5"
                     fill="rgba(255, 0, 0, 0.3)"
                     stroke="#ff0000"
-                    strokeWidth="2"
+                    strokeWidth="0.3"
                   />
                 ))}
               </svg>

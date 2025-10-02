@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./styles.css"; // keep your CSS here
 import LogoMorpher from "../LogoMorpher";
 import { Divide } from "lucide-react";
@@ -28,6 +28,8 @@ export default function ScannerUI() {
   const [isZoomedForPrecision, setIsZoomedForPrecision] = useState(false);
   const [isCameraMode, setIsCameraMode] = useState(false);
   const [capturedImages, setCapturedImages] = useState([]);
+  const [cameraStream, setCameraStream] = useState(null);
+  const videoRef = useRef(null);
 
   const handleStageClick = (id) => {
     setActive(id);
@@ -44,52 +46,103 @@ export default function ScannerUI() {
   // Camera functionality
   const startCamera = async () => {
     try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          facingMode: 'environment', // Use back camera
+          width: { ideal: 1920 },
+          height: { ideal: 1080 }
+        }
+      });
+      
+      setCameraStream(stream);
       setIsCameraMode(true);
+      
+      // Set video source
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+      }
     } catch (error) {
       console.error('Error starting camera:', error);
+      // Fallback to file picker if camera fails
+      setIsCameraMode(true);
     }
   };
 
   const stopCamera = () => {
+    if (cameraStream) {
+      cameraStream.getTracks().forEach(track => track.stop());
+      setCameraStream(null);
+    }
     setIsCameraMode(false);
   };
 
   const capturePhoto = async () => {
     try {
-      // For mobile camera, we'll use file input with camera capture
-      const input = document.createElement('input');
-      input.type = 'file';
-      input.accept = 'image/*';
-      input.capture = 'environment'; // Use back camera
-      
-      input.onchange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-          const url = URL.createObjectURL(file);
-          const newCapturedImage = {
-            file,
-            url,
-            timestamp: Date.now()
-          };
-          
-          setCapturedImages(prev => [...prev, newCapturedImage]);
-          
-          // Add to main images array like uploaded files
-          setUploadedImages(prev => [...prev, file]);
-          setImageUrls(prev => [...prev, url]);
-          setCurrentImageIndex(prev => prev + 1);
-        }
-      };
-      
-      input.click();
+      if (cameraStream && videoRef.current) {
+        // Capture from live video stream
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        const video = videoRef.current;
+        
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        
+        // Draw current video frame to canvas
+        ctx.drawImage(video, 0, 0);
+        
+        // Convert canvas to blob
+        canvas.toBlob((blob) => {
+          if (blob) {
+            const url = URL.createObjectURL(blob);
+            const newCapturedImage = {
+              file: blob,
+              url,
+              timestamp: Date.now()
+            };
+            
+            setCapturedImages(prev => [...prev, newCapturedImage]);
+            
+            // Add to main images array like uploaded files
+            setUploadedImages(prev => [...prev, blob]);
+            setImageUrls(prev => [...prev, url]);
+            setCurrentImageIndex(imageUrls.length); // Set to new image
+          }
+        }, 'image/png');
+      } else {
+        // Fallback to file picker if no camera stream
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.capture = 'environment';
+        
+        input.onchange = (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            const url = URL.createObjectURL(file);
+            const newCapturedImage = {
+              file,
+              url,
+              timestamp: Date.now()
+            };
+            
+            setCapturedImages(prev => [...prev, newCapturedImage]);
+            
+            // Add to main images array like uploaded files
+            setUploadedImages(prev => [...prev, file]);
+            setImageUrls(prev => [...prev, url]);
+            setCurrentImageIndex(prev => prev + 1);
+          }
+        };
+        
+        input.click();
+      }
     } catch (error) {
       console.error('Error capturing photo:', error);
     }
   };
 
   const finishCapturing = () => {
-    setIsCameraMode(false);
-    // Optional: show success message or navigate
+    stopCamera();
   };
 
   const handleFileUpload = (event) => {
@@ -149,14 +202,21 @@ export default function ScannerUI() {
     console.log('Stages updated:', stages);
   }, [stages]);
 
+  // Cleanup camera stream on unmount
+  useEffect(() => {
+    return () => {
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+      }
+    };
+  }, [cameraStream]);
+
   // Drag functionality for dots
   const handleMouseDown = (e, dotId) => {
-    e.preventDefault();
+    console.log('Touch/Mouse down event:', e.type, 'on dot:', dotId);
     
-    // Prevent default touch behaviors
-    if (e.type === 'touchstart') {
-      e.stopPropagation();
-    }
+    e.preventDefault();
+    e.stopPropagation();
     
     setDragState({ isDragging: true, draggedDot: dotId });
     setMorphed(true);
@@ -204,12 +264,30 @@ export default function ScannerUI() {
   const handleMouseMove = (e) => {
     if (!dragState.isDragging || !dragState.draggedDot) return;
 
+    // Prevent default behavior
+    e.preventDefault();
+
     const imageDisplay = document.querySelector('.currentImage');
     if (!imageDisplay) return;
 
-    // Handle both mouse and touch events
-    const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
-    const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+    // Handle pointer, mouse and touch events
+    let clientX, clientY;
+    
+    if (e.type === 'pointermove') {
+      clientX = e.clientX;
+      clientY = e.clientY;
+      console.log('Pointer move detected');
+    } else if (e.type === 'touchmove') {
+      clientX = e.touches[0].clientX;
+      clientY = e.touches[0].clientY;
+      console.log('Touch move detected');
+    } else {
+      clientX = e.clientX;
+      clientY = e.clientY;
+      console.log('Mouse move detected');
+    }
+
+    console.log('Move coordinates:', clientX, clientY);
 
     const rect = imageDisplay.getBoundingClientRect();
     const x = ((clientX - rect.left) / rect.width) * 100;
@@ -225,7 +303,12 @@ export default function ScannerUI() {
     }));
   };
 
-  const handleMouseUp = () => {
+  const handleMouseUp = (e) => {
+    // Prevent default behavior for touch events
+    if (e && e.type === 'touchend') {
+      e.preventDefault();
+    }
+
     setDragState({ isDragging: false, draggedDot: null });
     setMorphed(false);
     setIsZoomedForPrecision(false); // Disable smart zoom
@@ -276,19 +359,30 @@ export default function ScannerUI() {
   // Add global mouse and touch event listeners
   useEffect(() => {
     if (dragState.isDragging) {
-      document.addEventListener('mousemove', handleMouseMove);
-      document.addEventListener('mouseup', handleMouseUp);
-      document.addEventListener('touchmove', handleMouseMove);
-      document.addEventListener('touchend', handleMouseUp);
-      document.body.style.userSelect = 'none'; // Prevent text selection while dragging
-      document.body.style.touchAction = 'none'; // Prevent scrolling during touch
+      // Use pointer events if available, otherwise fallback to mouse/touch
+      if (window.PointerEvent) {
+        document.addEventListener('pointermove', handleMouseMove);
+        document.addEventListener('pointerup', handleMouseUp);
+      } else {
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+        document.addEventListener('touchmove', handleMouseMove, { passive: false });
+        document.addEventListener('touchend', handleMouseUp, { passive: false });
+      }
+      document.body.style.userSelect = 'none';
+      document.body.style.touchAction = 'none';
     }
 
     return () => {
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
-      document.removeEventListener('touchmove', handleMouseMove);
-      document.removeEventListener('touchend', handleMouseUp);
+      if (window.PointerEvent) {
+        document.removeEventListener('pointermove', handleMouseMove);
+        document.removeEventListener('pointerup', handleMouseUp);
+      } else {
+        document.removeEventListener('mousemove', handleMouseMove);
+        document.removeEventListener('mouseup', handleMouseUp);
+        document.removeEventListener('touchmove', handleMouseMove);
+        document.removeEventListener('touchend', handleMouseUp);
+      }
       document.body.style.userSelect = '';
       document.body.style.touchAction = '';
     };
@@ -424,6 +518,17 @@ useEffect(() => {
 
   return (
     <div className="scannerApp">
+      {/* Live Camera Feed - Background when in camera mode */}
+      {isCameraMode && (
+        <video
+          ref={videoRef}
+          autoPlay
+          playsInline
+          muted
+          className="cameraFeed"
+        />
+      )}
+      
       {/* HEADER */}
       <div className="fixed top-1 left-1 p-1 m-2 ">
         <LogoMorpher morphed={morphed} />
@@ -587,6 +692,7 @@ useEffect(() => {
               top: `${dotPositions['dot-1'].y}%`,
               transform: 'translate(-50%, -50%)'
             }}
+            onPointerDown={(e) => handleMouseDown(e, 'dot-1')}
             onMouseDown={(e) => handleMouseDown(e, 'dot-1')}
             onTouchStart={(e) => handleMouseDown(e, 'dot-1')}
           >
@@ -602,6 +708,7 @@ useEffect(() => {
               top: `${dotPositions['dot-2'].y}%`,
               transform: 'translate(-50%, -50%)'
             }}
+            onPointerDown={(e) => handleMouseDown(e, 'dot-2')}
             onMouseDown={(e) => handleMouseDown(e, 'dot-2')}
             onTouchStart={(e) => handleMouseDown(e, 'dot-2')}
           >
@@ -617,6 +724,7 @@ useEffect(() => {
               top: `${dotPositions['dot-3'].y}%`,
               transform: 'translate(-50%, -50%)'
             }}
+            onPointerDown={(e) => handleMouseDown(e, 'dot-3')}
             onMouseDown={(e) => handleMouseDown(e, 'dot-3')}
             onTouchStart={(e) => handleMouseDown(e, 'dot-3')}
           >
@@ -632,6 +740,7 @@ useEffect(() => {
               top: `${dotPositions['dot-4'].y}%`,
               transform: 'translate(-50%, -50%)'
             }}
+            onPointerDown={(e) => handleMouseDown(e, 'dot-4')}
             onMouseDown={(e) => handleMouseDown(e, 'dot-4')}
             onTouchStart={(e) => handleMouseDown(e, 'dot-4')}
           >
@@ -726,10 +835,10 @@ useEffect(() => {
       {isCameraMode && (
         <div className="captureButton" onClick={capturePhoto}>
           <svg viewBox="0 0 24 24" width="32" height="32" fill="white">
-            <circle cx="12" cy="12" r="10" />
-            <path d="M8 12l2 2 4-4" />
+            <circle cx="12" cy="12" r="3" />
+            <path d="M13.997 4a2 2 0 0 1 1.85 1.267L16.28 7h2.22a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5.5a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2h2.22l.43-1.733A2 2 0 0 1 10 4h3.997z" />
           </svg>
-          <span>Capture</span>
+          <span>{cameraStream ? 'Snap Photo' : 'Select Image'}</span>
         </div>
       )}
     </div>

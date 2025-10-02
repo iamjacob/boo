@@ -1,12 +1,14 @@
 "use client";
 import React, { useRef, useEffect, useMemo, Suspense, useState, forwardRef, useImperativeHandle } from "react";
 import { useOpenBookStore } from "../../../stores/useOpenBookStore";
-import { useThree } from "@react-three/fiber";
+import { useThree, useFrame } from "@react-three/fiber";
 import { Html, useCursor, PivotControls } from "@react-three/drei";
 import { useDrag } from "@use-gesture/react";
 import * as THREE from "three";
 import gsap from "gsap";
 import useSafeLoader from "./useSafeLoader";
+import BookContextMenu from "./BookContextMenuLayered";
+import FloatingTransformPanel from "./FloatingTransformPanel";
 
 // import { openDB } from "idb";
 // import BookDimensionControls from "./Dimensions"
@@ -22,6 +24,7 @@ const Book = forwardRef(({
   otherBooks = [],
   bookID,
   cover,
+  title = "Untitled Book", // Add title prop
   selectedBook = 0, // ✅ Receives the currently selected book ID
   setSelectedBook, // ✅ Function to update selection
   drag,
@@ -32,9 +35,41 @@ const Book = forwardRef(({
 }, ref  ) => {
   const { raycaster, camera, size } = useThree();
   const meshRef = useRef();
+  const selectionIndicatorRef = useRef();
+  const pulseIndicatorRef = useRef();
 
+  // Context menu state
+  const [showContextMenu, setShowContextMenu] = useState(false);
+  const [contextMenuPosition, setContextMenuPosition] = useState([0, 0, 0]);
+  const [isMenuOnRightSide, setIsMenuOnRightSide] = useState(false);
+  
+  // Transform panel state
+  const [showTransformPanel, setShowTransformPanel] = useState(false);
+  const [transformPanelPosition, setTransformPanelPosition] = useState([0, 0, 0]);
 
  const { openBookId,setBookObject,closeHandler, animateBackBook, animateBackBookId,loadingBookId, toggleBook ,closeBook,setLoadingBookId, setOpenBookId } = useOpenBookStore();
+
+  // Animate selection indicators
+  useFrame((state) => {
+    if (selectedBook === bookID) {
+      // Animate the main selection indicator with a gentle glow
+      if (selectionIndicatorRef.current) {
+        const time = state.clock.getElapsedTime();
+        selectionIndicatorRef.current.material.opacity = 0.2 + Math.sin(time * 2) * 0.1;
+      }
+      
+      // Animate the pulse indicator with a stronger effect
+      if (pulseIndicatorRef.current) {
+        const time = state.clock.getElapsedTime();
+        const pulse = Math.sin(time * 3) * 0.5 + 0.5; // 0 to 1
+        pulseIndicatorRef.current.material.opacity = pulse * 0.1;
+        
+        // Subtle scale pulsing
+        const scaleMultiplier = 1.1 + pulse * 0.05;
+        pulseIndicatorRef.current.scale.setScalar(scaleMultiplier);
+      }
+    }
+  });
 
 
 
@@ -66,6 +101,44 @@ if (closeHandler) {
   }
 
 }, [openBookId]);
+
+  // Selection indicator animations
+  useEffect(() => {
+    if (selectedBook === bookID) {
+      // Animate pulse effect when selected
+      if (pulseIndicatorRef.current) {
+        gsap.fromTo(pulseIndicatorRef.current.material, 
+          { opacity: 0.2 },
+          { 
+            opacity: 0.6,
+            duration: 0.8,
+            repeat: -1,
+            yoyo: true,
+            ease: "power2.inOut"
+          }
+        );
+        
+        gsap.fromTo(pulseIndicatorRef.current.scale,
+          { x: scale[0] * 1.1, y: scale[1] * 1.1, z: scale[2] * 1.1 },
+          {
+            x: scale[0] * 1.15,
+            y: scale[1] * 1.15, 
+            z: scale[2] * 1.15,
+            duration: 0.8,
+            repeat: -1,
+            yoyo: true,
+            ease: "power2.inOut"
+          }
+        );
+      }
+    } else {
+      // Stop animations when deselected
+      if (pulseIndicatorRef.current) {
+        gsap.killTweensOf(pulseIndicatorRef.current.material);
+        gsap.killTweensOf(pulseIndicatorRef.current.scale);
+      }
+    }
+  }, [selectedBook, bookID, scale]);
 
 
 // const handleOpenBook = () => {
@@ -208,17 +281,206 @@ if (closeHandler) {
     currentPlace.current = place;
   };
 
-  const handlePointerDown = () => {
+  const handlePointerDown = (e) => {
+    // Check if it's a right-click (context menu)
+    if (e && e.button === 2) {
+      //e.preventDefault();
+      //e.stopPropagation();
+      showBookContextMenu(e);
+      return;
+    }
+    
     setSelectedBook(bookID); // ✅ Updates the selected book in `Bookshelf`
     longPressTimer.current = setTimeout(() => {
-      switchPlace("positionAndRotate");
+      showBookContextMenu(e); // Show context menu on long press
     }, 500); // ✅ Long press detection (500ms)
+  };
+
+  const showBookContextMenu = (event) => {
+    if (!meshRef.current) return;
+    
+    // Get the book's world position
+    const worldPosition = new THREE.Vector3();
+    meshRef.current.getWorldPosition(worldPosition);
+    
+    // Check mouse position relative to screen edges if event is available
+    let isOnRightSide = false;
+    
+    if (event && event.clientX !== undefined) {
+      // Get actual mouse distance from screen edges
+      const screenWidth = window.innerWidth;
+      const mouseX = event.clientX;
+      const distanceFromLeft = mouseX;
+      const distanceFromRight = screenWidth - mouseX;
+      
+      // Use mouse position: if closer to right edge, show menu on left side of book
+      // This prevents menu from going off-screen
+      isOnRightSide = distanceFromRight < 200; // 200px threshold from right edge
+    } else {
+      // Fallback: use book's screen position if no mouse event
+      const screenPosition = worldPosition.clone();
+      screenPosition.project(camera);
+      isOnRightSide = screenPosition.x > 0.2;
+    }
+    
+    setIsMenuOnRightSide(isOnRightSide);
+    
+    // Set menu position relative to book
+    setContextMenuPosition([
+      worldPosition.x,
+      worldPosition.y + 0.3, // Slightly above the book
+      worldPosition.z
+    ]);
+    
+    setShowContextMenu(true);
+  };
+
+  const hideContextMenu = () => {
+    setShowContextMenu(false);
+  };
+
+  const showTransformControls = () => {
+    if (!meshRef.current) return;
+    
+    // Get the book's world position
+    const worldPosition = new THREE.Vector3();
+    meshRef.current.getWorldPosition(worldPosition);
+    
+    setTransformPanelPosition([worldPosition.x, worldPosition.y, worldPosition.z]);
+    setShowTransformPanel(true);
+    setShowContextMenu(false); // Hide context menu when showing transform panel
+  };
+
+  const hideTransformControls = () => {
+    setShowTransformPanel(false);
+  };
+
+  // Move book functionality
+  const handleSwapBook = (bookId) => {
+    console.log("Swap book:", bookId);
+    // TODO: Implement book swapping logic
+    // This could open a modal to select another book to swap with
+    // or enter a "swap mode" where clicking another book swaps them
+    alert("Swap mode activated! Click another book to swap positions.");
+  };
+
+  const handleHoldBook = (bookId) => {
+    console.log("Hold book:", bookId);
+    // TODO: Implement book holding logic
+    // This could temporarily "hold" the book in a virtual clipboard
+    // and allow placing it elsewhere
+    alert("Book held! You can now place it in a new position.");
+  };
+
+  const handleMoveToPosition = (bookId, newPosition) => {
+    console.log("Move book to position:", bookId, newPosition);
+    // TODO: Implement move to specific position
+    // This should animate the book to the new position
+    if (meshRef.current) {
+      gsap.to(meshRef.current.position, {
+        x: newPosition.x,
+        y: newPosition.y,
+        z: newPosition.z,
+        duration: 1,
+        ease: "power3.out"
+      });
+    }
+  };
+
+  // Context menu handlers
+  const handleAddToCollection = (bookId, collectionType) => {
+    console.log("Add to collection:", bookId, "Type:", collectionType);
+    // TODO: Implement add to collection functionality
+    // This could open a modal to select collections or create a new one
+    switch (collectionType) {
+      case "reading":
+        console.log("Adding to reading list");
+        break;
+      case "favorites":
+        console.log("Adding to favorites");
+        break;
+      case "wishlist":
+        console.log("Adding to wishlist");
+        break;
+      case "new":
+        console.log("Creating new collection");
+        break;
+      default:
+        console.log("General add to collection");
+    }
+    hideContextMenu();
+  };
+
+  const handleEditBook = (bookId, editType) => {
+    console.log("Edit book:", bookId, "Type:", editType);
+    // TODO: Implement edit book functionality  
+    // This could open the book editor or metadata editor
+    switch (editType) {
+      case "metadata":
+        console.log("Opening metadata editor");
+        break;
+      case "cover":
+        console.log("Opening cover editor");
+        break;
+      case "notes":
+        console.log("Opening notes editor");
+        break;
+      case "properties":
+        console.log("Opening properties panel");
+        break;
+      default:
+        console.log("General book edit");
+    }
+    hideContextMenu();
+  };
+
+  const handleEditRotation = (bookId, transformType) => {
+    console.log("Transform book:", bookId, "Type:", transformType);
+    
+    switch (transformType) {
+      case "position":
+        switchPlace("positionAndRotate");
+        setDrag(true); // Enable drag mode for positioning
+        setSelectedBook(bookID);
+        break;
+      case "rotation":
+        showTransformControls(); // Show the floating transform panel
+        break;
+      case "live-transform":
+        showTransformControls(); // Show the floating transform panel
+        break;
+      case "reset-position":
+        console.log("Resetting position");
+        // Reset to default position
+        if (meshRef.current) {
+          gsap.to(meshRef.current.position, {
+            x: initialPosition[0],
+            y: initialPosition[1],
+            z: initialPosition[2],
+            duration: 1,
+            ease: "power3.out"
+          });
+        }
+        break;
+      case "reset-rotation":
+        console.log("Resetting rotation");
+        // Reset to default rotation
+        handleRotationChange("x", 0);
+        handleRotationChange("y", 0);
+        handleRotationChange("z", 0);
+        break;
+      default:
+        showTransformControls(); // Default to showing transform panel
+    }
+    
+    hideContextMenu();
   };
 
   const handlePointerUp = () => {
     clearTimeout(longPressTimer.current); // ✅ Clear the timer
     setTimeout(() => {
       switchPlace("home");
+      hideContextMenu(); // Hide context menu when returning to home
     }, 6000);
   };
 
@@ -357,7 +619,7 @@ if (closeHandler) {
       if (!meshRef.current) return;
 
       if (active) {
-        handlePointerDown();
+        handlePointerDown(event);
         mouseVecRef.current.set(
           (event.clientX / size.width) * 2 - 1,
           -(event.clientY / size.height) * 2 + 1
@@ -418,7 +680,7 @@ if (closeHandler) {
       //newPos.y = newPos.y - (scale[1]/2) + 0.01;
 
       if (active) {
-        meshRef.current.position.copy(newPos);
+        meshRef.current.position.set(newPos.x, newPos.y, newPos.z);
         meshRef.current.rotation.x = THREE.MathUtils.lerp(
           meshRef.current.rotation.x,
           tiltAngle,
@@ -510,6 +772,17 @@ if (closeHandler) {
         // {...bind()} // ✅ Enable drag only if selected
         {...(drag ? bind() : {})}
         //{...(showPivot ? bind() : {})}
+
+        onPointerDown={(e) => { e.stopPropagation(); handlePointerDown(e); }}
+        onPointerUp={(e) => { e.stopPropagation(); handlePointerUp(); }}
+        onContextMenu={(e) => { 
+          e.preventDefault(); 
+          e.stopPropagation(); 
+          showBookContextMenu(e); 
+        }}
+
+        
+
         // onDoubleClick={() => {
         //   //meshRef.current.position.set(0, 0, 0);
         //   //alert(bookID);
@@ -518,8 +791,7 @@ if (closeHandler) {
         //   handleRotationChange("z", 0);
         // }}
 
-  onDoubleClick={()=> {toggleBook(id)}}
-
+        onDoubleClick={()=> {toggleBook(id)}}        
         scale={scale}
         position={positionRef.current}
         rotation={rotationRef.current}
@@ -534,6 +806,42 @@ if (closeHandler) {
           <primitive key={`${bookID}-material-${i}`} object={material} attach={`material-${i}`} />
         ))}
       </mesh>
+
+      {/* Selection Indicator - Glowing outline when book is selected */}
+      {selectedBook === bookID && (
+        <mesh
+          ref={selectionIndicatorRef}
+          position={positionRef.current}
+          rotation={rotationRef.current}
+          scale={[scale[0] * 1.05, scale[1] * 1.05, scale[2] * 1.05]} // Slightly larger
+        >
+          <boxGeometry args={[1, 1, 1]} />
+          <meshBasicMaterial 
+            color="#60a5fa" 
+            transparent 
+            opacity={0.4}
+            side={THREE.FrontSide} // Changed to FrontSide for better visibility
+          />
+        </mesh>
+      )}
+
+      {/* Selection Pulse Effect */}
+      {selectedBook === bookID && (
+        <mesh
+          ref={pulseIndicatorRef}
+          position={positionRef.current}
+          rotation={rotationRef.current}
+          scale={[scale[0] * 1.1, scale[1] * 1.1, scale[2] * 1.1]} // Even larger for pulse
+        >
+          <boxGeometry args={[1, 1, 1]} />
+          <meshBasicMaterial 
+            color="#3b82f6" 
+            transparent 
+            opacity={0.2}
+            side={THREE.FrontSide} // Changed to FrontSide for better visibility
+          />
+        </mesh>
+      )}
       {/* {selectedBook === bookID && currentPlace.current === "positionAndRotate" && ( */}
         {/* <PivotControls
           anchor={[0, -0.5, 0]}
@@ -564,6 +872,37 @@ if (closeHandler) {
           </div> 
         </Html> */}
       {/* // )} */}
+
+
+      {/* Context Menu */}
+      <BookContextMenu
+        visible={showContextMenu}
+        position={contextMenuPosition}
+        onClose={hideContextMenu}
+        onAddToCollection={handleAddToCollection}
+        onEditBook={handleEditBook}
+        onEditRotation={handleEditRotation}
+        bookId={bookID}
+        bookTitle={title || bookObject?.title || `Book ${bookID}`}
+        bookCover={cover || bookObject?.cover?.front || "./books/covers/000.jpg"}
+        bookAuthor={bookObject?.author || "Unknown Author"}
+        meshRef={meshRef} // Pass the mesh reference for live updates
+        isOnRightSide={isMenuOnRightSide}
+      />
+
+      {/* Floating Transform Panel */}
+      <FloatingTransformPanel
+        visible={showTransformPanel}
+        bookPosition={transformPanelPosition}
+        meshRef={meshRef}
+        camera={camera}
+        onClose={hideTransformControls}
+        onSwapBook={handleSwapBook}
+        onHoldBook={handleHoldBook}
+        onMoveToPosition={handleMoveToPosition}
+        bookId={bookID}
+        bookTitle={title || `Book ${bookID}`}
+      />
 
 
     </Suspense>

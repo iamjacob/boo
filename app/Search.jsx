@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef } from "react";
-import { client } from "./lib/meilisearchClient";
+// import { client } from "./lib/meilisearchClient";
 import Image from "next/image";
 import BoooksHeart from "./BoooksHeart";
 import { div } from "three/tsl";
@@ -54,39 +54,75 @@ export default function Search() {
   const [focusedIdx, setFocusedIdx] = useState(0);
   const resultRefs = useRef([]);
 
-  // Add this useEffect inside your component:
-  useEffect(() => {
-    if (!results.length) return;
-    resultRefs.current = resultRefs.current.slice(0, results.length);
-    const observer = new window.IntersectionObserver(
-      (entries) => {
-        // Find all intersecting entries
-        const visibleEntries = entries.filter((entry) => entry.isIntersecting);
-        if (visibleEntries.length > 0) {
-          // Find the entry closest to the top
-          const topEntry = visibleEntries.reduce((prev, curr) =>
-            curr.boundingClientRect.top < prev.boundingClientRect.top
-              ? curr
-              : prev
-          );
-          setFocusedIdx(Number(topEntry.target.dataset.idx));
-        }
-      },
-      {
-        root: null,
-        threshold: 0.1, // Lower threshold for earlier detection
+  // Google Books API search function
+  const searchGoogleBooks = async (query) => {
+    try {
+      const response = await fetch(
+        `https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=20`
+      );
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch from Google Books API');
       }
-    );
-    resultRefs.current.forEach((ref) => {
-      if (ref) observer.observe(ref);
-    });
-    return () => {
-      resultRefs.current.forEach((ref) => {
-        if (ref) observer.unobserve(ref);
+      
+      const data = await response.json();
+      
+      if (!data.items) {
+        return [];
+      }
+      
+      return data.items.map(item => {
+        const volumeInfo = item.volumeInfo;
+        return {
+          id: item.id,
+          title: volumeInfo.title || 'Unknown Title',
+          author: volumeInfo.authors ? volumeInfo.authors.join(', ') : 'Unknown Author',
+          overview: volumeInfo.description || 'No description available',
+          poster: volumeInfo.imageLinks?.thumbnail || volumeInfo.imageLinks?.smallThumbnail || '/placeholder-book.jpg',
+          genres: volumeInfo.categories || [],
+          release_date: volumeInfo.publishedDate ? new Date(volumeInfo.publishedDate).getTime() / 1000 : 0,
+          type: 'book'
+        };
       });
-      observer.disconnect();
-    };
-  }, [results]);
+    } catch (error) {
+      console.error('Google Books API error:', error);
+      return [];
+    }
+  };
+
+  // Add this useEffect inside your component:
+  // useEffect(() => {
+  //   if (!results.length) return;
+  //   resultRefs.current = resultRefs.current.slice(0, results.length);
+  //   const observer = new window.IntersectionObserver(
+  //     (entries) => {
+  //       // Find all intersecting entries
+  //       const visibleEntries = entries.filter((entry) => entry.isIntersecting);
+  //       if (visibleEntries.length > 0) {
+  //         // Find the entry closest to the top
+  //         const topEntry = visibleEntries.reduce((prev, curr) =>
+  //           curr.boundingClientRect.top < prev.boundingClientRect.top
+  //             ? curr
+  //             : prev
+  //         );
+  //         setFocusedIdx(Number(topEntry.target.dataset.idx));
+  //       }
+  //     },
+  //     {
+  //       root: null,
+  //       threshold: 0.1, // Lower threshold for earlier detection
+  //     }
+  //   );
+  //   resultRefs.current.forEach((ref) => {
+  //     if (ref) observer.observe(ref);
+  //   });
+  //   return () => {
+  //     resultRefs.current.forEach((ref) => {
+  //       if (ref) observer.unobserve(ref);
+  //     });
+  //     observer.disconnect();
+  //   };
+  // }, [results]);
 
   useEffect(() => {
     const detected = document.body.getAttribute("data-lang") || "en";
@@ -183,16 +219,21 @@ export default function Search() {
     let bookResults = [];
 
     try {
-      // Try MeiliSearch first
-      const index = client.index("movies");
-      const searchResults = await index.search(q);
-      bookResults = searchResults.hits.map((item) => ({
-        ...item,
-        type: "book",
-      }));
+      // Try Google Books API first
+      bookResults = await searchGoogleBooks(q);
       setIsOnline(true);
+      
+      // TODO: Uncomment when MeiliSearch is ready
+      // Try MeiliSearch first
+      // const index = client.index("movies");
+      // const searchResults = await index.search(q);
+      // bookResults = searchResults.hits.map((item) => ({
+      //   ...item,
+      //   type: "book",
+      // }));
+      // setIsOnline(true);
     } catch (error) {
-      console.error("MeiliSearch offline, using local search:", error);
+      console.error("Google Books API offline, using local search:", error);
       setIsOnline(false);
 
       // Fallback to local book search
@@ -208,7 +249,7 @@ export default function Search() {
           );
         })
         .slice(0, 20)
-        .map((item) => ({ ...item, type: "book" })); // Limit results similar to MeiliSearch
+        .map((item) => ({ ...item, type: "book" })); // Limit results similar to Google Books API
     }
 
     // Combine results - users first, then books/movies
@@ -224,6 +265,35 @@ export default function Search() {
     }
   };
 
+  // Handle adding book to draft
+  const handleAddToDraft = async (book) => {
+    try {
+      const draftId = Date.now().toString(); // Simple ID generation
+      const draftBook = {
+        ...book,
+        draftId,
+        addedToDraft: new Date().toISOString(),
+        status: 'draft',
+        // Additional fields for validation
+        personalRating: null,
+        personalNotes: '',
+        readingStatus: 'want-to-read',
+        tags: book.genres || [],
+        isPublic: true
+      };
+      
+      // Save to localStorage for now (could be API call later)
+      const existingDrafts = JSON.parse(localStorage.getItem('bookDrafts') || '[]');
+      existingDrafts.push(draftBook);
+      localStorage.setItem('bookDrafts', JSON.stringify(existingDrafts));
+      
+      // Navigate to draft page
+      window.location.href = `/draft/${draftId}`;
+    } catch (error) {
+      console.error('Failed to add book to draft:', error);
+    }
+  };
+
   const handleUpload = (type) => {
     setUploadType(type);
     setUploadModal(true);
@@ -235,13 +305,13 @@ export default function Search() {
 
 
       {uploadModal && 
-      <div className="absolute text-white bottom-1 left-1 border border-1 p-4 rounded bg-black/80 backdrop-blur-md shadow-lg z-50 rounded-[1rem] w-[210px] ">
-        <h1>Upload Modal</h1>
-        <ol>
-          <li className={`py-1 flex ${uploadType == "file" ? "bg-gray-200" : ""}`}><a onClick={() => handleUpload("file")} className="flex" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-file-icon lucide-file"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg> Upload a file</a></li>
-          <li className={`py-1 flex ${uploadType == "url" ? "bg-gray-200" : ""}`}><a onClick={() => handleUpload("url")} className="flex" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-link-icon lucide-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Import from URL</a></li>
-          <li className={`py-1 flex ${uploadType == "image" ? "bg-gray-200" : ""}`}><a onClick={() => handleUpload("image")} className="flex" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-file-image-icon lucide-file-image"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><circle cx="10" cy="12" r="2"/><path d="m20 17-1.296-1.296a2.41 2.41 0 0 0-3.408 0L9 22"/></svg>Upload image</a></li>
-          <li className={`py-1 flex ${uploadType == "camera" ? "bg-gray-200" : ""}`}><a onClick={() => handleUpload("camera")} className="flex" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-aperture-icon lucide-aperture"><circle cx="12" cy="12" r="10"/><path d="m14.31 8 5.74 9.94"/><path d="M9.69 8h11.48"/><path d="m7.38 12 5.74-9.94"/><path d="M9.69 16 3.95 6.06"/><path d="M14.31 16H2.83"/><path d="m16.62 12-5.74 9.94"/></svg> Use camera</a></li>
+      <div className="absolute text-white text-[12px] bottom-[90px] left-0 border border-1 p-2 rounded bg-black/80 backdrop-blur-md shadow-lg z-50 rounded-[1rem] w-[210px] ">
+        {/* <h1>Upload Modal</h1> */}
+        <ol className="flex flex-col gap-1">
+          <li className={`p-1 flex rounded transition ${uploadType == "file" ? "bg-gray-200" : "hover:bg-gray-200 hover:text-black"}`}><a onClick={() => handleUpload("file")} className="flex justify-between align-center" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-file-icon lucide-file"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/></svg> Upload a file</a></li>
+          <li className={`p-1 flex rounded transition ${uploadType == "url" ? "bg-gray-200" : "hover:bg-gray-200 hover:text-black"}`}><a onClick={() => handleUpload("url")} className="flex justify-between align-center" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-link-icon lucide-link"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg> Import from URL</a></li>
+          <li className={`p-1 flex rounded transition ${uploadType == "image" ? "bg-gray-200" : "hover:bg-gray-200 hover:text-black"}`}><a onClick={() => handleUpload("image")} className="flex justify-between align-center" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-file-image-icon lucide-file-image"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><circle cx="10" cy="12" r="2"/><path d="m20 17-1.296-1.296a2.41 2.41 0 0 0-3.408 0L9 22"/></svg>Upload image</a></li>
+          <li className={`p-1 flex rounded transition ${uploadType == "camera" ? "bg-gray-200" : "hover:bg-gray-200 hover:text-black"}`}><a onClick={() => handleUpload("camera")} className="flex justify-between align-center" href="#"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-aperture-icon lucide-aperture"><circle cx="12" cy="12" r="10"/><path d="m14.31 8 5.74 9.94"/><path d="M9.69 8h11.48"/><path d="m7.38 12 5.74-9.94"/><path d="M9.69 16 3.95 6.06"/><path d="M14.31 16H2.83"/><path d="m16.62 12-5.74 9.94"/></svg> Use camera</a></li>
         </ol>
         
       </div>
@@ -299,6 +369,19 @@ export default function Search() {
               <path d="M12 2a8 8 0 0 0-8 8v12l3-3 2.5 2.5L12 19l2.5 2.5L17 19l3 3V10a8 8 0 0 0-8-8z" />
             </svg>
 </div>
+
+
+{/* <div className="searchStatus">
+  Boooks,
+  Google,
+  Amazon,
+  OpenBoooks,
+  Agents
+</div> */}
+
+
+
+
 </div>
  {/* 
             {query && !isOnline ? (
@@ -448,11 +531,31 @@ export default function Search() {
                       className="lucide lucide-chevron-down-icon lucide-chevron-down"
                     >
                       <path d="m9 18 6-6-6-6" />
-                    </svg>
-                  </div>
-                </div>
-
-                <div className="flex gap-2 justify-right">
+            </svg>
+</div>
+<div 
+  onClick={() => window.location.href = '/drafts'}
+  className="cursor-pointer flex items-center gap-1 p-1 text-xs hover:bg-gray-200 rounded transition"
+  title="View Drafts"
+>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="#999"
+    strokeWidth="1"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="lucide lucide-file-edit-icon lucide-file-edit"
+  >
+    <path d="M4 13.5V4a2 2 0 0 1 2-2h8.5L20 7.5V20a2 2 0 0 1-2 2h-5.5" />
+    <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+    <path d="M10.42 12.61a2.1 2.1 0 1 1 2.97 2.97L7.95 21 4 22l1.05-3.95z" />
+  </svg>
+</div>
+</div>                <div className="flex gap-2 justify-right">
                   <div className="pill">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -694,7 +797,7 @@ a
 
       {/* Sorting buttons with chevron direction and state */}
       {results.length > 1 && (
-        <div className="sorting w-full h-[40px] flex">
+        <div className="sorting bg-white/80 w-full h-[40px] flex">
           <div className="flex gap-2 w-full m-2">
             {[
               { label: "Relevance", value: "relevance" },
@@ -744,15 +847,17 @@ a
       {/* {results.length}  */}
 
       {results.length > 1 && (
-        <div className="results--open flex flex-col w-[90vw] md:w-[40vw] max-h-[60vh] mb-2 overflow-auto">
+        <div className="results--open bg-white/80 flex flex-col w-[90vw] md:w-[40vw] max-h-[60vh] mb-2 overflow-auto">
           {results.map((item, idx) => (
             <div
               key={`${item.type}-${item.id}`}
               ref={(el) => (resultRefs.current[idx] = el)}
               data-idx={idx}
-              className={`border-top shadow p-1 flex justify-between transition-all duration-500 ${
+              className={`border-top shadow p-1 flex justify-between transition-all duration-500 
+                ${
                 idx === focusedIdx ? "focused-result" : ""
-              }`}
+              }
+              `}
               style={
                 idx === focusedIdx
                   ? { height: "220px", background: "#fffbe6", zIndex: 2 }
@@ -907,6 +1012,29 @@ a
                     {/* quick action buttons*/}
                     <div className="ml-4 flex justify-between items-center">
                       <ul className="flex gap-4 justify-around w-full">
+                        <li>
+                          <button 
+                            onClick={() => handleAddToDraft(item)}
+                            className="p-1 hover:bg-blue-100 rounded"
+                            title="Add to Draft"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              className="lucide lucide-plus-icon lucide-plus"
+                            >
+                              <path d="M5 12h14" />
+                              <path d="M12 5v14" />
+                            </svg>
+                          </button>
+                        </li>
                         <li>
                           <a href="#">
                             <svg

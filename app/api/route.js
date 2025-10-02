@@ -1,15 +1,13 @@
-import { Pool } from 'pg';
 import { NextRequest, NextResponse } from 'next/server';
-
-// Database connection configuration
-const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT || 5432,
-  database: process.env.DB_NAME || 'boooks_db',
-  user: process.env.DB_USER || 'boooks',
-  password: process.env.DB_PASSWORD || 'boooks_pass',
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
-});
+import { 
+  createSession, 
+  hashPassword, 
+  verifyPassword, 
+  validateSession, 
+  revokeSession,
+  pool 
+} from '../lib/authService.js';
+import { withRateLimit, addSecurityHeaders } from '../lib/rateLimitMiddleware.js';
 
 // Input validation functions
 function validateEmail(email) {
@@ -27,25 +25,8 @@ function sanitizeInput(input) {
   return input.trim().replace(/[<>]/g, '');
 }
 
-// Simple password hashing (in production, use bcrypt)
-function simpleHash(password) {
-  // This is a basic hash - in production use bcrypt
-  const crypto = require('crypto');
-  return crypto.createHash('sha256').update(password + 'boooks_salt').digest('hex');
-}
-
-function verifyPassword(inputPassword, hashedPassword) {
-  return simpleHash(inputPassword) === hashedPassword;
-}
-
-// Generate simple session token
-function generateSessionToken() {
-  const crypto = require('crypto');
-  return crypto.randomBytes(32).toString('hex');
-}
-
-// POST /api/login - User login endpoint
-export async function POST(request) {
+// POST /api/login - User login endpoint with rate limiting
+export const POST = withRateLimit(async function(request) {
   let client;
   
   try {
@@ -115,22 +96,20 @@ export async function POST(request) {
     const user = userResult.rows[0];
 
     // Verify password
-    if (!verifyPassword(password, user.password_hash)) {
+    if (!await verifyPassword(password, user.password_hash)) {
       return NextResponse.json(
         { error: 'Invalid credentials' },
         { status: 401 }
       );
     }
 
-    // Generate session token
-    const sessionToken = generateSessionToken();
-    const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
-
-    // Store session in database
-    await client.query(
-      'INSERT INTO user_sessions (user_id, session_token, expires_at) VALUES ($1, $2, $3)',
-      [user.id, sessionToken, expiresAt]
-    );
+    // Create session with rolling tokens
+    const sessionData = {
+      ipAddress: request.ip || null,
+      userAgent: request.headers.get('user-agent') || null
+    };
+    
+    const tokens = await createSession(user.id, sessionData);
 
     // Update last login
     await client.query(
@@ -154,19 +133,29 @@ export async function POST(request) {
         location: user.location,
         joinDate: user.created_at
       },
-      sessionToken
+      accessToken: tokens.accessToken,
+      accessExpiresAt: tokens.accessExpiresAt,
+      tokenVersion: tokens.tokenVersion
     };
 
-    // Set session cookie
+    // Set secure cookies with separate access and refresh tokens
     const response = NextResponse.json(responseData, { status: 200 });
-    response.cookies.set('session_token', sessionToken, {
+    
+    response.cookies.set('access_token', tokens.accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
-      maxAge: 24 * 60 * 60 // 24 hours
+      maxAge: 15 * 60 // 15 minutes
+    });
+    
+    response.cookies.set('refresh_token', tokens.refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 // 7 days
     });
 
-    return response;
+    return addSecurityHeaders(response);
 
   } catch (error) {
     console.error('Login error:', error);
@@ -188,56 +177,36 @@ export async function POST(request) {
       client.release();
     }
   }
-}
+}, 'login');
 
-// GET /api/verify-session - Verify session token
-export async function GET(request) {
-  let client;
-  
+// GET /api/verify-session - Verify session token  
+export const GET = withRateLimit(async function(request) {
   try {
-    const sessionToken = request.cookies.get('session_token')?.value;
+    const accessToken = request.cookies.get('access_token')?.value ||
+                       request.headers.get('Authorization')?.substring(7);
     
-    if (!sessionToken) {
+    if (!accessToken) {
       return NextResponse.json(
-        { error: 'No session token provided' },
+        { error: 'No access token provided' },
         { status: 401 }
       );
     }
 
-    client = await pool.connect();
+    const sessionData = await validateSession(accessToken);
 
-    // Check if session exists and is valid
-    const sessionResult = await client.query(`
-      SELECT s.*, u.username, u.email, u.display_name, u.avatar, u.bio, 
-             u.books_read, u.followers_count, u.following_count, u.location, u.created_at
-      FROM user_sessions s
-      JOIN users u ON s.user_id = u.id
-      WHERE s.session_token = $1 AND s.expires_at > NOW()
-    `, [sessionToken]);
-
-    if (sessionResult.rows.length === 0) {
+    if (!sessionData) {
       return NextResponse.json(
         { error: 'Invalid or expired session' },
         { status: 401 }
       );
     }
 
-    const session = sessionResult.rows[0];
-
     return NextResponse.json({
       success: true,
-      user: {
-        id: session.user_id,
-        username: session.username,
-        email: session.email,
-        displayName: session.display_name,
-        avatar: session.avatar,
-        bio: session.bio,
-        booksRead: session.books_read,
-        followers: session.followers_count,
-        following: session.following_count,
-        location: session.location,
-        joinDate: session.created_at
+      user: sessionData.user,
+      session: {
+        tokenVersion: sessionData.session.tokenVersion,
+        lastRefreshed: sessionData.session.lastRefreshed
       }
     });
 
@@ -247,38 +216,39 @@ export async function GET(request) {
       { error: 'Internal server error' },
       { status: 500 }
     );
-  } finally {
-    if (client) {
-      client.release();
-    }
   }
-}
+}, 'api');
 
 // DELETE /api/logout - User logout
-export async function DELETE(request) {
-  let client;
-  
+export const DELETE = withRateLimit(async function(request) {
   try {
-    const sessionToken = request.cookies.get('session_token')?.value;
+    const accessToken = request.cookies.get('access_token')?.value ||
+                       request.headers.get('Authorization')?.substring(7);
     
-    if (!sessionToken) {
+    if (!accessToken) {
       return NextResponse.json(
-        { error: 'No session token provided' },
+        { error: 'No access token provided' },
         { status: 401 }
       );
     }
 
-    client = await pool.connect();
+    // Revoke the session
+    await revokeSession(accessToken);
 
-    // Delete session from database
-    await client.query(
-      'DELETE FROM user_sessions WHERE session_token = $1',
-      [sessionToken]
-    );
-
-    // Clear session cookie
-    const response = NextResponse.json({ success: true, message: 'Logged out successfully' });
-    response.cookies.set('session_token', '', {
+    // Clear session cookies
+    const response = NextResponse.json({ 
+      success: true, 
+      message: 'Logged out successfully' 
+    });
+    
+    response.cookies.set('access_token', '', {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+      maxAge: 0
+    });
+    
+    response.cookies.set('refresh_token', '', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
@@ -293,9 +263,5 @@ export async function DELETE(request) {
       { error: 'Internal server error' },
       { status: 500 }
     );
-  } finally {
-    if (client) {
-      client.release();
-    }
   }
-}
+}, 'api');

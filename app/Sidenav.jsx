@@ -172,6 +172,30 @@ const Sidenav = ({ menu }) => {
 
         <li>
           <a
+            href="/drafts"
+            className="block p-2 rounded-lg hover:bg-white/10 flex items-center gap-2"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-file-edit-icon lucide-file-edit"
+            >
+              <path d="M4 13.5V4a2 2 0 0 1 2-2h8.5L20 7.5V20a2 2 0 0 1-2 2h-5.5" />
+              <path d="M14 2v4a2 2 0 0 0 2 2h4" />
+              <path d="M10.42 12.61a2.1 2.1 0 1 1 2.97 2.97L7.95 21 4 22l1.05-3.95z" />
+            </svg>
+            Drafts
+          </a>
+        </li>
+        <li>
+          <a
             href="#section1"
             className="block p-2 rounded-lg hover:bg-white/10"
           >

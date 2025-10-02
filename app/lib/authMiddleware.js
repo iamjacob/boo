@@ -1,134 +1,153 @@
-import { Pool } from 'pg';
 import { NextRequest, NextResponse } from 'next/server';
-
-// Database connection configuration
-const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT || 5432,
-  database: process.env.DB_NAME || 'boooks_db',
-  user: process.env.DB_USER || 'boooks',
-  password: process.env.DB_PASSWORD || 'boooks_pass',
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
-});
+import { validateSession, refreshAccessToken, shouldRefreshToken } from './authService.js';
 
 /**
- * Authentication middleware to verify user sessions
+ * Enhanced authentication middleware with rolling token support
  * @param {NextRequest} request - The incoming request
- * @returns {Promise<{user: Object|null, error: string|null}>}
+ * @param {Object} options - Configuration options
+ * @returns {Promise<{user: Object|null, error: string|null, refreshed: boolean}>}
  */
-export async function verifyAuth(request) {
-  let client;
-  
+export async function verifyAuth(request, options = {}) {
   try {
-    // Get session token from cookies or Authorization header
-    let sessionToken = request.cookies.get('session_token')?.value;
+    // Get access token from cookies or Authorization header
+    let accessToken = request.cookies.get('access_token')?.value;
     
-    if (!sessionToken) {
+    if (!accessToken) {
       const authHeader = request.headers.get('Authorization');
       if (authHeader && authHeader.startsWith('Bearer ')) {
-        sessionToken = authHeader.substring(7);
+        accessToken = authHeader.substring(7);
       }
     }
 
-    if (!sessionToken) {
-      return { user: null, error: 'No session token provided' };
+    if (!accessToken) {
+      return { user: null, error: 'No access token provided', refreshed: false };
     }
 
-    client = await pool.connect();
+    // First, try to validate the current token
+    let sessionData = await validateSession(accessToken);
+    let refreshed = false;
 
-    // Verify session token and get user data
-    const sessionResult = await client.query(`
-      SELECT s.*, u.id as user_id, u.username, u.email, u.display_name, 
-             u.avatar, u.bio, u.books_read, u.followers_count, 
-             u.following_count, u.location, u.created_at, u.is_active
-      FROM user_sessions s
-      JOIN users u ON s.user_id = u.id
-      WHERE s.session_token = $1 AND s.expires_at > NOW() AND u.is_active = true
-    `, [sessionToken]);
-
-    if (sessionResult.rows.length === 0) {
-      return { user: null, error: 'Invalid or expired session' };
+    // If token is invalid but we have auto-refresh enabled, try to refresh
+    if (!sessionData && options.autoRefresh !== false) {
+      const refreshToken = request.cookies.get('refresh_token')?.value;
+      
+      if (refreshToken) {
+        try {
+          const tokens = await refreshAccessToken(refreshToken);
+          sessionData = await validateSession(tokens.accessToken);
+          refreshed = true;
+          
+          // Add new tokens to response headers for the calling function to set cookies
+          if (sessionData) {
+            request._newTokens = tokens;
+          }
+        } catch (refreshError) {
+          console.error('Auto-refresh failed:', refreshError);
+        }
+      }
     }
 
-    const session = sessionResult.rows[0];
+    if (!sessionData) {
+      return { user: null, error: 'Invalid or expired session', refreshed: false };
+    }
 
-    // Update session last access time (optional)
-    await client.query(
-      'UPDATE user_sessions SET created_at = NOW() WHERE session_token = $1',
-      [sessionToken]
-    );
+    // Check if token should be proactively refreshed (within 5 minutes of expiry)
+    if (!refreshed && sessionData.session && shouldRefreshToken(accessToken, sessionData.session.lastRefreshed) && options.autoRefresh !== false) {
+      const refreshToken = request.cookies.get('refresh_token')?.value;
+      
+      if (refreshToken) {
+        try {
+          const tokens = await refreshAccessToken(refreshToken);
+          request._newTokens = tokens;
+          refreshed = true;
+        } catch (refreshError) {
+          console.error('Proactive refresh failed:', refreshError);
+          // Continue with current session since it's still valid
+        }
+      }
+    }
 
     return {
-      user: {
-        id: session.user_id,
-        username: session.username,
-        email: session.email,
-        displayName: session.display_name,
-        avatar: session.avatar,
-        bio: session.bio,
-        booksRead: session.books_read,
-        followers: session.followers_count,
-        following: session.following_count,
-        location: session.location,
-        joinDate: session.created_at,
-        sessionToken: sessionToken
-      },
-      error: null
+      user: sessionData.user,
+      session: sessionData.session,
+      error: null,
+      refreshed
     };
 
   } catch (error) {
     console.error('Auth verification error:', error);
-    return { user: null, error: 'Authentication service error' };
-  } finally {
-    if (client) {
-      client.release();
-    }
+    return { user: null, error: 'Authentication service error', refreshed: false };
   }
 }
 
 /**
- * Higher-order function to create protected API routes
+ * Higher-order function to create protected API routes with rolling token support
  * @param {Function} handler - The API route handler function
+ * @param {Object} options - Configuration options
  * @returns {Function} - Wrapped handler with authentication
  */
-export function withAuth(handler) {
+export function withAuth(handler, options = {}) {
   return async (request) => {
-    const { user, error } = await verifyAuth(request);
+    const authResult = await verifyAuth(request, options);
     
-    if (!user) {
+    if (!authResult.user) {
       return NextResponse.json(
-        { error: error || 'Authentication required' },
+        { error: authResult.error || 'Authentication required' },
         { status: 401 }
       );
     }
 
     // Add user to request for handler to use
-    request.user = user;
+    request.user = authResult.user;
+    request.session = authResult.session;
     
-    return handler(request);
+    // Call the handler
+    const response = await handler(request);
+    
+    // If tokens were refreshed, update cookies
+    if (authResult.refreshed && request._newTokens) {
+      const tokens = request._newTokens;
+      
+      response.cookies.set('access_token', tokens.accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 15 * 60 // 15 minutes
+      });
+      
+      response.cookies.set('refresh_token', tokens.refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60 // 7 days
+      });
+    }
+    
+    return response;
   };
 }
 
 /**
- * Role-based authentication wrapper
+ * Role-based authentication wrapper with rolling token support
  * @param {Function} handler - The API route handler function
  * @param {Array|string} allowedRoles - Allowed roles for this route
+ * @param {Object} options - Configuration options
  * @returns {Function} - Wrapped handler with role-based authentication
  */
-export function withRoleAuth(handler, allowedRoles = []) {
+export function withRoleAuth(handler, allowedRoles = [], options = {}) {
   return async (request) => {
-    const { user, error } = await verifyAuth(request);
+    const authResult = await verifyAuth(request, options);
     
-    if (!user) {
+    if (!authResult.user) {
       return NextResponse.json(
-        { error: error || 'Authentication required' },
+        { error: authResult.error || 'Authentication required' },
         { status: 401 }
       );
     }
 
     // If roles are specified, check user role
     if (allowedRoles.length > 0) {
-      const userRoles = user.roles || [];
+      const userRoles = authResult.user.roles || [];
       const hasPermission = allowedRoles.some(role => userRoles.includes(role));
       
       if (!hasPermission) {
@@ -139,79 +158,93 @@ export function withRoleAuth(handler, allowedRoles = []) {
       }
     }
 
-    request.user = user;
-    return handler(request);
+    request.user = authResult.user;
+    request.session = authResult.session;
+    
+    const response = await handler(request);
+    
+    // Handle token refresh
+    if (authResult.refreshed && request._newTokens) {
+      const tokens = request._newTokens;
+      
+      response.cookies.set('access_token', tokens.accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 15 * 60
+      });
+      
+      response.cookies.set('refresh_token', tokens.refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60
+      });
+    }
+    
+    return response;
   };
 }
 
 /**
  * Optional authentication wrapper - allows both authenticated and guest users
  * @param {Function} handler - The API route handler function
+ * @param {Object} options - Configuration options
  * @returns {Function} - Wrapped handler with optional authentication
  */
-export function withOptionalAuth(handler) {
+export function withOptionalAuth(handler, options = {}) {
   return async (request) => {
-    const { user } = await verifyAuth(request);
+    const authResult = await verifyAuth(request, options);
     
     // Add user to request (will be null if not authenticated)
-    request.user = user;
+    request.user = authResult.user;
+    request.session = authResult.session;
     
-    return handler(request);
+    const response = await handler(request);
+    
+    // Handle token refresh for authenticated users
+    if (authResult.user && authResult.refreshed && request._newTokens) {
+      const tokens = request._newTokens;
+      
+      response.cookies.set('access_token', tokens.accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 15 * 60
+      });
+      
+      response.cookies.set('refresh_token', tokens.refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+        maxAge: 7 * 24 * 60 * 60
+      });
+    }
+    
+    return response;
   };
 }
 
+// Legacy utility functions - use authService.js for new implementations
+
 /**
- * Utility function to refresh session expiry
+ * Utility function to refresh session expiry (deprecated - use authService)
  * @param {string} sessionToken - The session token to refresh
  * @returns {Promise<boolean>} - Success status
+ * @deprecated Use refreshAccessToken from authService instead
  */
 export async function refreshSession(sessionToken) {
-  let client;
-  
-  try {
-    client = await pool.connect();
-    
-    const newExpiry = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
-    
-    const result = await client.query(
-      'UPDATE user_sessions SET expires_at = $1 WHERE session_token = $2 AND expires_at > NOW()',
-      [newExpiry, sessionToken]
-    );
-    
-    return result.rowCount > 0;
-  } catch (error) {
-    console.error('Session refresh error:', error);
-    return false;
-  } finally {
-    if (client) {
-      client.release();
-    }
-  }
+  console.warn('refreshSession is deprecated. Use refreshAccessToken from authService instead.');
+  return false;
 }
 
 /**
- * Utility function to logout user from all devices
+ * Utility function to logout user from all devices (deprecated - use authService)
  * @param {number} userId - The user ID
  * @returns {Promise<boolean>} - Success status
+ * @deprecated Use revokeAllUserSessions from authService instead
  */
 export async function logoutAllSessions(userId) {
-  let client;
-  
-  try {
-    client = await pool.connect();
-    
-    await client.query(
-      'DELETE FROM user_sessions WHERE user_id = $1',
-      [userId]
-    );
-    
-    return true;
-  } catch (error) {
-    console.error('Logout all sessions error:', error);
-    return false;
-  } finally {
-    if (client) {
-      client.release();
-    }
-  }
+  console.warn('logoutAllSessions is deprecated. Use revokeAllUserSessions from authService instead.');
+  return false;
 }

@@ -20,13 +20,13 @@ const LogoMorpher = ({morphed=false}) => {
 
     if (toggled) {
       gsap.to(multiRef.current, {
-        duration: 0.2,
+        duration: 0.1,
         morphSVG: { shape: singleRef.current, shapeIndex: "auto" },
         ease: "power1.inOut"
       });
     } else {
       gsap.to(multiRef.current, {
-        duration: 0.2,
+        duration: 0.1,
         morphSVG: { shape: multiRef.current, shapeIndex: "auto" }, // reset
         ease: "power1.inOut"
       });

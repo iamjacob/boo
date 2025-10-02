@@ -25,6 +25,9 @@ export default function ScannerUI() {
   });
 
   const [morphed, setMorphed] = useState(false);
+  const [isZoomedForPrecision, setIsZoomedForPrecision] = useState(false);
+  const [isCameraMode, setIsCameraMode] = useState(false);
+  const [capturedImages, setCapturedImages] = useState([]);
 
   const handleStageClick = (id) => {
     setActive(id);
@@ -38,6 +41,57 @@ export default function ScannerUI() {
   };
 
   // Handle file upload
+  // Camera functionality
+  const startCamera = async () => {
+    try {
+      setIsCameraMode(true);
+    } catch (error) {
+      console.error('Error starting camera:', error);
+    }
+  };
+
+  const stopCamera = () => {
+    setIsCameraMode(false);
+  };
+
+  const capturePhoto = async () => {
+    try {
+      // For mobile camera, we'll use file input with camera capture
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = 'image/*';
+      input.capture = 'environment'; // Use back camera
+      
+      input.onchange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const url = URL.createObjectURL(file);
+          const newCapturedImage = {
+            file,
+            url,
+            timestamp: Date.now()
+          };
+          
+          setCapturedImages(prev => [...prev, newCapturedImage]);
+          
+          // Add to main images array like uploaded files
+          setUploadedImages(prev => [...prev, file]);
+          setImageUrls(prev => [...prev, url]);
+          setCurrentImageIndex(prev => prev + 1);
+        }
+      };
+      
+      input.click();
+    } catch (error) {
+      console.error('Error capturing photo:', error);
+    }
+  };
+
+  const finishCapturing = () => {
+    setIsCameraMode(false);
+    // Optional: show success message or navigate
+  };
+
   const handleFileUpload = (event) => {
     const files = Array.from(event.target.files);
     
@@ -98,8 +152,16 @@ export default function ScannerUI() {
   // Drag functionality for dots
   const handleMouseDown = (e, dotId) => {
     e.preventDefault();
+    
+    // Prevent default touch behaviors
+    if (e.type === 'touchstart') {
+      e.stopPropagation();
+    }
+    
     setDragState({ isDragging: true, draggedDot: dotId });
     setMorphed(true);
+    setIsZoomedForPrecision(true); // Enable smart zoom for precision
+    
     // Hide UI elements during drag for full screen workspace
     const footer = document.querySelector('footer');
     const header = document.querySelector('header');
@@ -120,7 +182,7 @@ export default function ScannerUI() {
       dotsContainer.style.height = '100vh';
     }
     
-    // Prevent image resize during drag by fixing the current image dimensions
+    // Apply smart zoom for precision (30% zoom in)
     const currentImageEl = document.querySelector('.currentImage');
     if (currentImageEl) {
       const rect = currentImageEl.getBoundingClientRect();
@@ -130,7 +192,12 @@ export default function ScannerUI() {
       currentImageEl.style.top = `${rect.top}px`;
       currentImageEl.style.left = `${rect.left}px`;
       currentImageEl.style.zIndex = '1';
-      currentImageEl.style.marginLeft = '0'; // Remove margin during drag
+      currentImageEl.style.marginLeft = '0';
+      
+      // Apply smart zoom with smooth transition
+      currentImageEl.style.transition = 'transform 0.3s ease-out';
+      currentImageEl.style.transform = 'scale(1.3)'; // 30% zoom in
+      currentImageEl.style.transformOrigin = 'center center';
     }
   };
 
@@ -140,9 +207,13 @@ export default function ScannerUI() {
     const imageDisplay = document.querySelector('.currentImage');
     if (!imageDisplay) return;
 
+    // Handle both mouse and touch events
+    const clientX = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+    const clientY = e.type === 'touchmove' ? e.touches[0].clientY : e.clientY;
+
     const rect = imageDisplay.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 100;
-    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    const x = ((clientX - rect.left) / rect.width) * 100;
+    const y = ((clientY - rect.top) / rect.height) * 100;
 
     // Constrain within bounds
     const constrainedX = Math.max(0, Math.min(100, x));
@@ -157,6 +228,7 @@ export default function ScannerUI() {
   const handleMouseUp = () => {
     setDragState({ isDragging: false, draggedDot: null });
     setMorphed(false);
+    setIsZoomedForPrecision(false); // Disable smart zoom
 
     // Show UI elements again
     const footer = document.querySelector('footer');
@@ -178,31 +250,47 @@ export default function ScannerUI() {
       dotsContainer.style.height = '';
     }
     
-    // Restore image layout
+    // Restore image layout and zoom
     const currentImageEl = document.querySelector('.currentImage');
     if (currentImageEl) {
-      currentImageEl.style.width = '';
-      currentImageEl.style.height = '';
-      currentImageEl.style.position = '';
-      currentImageEl.style.top = '';
-      currentImageEl.style.left = '';
-      currentImageEl.style.zIndex = '';
-      currentImageEl.style.marginLeft = '';
+      // Smooth zoom out transition
+      currentImageEl.style.transition = 'transform 0.3s ease-out';
+      currentImageEl.style.transform = 'scale(1)'; // Zoom back to normal
+      
+      // After transition, cleanup all styles
+      setTimeout(() => {
+        currentImageEl.style.width = '';
+        currentImageEl.style.height = '';
+        currentImageEl.style.position = '';
+        currentImageEl.style.top = '';
+        currentImageEl.style.left = '';
+        currentImageEl.style.zIndex = '';
+        currentImageEl.style.marginLeft = '';
+        currentImageEl.style.transition = '';
+        currentImageEl.style.transform = '';
+        currentImageEl.style.transformOrigin = '';
+      }, 300); // Match transition duration
     }
   };
 
-  // Add global mouse event listeners
+  // Add global mouse and touch event listeners
   useEffect(() => {
     if (dragState.isDragging) {
       document.addEventListener('mousemove', handleMouseMove);
       document.addEventListener('mouseup', handleMouseUp);
+      document.addEventListener('touchmove', handleMouseMove);
+      document.addEventListener('touchend', handleMouseUp);
       document.body.style.userSelect = 'none'; // Prevent text selection while dragging
+      document.body.style.touchAction = 'none'; // Prevent scrolling during touch
     }
 
     return () => {
       document.removeEventListener('mousemove', handleMouseMove);
       document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('touchmove', handleMouseMove);
+      document.removeEventListener('touchend', handleMouseUp);
       document.body.style.userSelect = '';
+      document.body.style.touchAction = '';
     };
   }, [dragState.isDragging, dragState.draggedDot]);
 
@@ -338,8 +426,16 @@ useEffect(() => {
     <div className="scannerApp">
       {/* HEADER */}
       <div className="fixed top-1 left-1 p-1 m-2 ">
-      <LogoMorpher morphed={morphed} />
+        <LogoMorpher morphed={morphed} />
       </div>
+      
+      {/* Camera Mode Indicator */}
+      {isCameraMode && (
+        <div className="cameraIndicator">
+          <div className="cameraIndicatorDot"></div>
+          <span>Camera Mode Active</span>
+        </div>
+      )}
 
       {/* MAIN IMAGE DISPLAY AREA */}
       <main className="imageDisplay">
@@ -395,6 +491,19 @@ useEffect(() => {
               <div className="imageCounter">
                 {currentImageIndex + 1} / {imageUrls.length}
               </div>
+
+              {/* Smart zoom indicator */}
+              {isZoomedForPrecision && (
+                <div className="zoomIndicator">
+                  <svg viewBox="0 0 24 24" width="16" height="16">
+                    <circle cx="11" cy="11" r="8" stroke="currentColor" fill="none" strokeWidth="2"/>
+                    <path d="M21 21L16.5 16.5" stroke="currentColor" strokeWidth="2"/>
+                    <path d="M11 8v6" stroke="currentColor" strokeWidth="2"/>
+                    <path d="M8 11h6" stroke="currentColor" strokeWidth="2"/>
+                  </svg>
+                  Precision Zoom 1.3x
+                </div>
+              )}
 
               {/* Perspective correction button */}
               <button className="cropButton" onClick={handleCrop}>
@@ -479,6 +588,7 @@ useEffect(() => {
               transform: 'translate(-50%, -50%)'
             }}
             onMouseDown={(e) => handleMouseDown(e, 'dot-1')}
+            onTouchStart={(e) => handleMouseDown(e, 'dot-1')}
           >
             <span className="RoundO" />
             <svg viewBox="0 0 24 24" width="28" height="28">
@@ -493,6 +603,7 @@ useEffect(() => {
               transform: 'translate(-50%, -50%)'
             }}
             onMouseDown={(e) => handleMouseDown(e, 'dot-2')}
+            onTouchStart={(e) => handleMouseDown(e, 'dot-2')}
           >
             <span className="RoundO" />
             <svg viewBox="0 0 24 24" width="28" height="28">
@@ -507,6 +618,7 @@ useEffect(() => {
               transform: 'translate(-50%, -50%)'
             }}
             onMouseDown={(e) => handleMouseDown(e, 'dot-3')}
+            onTouchStart={(e) => handleMouseDown(e, 'dot-3')}
           >
             <span className="RoundO" />
             <svg viewBox="0 0 24 24" width="28" height="28">
@@ -521,6 +633,7 @@ useEffect(() => {
               transform: 'translate(-50%, -50%)'
             }}
             onMouseDown={(e) => handleMouseDown(e, 'dot-4')}
+            onTouchStart={(e) => handleMouseDown(e, 'dot-4')}
           >
             <span className="RoundO" />
             <svg viewBox="0 0 24 24" width="28" height="28">
@@ -589,14 +702,36 @@ useEffect(() => {
         </div>
 
         {/* CAMERA */}
-        <div className="camera">
-          <svg viewBox="0 0 24 24" width="24" height="24">
-            <path d="M13.997 4a2 2..." />
-            <circle cx="12" cy="13" r="3" />
-          </svg>
-          <span>camera</span>
+        <div className="camera" onClick={isCameraMode ? finishCapturing : startCamera}>
+          {isCameraMode ? (
+            <>
+              <svg viewBox="0 0 24 24" width="24" height="24" fill="currentColor">
+                <path d="M20 6L9 17l-5-5" />
+              </svg>
+              <span>Done</span>
+            </>
+          ) : (
+            <>
+              <svg viewBox="0 0 24 24" width="24" height="24">
+                <path d="M13.997 4a2 2 0 0 1 1.85 1.267L16.28 7h2.22a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5.5a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2h2.22l.43-1.733A2 2 0 0 1 10 4h3.997z" />
+                <circle cx="12" cy="13" r="3" />
+              </svg>
+              <span>camera</span>
+            </>
+          )}
         </div>
       </footer>
+
+      {/* Camera Capture Button - appears in camera mode */}
+      {isCameraMode && (
+        <div className="captureButton" onClick={capturePhoto}>
+          <svg viewBox="0 0 24 24" width="32" height="32" fill="white">
+            <circle cx="12" cy="12" r="10" />
+            <path d="M8 12l2 2 4-4" />
+          </svg>
+          <span>Capture</span>
+        </div>
+      )}
     </div>
   );
 }

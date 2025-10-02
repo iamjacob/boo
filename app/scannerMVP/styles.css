@@ -9,6 +9,10 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+/*
+outline: 1px solid red;
+*/
+
 }
 
 .scannerApp {
@@ -33,35 +37,11 @@ header {
   z-index: 1000;
   display: flex;
   align-items: center;
-  justify-content: center;
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 header.hidden {
   transform: translateY(-100%);
-  opacity: 0;
-}
-
-/* FOOTER - FIXED OVERLAY */
-footer {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 80px;
-  background: rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(10px);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-  transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-footer.hidden {
-  transform: translateY(100%);
   opacity: 0;
 }
 
@@ -224,28 +204,6 @@ footer.hidden {
   z-index: 800;
 }
 
-.zoomIndicator {
-  position: absolute;
-  top: 40px;
-  right: 10px;
-  background: rgba(255, 0, 0, 0.9);
-  color: white;
-  padding: 5px 10px;
-  border-radius: 15px;
-  font-size: 11px;
-  font-family: Arial, sans-serif;
-  z-index: 800;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  animation: pulseZoom 2s ease-in-out infinite;
-}
-
-@keyframes pulseZoom {
-  0%, 100% { opacity: 0.8; transform: scale(1); }
-  50% { opacity: 1; transform: scale(1.05); }
-}
-
 .cropButton {
   position: absolute;
   bottom: 100px; /* Higher position, above footer */
@@ -291,7 +249,6 @@ footer.hidden {
 /* HEADER - COMPACT FOR FULLSCREEN */
 header {
   display: flex;
-  justify-content: center;
   padding: 0.5rem;
   background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(10px);
@@ -316,7 +273,7 @@ header.hidden {
   width: 100%;
   height: 100vh;
   pointer-events: none; /* Allow clicks to pass through container */
-  z-index: 700;
+  z-index: 1100; /* Higher than footer (1000) so dots are accessible */
   transition: left 0.3s ease, width 0.3s ease;
   touch-action: none; /* Prevent any default touch behavior */
 }
@@ -394,26 +351,25 @@ header.hidden {
 
 /* FOOTER NAV - FIXED FOR FULLSCREEN */
 footer {
-  height: 60px;
-  display: flex;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
   background: rgba(0, 0, 0, 0.8);
   backdrop-filter: blur(10px);
-  border-radius: 22px;
-  position: fixed;
-  bottom: 8px;
-  left: 10vw;
-  right: 10vw;
-  width: 80vw;
-  max-width: 800px;
-  padding: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  z-index: 1000;
+  display: flex;
   align-items: center;
-  gap: 8px;
-  z-index: 100;
-  transition: transform 0.3s ease;
+  justify-content: space-between;
+  padding: 0 20px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 footer.hidden {
   transform: translateY(100%);
+  opacity: 0;
 }
 
 /* Upload + Camera buttons */
@@ -513,6 +469,63 @@ footer.hidden {
   object-fit: cover;
 }
 
+/* Next Button - Very Prominent */
+.nextBtn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #00ff00, #32cd32);
+  border: 2px solid #00ff00;
+  box-shadow: 0 4px 20px rgba(0, 255, 0, 0.4);
+  position: relative;
+  overflow: hidden;
+}
+
+.nextBtn::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+  transition: left 0.5s ease;
+}
+
+.nextBtn:hover::before {
+  left: 100%;
+}
+
+.nextBtn:hover {
+  background: linear-gradient(135deg, #32cd32, #00ff00);
+  transform: scale(1.1);
+  box-shadow: 0 6px 30px rgba(0, 255, 0, 0.6);
+}
+
+.nextBtn:active {
+  transform: scale(0.95);
+}
+
+.nextBtn svg {
+  stroke: #ffffff;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.nextBtn span {
+  color: #ffffff;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+  font-weight: bold;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
 /* Camera Capture Button */
 .captureButton {
   position: fixed;
@@ -594,12 +607,12 @@ footer.hidden {
   width: 100vw;
   height: 100vh;
   object-fit: cover;
-  z-index: -1; /* Behind everything else */
+  z-index: 1; /* Above background but below UI */
   background: #000;
 }
 
 /* Ensure UI elements stay visible over camera feed */
 .scannerApp {
   position: relative;
-  z-index: 1;
+  z-index: 10;
 }

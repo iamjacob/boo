@@ -364,7 +364,7 @@ const BottomNav = () => {
         </a> */}
 
           {/* Level navigation buttons */}
-          <div className="flex flex-col gap-1 fixed right-[8px] top-[30vh] p-1 rounded-full ">
+          {/* <div className="flex flex-col gap-1 fixed right-[8px] top-[30vh] p-1 rounded-full ">
             <button
               onClick={levelDown}
               className="px-3 py-1 rounded bg-black/40 text-white border border-1 bg-black/20 p-3 backdrop-blur rounded-[44px]"
@@ -378,7 +378,9 @@ const BottomNav = () => {
             >
               +
             </button>
-          </div>
+          </div> */}
+
+
         </nav>
       </div>
 

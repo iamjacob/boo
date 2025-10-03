@@ -3,6 +3,7 @@
 import { useState, useRef, useMemo, useEffect } from "react";
 import { Filter, Books } from "./boooks/";
 import { useBooksStore } from "../../stores/useBooksStore";
+import { useBookInfoStore } from "../../stores/useBookInfoStore";
 import { useMenuStore } from "../../stores/useMenuStore";
 import { gsap } from "gsap";
 import Experience from "./Experience";
@@ -27,6 +28,10 @@ export default function Page() {
   const level = useLevelStore((s) => s.level);
   const levelUp = useLevelStore((s) => s.levelUp);
   const levelDown = useLevelStore((s) => s.levelDown);
+  const { selectedBook: infoBook, showBookInfo, hideBookInfo } = useBookInfoStore();
+
+  // Debug logging
+  console.log('Book info state:', { showBookInfo, infoBook: infoBook?.title });
 
   
   const bookRefs = useRef({}); // Store refs by book id
@@ -338,7 +343,16 @@ export default function Page() {
 
       {!activeOpenBook && <Header />}
 
-      <Experience drag={drag} setDrag={setDrag}>
+      <Experience 
+        drag={drag} 
+        setDrag={setDrag}
+        onClick={(e) => {
+          // Close book info when clicking on 3D scene background
+          if (showBookInfo) {
+            hideBookInfo();
+          }
+        }}
+      >
         {/* Tornado System - only active when geo is true */}
         {tornadoActive && (
           <group position={[0, -8, 0]}>    {/* Center (current) */}
@@ -382,6 +396,62 @@ export default function Page() {
         )}
 
       </Experience>
+
+      {/* Debug info */}
+      {showBookInfo && (
+        <div className="absolute top-4 left-4 bg-red-500 text-white p-2 rounded">
+          DEBUG: showBookInfo = {showBookInfo.toString()}, book = {infoBook?.title || 'none'}
+        </div>
+      )}
+
+      {/* Book Info Overlay */}
+      {showBookInfo && infoBook && (
+        <div className="absolute bottom-4 left-4 pointer-events-auto">
+          <div className="bg-black/80 backdrop-blur-md p-4 rounded-lg border border-white/30 text-white max-w-xs relative">
+            {/* Close button */}
+            <button
+              onClick={hideBookInfo}
+              className="absolute top-2 right-2 text-white/60 hover:text-white transition-colors text-lg"
+            >
+              ✕
+            </button>
+            
+            {/* Open book button */}
+            <button
+              onClick={() => {
+                const { toggleBook, setBookObject } = useOpenBookStore.getState();
+                toggleBook(infoBook);
+                setBookObject(infoBook);
+                hideBookInfo(); // Close info overlay when opening book
+              }}
+              className="absolute top-2 right-8 text-white/60 hover:text-white transition-colors text-sm"
+              title="Open Book"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-square-arrow-out-up-right-icon lucide-square-arrow-out-up-right"><path d="M21 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6"/><path d="m21 3-9 9"/><path d="M15 3h6v6"/></svg>
+            </button>
+            
+            <h3 className="font-semibold text-sm mb-1 pr-12">
+              {infoBook.title || "Untitled"}
+            </h3>
+            {infoBook.author && (
+              <p className="text-xs text-gray-300">by {infoBook.author}</p>
+            )}
+            {infoBook.year && <p className="text-xs text-gray-400">{infoBook.year}</p>}
+            {infoBook.categories?.main && (
+              <div className="mt-2 flex flex-wrap gap-1">
+                {infoBook.categories.main.map((cat, index) => (
+                  <span
+                    key={index}
+                    className="text-xs bg-white/20 px-2 py-1 rounded-full"
+                  >
+                    {cat}
+                  </span>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {searchOpen && (<div className="flex justify-center items-center absolute top-0 left-0 w-screen h-screen"><Search /></div>)}
 

@@ -1,6 +1,7 @@
 "use client";
 import React, { useRef, useEffect, useMemo, Suspense, useState, forwardRef, useImperativeHandle } from "react";
 import { useOpenBookStore } from "../../../stores/useOpenBookStore";
+import { useBookInfoStore } from "../../../stores/useBookInfoStore";
 import { useThree, useFrame } from "@react-three/fiber";
 import { Html, useCursor, PivotControls } from "@react-three/drei";
 import { useDrag } from "@use-gesture/react";
@@ -29,7 +30,7 @@ const Book = forwardRef(({
   setSelectedBook, // ✅ Function to update selection
   drag,
   setDrag,
-  onDoubleClick,
+  // onDoubleClick,
   bookObject
 
 }, ref  ) => {
@@ -47,7 +48,12 @@ const Book = forwardRef(({
   const [showTransformPanel, setShowTransformPanel] = useState(false);
   const [transformPanelPosition, setTransformPanelPosition] = useState([0, 0, 0]);
 
+  // Click delay to prevent interference with double-click
+  const clickTimeoutRef = useRef(null);
+  const lastTapTimeRef = useRef(0);
+
  const { openBookId,setBookObject,closeHandler, animateBackBook, animateBackBookId,loadingBookId, toggleBook ,closeBook,setLoadingBookId, setOpenBookId } = useOpenBookStore();
+ const { toggleBookInfo } = useBookInfoStore();
 
   // Animate selection indicators
   useFrame((state) => {
@@ -743,21 +749,22 @@ if (closeHandler) {
   // console.log("scale[1] on render:", scale[1]);
   // console.log("scale[1]/2 on render:", scale[1]/2);
 
-  const textures = [
+  // Memoize textures to prevent recreation every render
+  const textures = useMemo(() => [
     useSafeLoader("./books/booktextureRotated.png"),
-    // useSafeLoader(cover?.spine || "./books/covers/000.jpg"),
-    useSafeLoader(cover || "./books/covers/000.jpg"),
-    useSafeLoader("./books/booktexture.png"),
-    useSafeLoader("./books/booktexture.png"),
-    // useSafeLoader(cover?.front || "./books/covers/000.jpg"),
-    useSafeLoader(cover || "./books/covers/000.jpg"),
-    // useSafeLoader(cover?.back || "./books/covers/000.jpg"),
-    useSafeLoader(cover || "./books/covers/000.jpg"),
-  ];
+    useSafeLoader(cover || "./books/covers/000.jpg"), // Cover - only load once
+    useSafeLoader("./books/booktexture.png"), // Generic texture
+  ], [cover]);
 
-  const materials = textures.map(
-    (texture) => new THREE.MeshStandardMaterial({ map: texture })
-  );
+  // Memoize materials to prevent recreation every render  
+  const materials = useMemo(() => [
+    new THREE.MeshStandardMaterial({ map: textures[0] }), // Top
+    new THREE.MeshStandardMaterial({ map: textures[1] }), // Front (cover)
+    new THREE.MeshStandardMaterial({ map: textures[2] }), // Right
+    new THREE.MeshStandardMaterial({ map: textures[2] }), // Left  
+    new THREE.MeshStandardMaterial({ map: textures[1] }), // Back (cover)
+    new THREE.MeshStandardMaterial({ map: textures[1] }), // Bottom (cover)
+  ], [textures]);
   //saveToDB();
   //console.log(meshRef.current.scale.set(1,1,1))
   return (
@@ -773,25 +780,44 @@ if (closeHandler) {
         {...(drag ? bind() : {})}
         //{...(showPivot ? bind() : {})}
 
-        onPointerDown={(e) => { e.stopPropagation(); handlePointerDown(e); }}
+        onPointerDown={(e) => { 
+          e.stopPropagation(); 
+          
+          const now = Date.now();
+          const timeDiff = now - lastTapTimeRef.current;
+          
+          // Clear existing timeout
+          if (clickTimeoutRef.current) {
+            clearTimeout(clickTimeoutRef.current);
+            clickTimeoutRef.current = null;
+          }
+          
+          // Check if it's a double tap (within 400ms)
+          if (timeDiff < 400 && timeDiff > 50) {
+            // This is a double tap - open book immediately
+            console.log('Double tap detected! Opening book:', bookObject?.title, 'ID:', id);
+            toggleBook(id); // Use id instead of bookID to match useEffect
+            setBookObject(bookObject);
+            lastTapTimeRef.current = 0; // Reset
+          } else {
+            // This might be a single tap - wait to see if another comes
+            clickTimeoutRef.current = setTimeout(() => {
+              console.log('Single tap confirmed! Toggling info for:', bookObject?.title);
+              toggleBookInfo(bookObject);
+              lastTapTimeRef.current = 0; // Reset
+            }, 250);
+            lastTapTimeRef.current = now;
+          }
+          
+          // Also handle the original pointer down logic
+          handlePointerDown(e);
+        }}
         onPointerUp={(e) => { e.stopPropagation(); handlePointerUp(); }}
         onContextMenu={(e) => { 
           e.preventDefault(); 
           e.stopPropagation(); 
           showBookContextMenu(e); 
-        }}
-
-        
-
-        // onDoubleClick={() => {
-        //   //meshRef.current.position.set(0, 0, 0);
-        //   //alert(bookID);
-        //   handleRotationChange("y", 0);
-        //   handleRotationChange("x", 0);
-        //   handleRotationChange("z", 0);
-        // }}
-
-        onDoubleClick={()=> {toggleBook(id)}}        
+        }}        
         scale={scale}
         position={positionRef.current}
         rotation={rotationRef.current}

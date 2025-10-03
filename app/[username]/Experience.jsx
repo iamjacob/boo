@@ -25,7 +25,7 @@ import { useOpenBookStore } from "../../stores/useOpenBookStore";
 
 import LiveScanner from "./LiveScanner";
 
-export const Experience = ({ children, drag, setDrag }) => {
+export const Experience = ({ children, drag, setDrag, onClick }) => {
   const zoom = useCameraStore((s) => s.zoom);
   const rotation = useCameraStore((s) => s.rotation);
   const position = useCameraStore((s) => s.position);
@@ -179,7 +179,7 @@ export const Experience = ({ children, drag, setDrag }) => {
         )}
 
         {/* {isBookOpen && <OpenBook />} */}
-        {console.log("openBookId", openBookId)}
+        {/* {console.log("openBookId", openBookId)} */}
 
         {activeOpenBook && <OpenBook bookId={openBookId} />}
         {/* {activeOpenBook && <Html><div onClick={() => animateBack()}>closeBook</div></Html>} */}
@@ -187,6 +187,15 @@ export const Experience = ({ children, drag, setDrag }) => {
         {/* {isScannerShowing && } */}
 
         {children}
+
+        {/* Invisible background for click-outside detection */}
+        <mesh
+          position={[0, 0, -10]}
+          onClick={onClick}
+        >
+          <planeGeometry args={[100, 100]} />
+          <meshBasicMaterial transparent opacity={0} />
+        </mesh>
 
         <OrbitControls
           minPolarAngle={minPolarAngle}

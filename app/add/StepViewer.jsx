@@ -14,12 +14,12 @@ export default function InteractiveStepper({step, setStep}) {
     { id: 3, content: 'Year' },
     { id: 4, content: 'Size' },
     { id: 5, content: 'Weight' },
-    { id: 6, content: 'Cover' },
-    { id: 7, content: 'Camera' },
-    { id: 8, content: 'Enhance' },
-    { id: 9, content: 'Language' },
-    { id: 10, content: 'Details' },
-    { id: 11, content: 'Preview' },
+    { id: 6, content: 'Cover Method' },
+    { id: 7, content: 'Cover Crop' },
+    { id: 8, content: 'Preview' },
+    { id: 9, content: 'Add More' },
+    { id: 10, content: 'Add to Collection' },
+    { id: 11, content: 'Thanks!' },
   ];
 
   useEffect(() => {
@@ -98,17 +98,20 @@ export default function InteractiveStepper({step, setStep}) {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-20 bg-black/90 backdrop-blur-lg border-t border-white/10">
-      <div className="w-full max-w-full overflow-hidden">
-        <div className="px-2 py-3 sm:px-4 sm:py-4">
-          {/* Stepper Container */}
+    <div className="p-1 sm:p-2 rounded-lg max-w-full overflow-hidden">
+      <div className="">
+      
+    
+
+        {/* Stepper Container */}
+        <div className="mb-2 sm:mb-4">
           <div 
             ref={scrollContainerRef}
-            className="overflow-x-auto pb-2 scrollbar-hide select-none cursor-pointer"
+            className={`overflow-x-auto pb-2 scrollbar-hide select-none cursor-pointer`}
             style={{ 
               scrollbarWidth: 'none', 
               msOverflowStyle: 'none',
-              WebkitOverflowScrolling: 'touch'
+              WebkitOverflowScrolling: 'touch' // Smooth scrolling on iOS
             }}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
@@ -129,32 +132,29 @@ export default function InteractiveStepper({step, setStep}) {
                   >
                     <div
                       className={`
-                        w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 rounded-full flex items-center justify-center
-                        transition-all duration-300 text-xs font-medium border-2
+                        w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 rounded-full flex items-center justify-center
+                        transition-all duration-200 text-xs font-light border-2
                         ${s.id < step 
-                          ? 'bg-green-500 border-green-500 text-white scale-100 shadow-lg shadow-green-500/20' 
+                          ? 'bg-white border-white text-black scale-100' 
                           : s.id === step
-                          ? 'bg-blue-500 border-blue-500 text-white scale-110 shadow-lg shadow-blue-500/30'
-                          : 'bg-transparent border-white/40 text-white/70 group-hover:border-white/70 scale-100'
+                          ? 'bg-white border-white text-black scale-110 shadow-lg'
+                          : 'bg-transparent border-white/50 text-white/70 group-hover:border-white/70 scale-100'
                         }
                       `}
                     >
                       {s.id < step ? (
-                        <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
+                        <span className="text-xs">✓</span>
                       ) : (
-                        <span className="text-xs font-semibold">{s.id}</span>
+                        <span className="text-xs font-medium">{s.id}</span>
                       )}
                     </div>
                     
                     <div className={`
-                      mt-1 text-xs sm:text-xs md:text-sm font-medium text-center whitespace-nowrap transition-all duration-300 
-                      max-w-[50px] sm:max-w-[60px] md:max-w-[80px] lg:max-w-none truncate lg:whitespace-normal
+                      mt-1 text-xs sm:text-xs md:text-sm font-light text-center whitespace-nowrap transition-all duration-200 max-w-[60px] sm:max-w-[80px] md:max-w-none truncate
                       ${s.id === step 
-                        ? 'text-blue-300 font-semibold scale-105' 
+                        ? 'text-white font-medium scale-105' 
                         : s.id < step
-                        ? 'text-green-300 scale-100'
+                        ? 'text-white/80 scale-100'
                         : 'text-white/60 group-hover:text-white/80 scale-100'
                       }
                     `}>
@@ -167,12 +167,12 @@ export default function InteractiveStepper({step, setStep}) {
                     <div className="flex-shrink-0 mx-1 sm:mx-2 mb-4">
                       <div
                         className={`
-                          h-0.5 w-3 sm:w-4 md:w-6 lg:w-8 transition-all duration-300
+                          h-px w-4 sm:w-6 md:w-8 transition-all duration-300
                           ${s.id < step 
-                            ? 'bg-green-500 shadow-sm shadow-green-500/20' 
+                            ? 'bg-white h-0.5' 
                             : s.id === step
-                            ? 'bg-blue-500/70 shadow-sm shadow-blue-500/20'
-                            : 'bg-white/20'
+                            ? 'bg-white/70 h-0.5'
+                            : 'bg-white/30 h-px'
                           }
                         `}
                       />
@@ -183,29 +183,75 @@ export default function InteractiveStepper({step, setStep}) {
             </div>
           </div>
         </div>
+{/* 
+        <div className="mb-12 border-t border-neutral-200 pt-12">
+          <div>
+            <h2 className="text-xl font-light text-neutral-800 mb-2">
+              {steps[step - 1].content}
+            </h2>
+            <p className="text-sm text-neutral-500 mb-12 font-light">
+              Step {step} of {steps.length}
+            </p>
+            
+            <div className="h-64 bg-neutral-50 flex items-center justify-center">
+              <span className="text-neutral-300 text-sm font-light">Form content</span>
+            </div>
+          </div>
+        </div>
 
-        <style>{`
-          .scrollbar-hide::-webkit-scrollbar {
-            display: none;
+        <div className="flex justify-between items-center border-t border-neutral-200 pt-8">
+          <button
+            onClick={handlePrev}
+            disabled={step === 1}
+            className={`
+              px-8 py-3 text-sm font-light tracking-wide transition-colors duration-200
+              ${step === 1
+                ? 'text-neutral-300 cursor-not-allowed'
+                : 'text-neutral-800 hover:text-neutral-600'
+              }
+            `}
+          >
+            Previous
+          </button>
+
+          <button
+            onClick={handleNext}
+            disabled={step === steps.length}
+            className={`
+              px-8 py-3 text-sm font-light tracking-wide transition-colors duration-200
+              ${step === steps.length
+                ? 'text-neutral-300 cursor-not-allowed'
+                : 'text-neutral-800 hover:text-neutral-600'
+              }
+            `}
+          >
+            {step === steps.length ? 'Complete' : 'Next'}
+          </button>
+        </div>
+      </div> */}
+
+      <style>{`
+        .scrollbar-hide::-webkit-scrollbar {
+          display: none;
+        }
+        
+        /* Mobile touch scrolling improvements */
+        @media (max-width: 640px) {
+          .scrollbar-hide {
+            scroll-snap-type: x proximity;
+            -webkit-overflow-scrolling: touch;
           }
-          
-          /* Mobile touch scrolling improvements */
-          @media (max-width: 640px) {
-            .scrollbar-hide {
-              scroll-snap-type: x proximity;
-              -webkit-overflow-scrolling: touch;
-            }
-          }
-          
-          /* Prevent text selection during drag */
-          .select-none {
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-          }
-        `}</style>
-      </div>
+        }
+        
+        /* Prevent text selection during drag */
+        .select-none {
+          -webkit-user-select: none;
+          -moz-user-select: none;
+          -ms-user-select: none;
+          user-select: none;
+        }
+      `}</style>
+    </div>
     </div>
   );
 }

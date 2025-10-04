@@ -23,6 +23,8 @@ import FullScreen from '../Fullscreen'
 import { useMenuStore } from "../../stores/useMenuStore";
 import { useOpenBookStore } from "../../stores/useOpenBookStore";
 
+import CameraIntro from "./components/CameraIntro";
+
 import LiveScanner from "./LiveScanner";
 
 export const Experience = ({ children, drag, setDrag, onClick }) => {
@@ -213,6 +215,7 @@ export const Experience = ({ children, drag, setDrag, onClick }) => {
 
         <Lighting />
         <Stars />
+        {/* <CameraIntro /> */}
       </Canvas>
 
       <Menu drag={drag} setDrag={setDrag} resetCamera={resetCamera} />
@@ -220,7 +223,7 @@ export const Experience = ({ children, drag, setDrag, onClick }) => {
      {activeOpenBook && <BookMenu />}
 
 
-        {/* <Levels /> */}
+         <Levels /> 
 
     </div>
   );

@@ -2,29 +2,7 @@ import { useMemo, useState, useEffect } from 'react';
 import * as THREE from 'three';
 
 // 🚀 Global texture cache to prevent duplicate loading across all books
-const textureC  // 📊 Enhanced debug logging
-  useEffect(() => {
-    const loadedCount = textures.filter(t => t && t.image && t.image.complete).length;
-    const loadingDetails = textures.map((t, i) => ({
-      index: i,
-      hasTexture: !!t,
-      hasImage: !!(t && t.image),
-      isComplete: !!(t && t.image && t.image.complete),
-      url: t?.userData?.url || 'unknown'
-    }));
-    
-    console.log(`📖 Book ${bookID}: ${loadedCount}/${textures.length} textures loaded`, {
-      isLoading,
-      timeoutReached,
-      refreshKey,
-      details: loadingDetails
-    });
-    
-    // Log when book finally loads
-    if (!isLoading && loadedCount === textures.length) {
-      console.log(`🎉 Book ${bookID} fully loaded!`);
-    }
-  }, [bookID, textures, isLoading, refreshKey, timeoutReached]);= new Map();
+const textureCache = new Map();
 const materialCache = new Map();
 
 // 🎨 Color palette for loading states
@@ -35,7 +13,7 @@ const LOADING_COLORS = [
   "#0fbcf9", "#3d40d0", "#8c7ae6", "#e056fd"
 ];
 
-// 🔧 Simplified texture loader that works like the original useSafeLoader but with caching
+// 🔧 Robust texture loader with caching and callback system
 const loadTexture = (url, fallbackUrl = "/covers/000.webp", onUpdate = null) => {
   if (textureCache.has(url)) {
     const cached = textureCache.get(url);
@@ -57,7 +35,7 @@ const loadTexture = (url, fallbackUrl = "/covers/000.webp", onUpdate = null) => 
   // Set up the texture in cache immediately
   textureCache.set(url, placeholderTexture);
   
-  // Load the texture
+  // Load the texture with robust error handling
   loader.load(
     url,
     (texture) => {
@@ -78,8 +56,8 @@ const loadTexture = (url, fallbackUrl = "/covers/000.webp", onUpdate = null) => 
         },
         undefined,
         (fallbackError) => {
-          console.error(`❌ Failed to load fallback ${fallbackUrl}`);
-          // Create a simple colored canvas texture
+          console.error(`❌ Failed to load fallback ${fallbackUrl}, creating placeholder`);
+          // Create a simple colored canvas texture as last resort
           const canvas = document.createElement('canvas');
           canvas.width = canvas.height = 256;
           const ctx = canvas.getContext('2d');
@@ -87,7 +65,8 @@ const loadTexture = (url, fallbackUrl = "/covers/000.webp", onUpdate = null) => 
           ctx.fillRect(0, 0, 256, 256);
           ctx.fillStyle = '#999';
           ctx.font = '20px Arial';
-          ctx.fillText('No Image', 80, 130);
+          ctx.textAlign = 'center';
+          ctx.fillText('No Image', 128, 128);
           const errorTexture = new THREE.CanvasTexture(canvas);
           textureCache.set(url, errorTexture);
           if (onUpdate) onUpdate();
@@ -111,7 +90,7 @@ export const useBookMaterials = (cover, initialPosition, bookID) => {
     return LOADING_COLORS[positionHash % LOADING_COLORS.length];
   }, [initialPosition]);
 
-  // 📦 Load textures with caching
+  // 📦 Load textures with caching and callback system
   const textures = useMemo(() => {
     const textureUrls = [
       "./books/booktextureRotated.webp",   // Side spine
@@ -152,7 +131,7 @@ export const useBookMaterials = (cover, initialPosition, bookID) => {
         metalness: 0.1,
       });
       
-      // Smoother covers
+      // Smoother covers for better appearance
       if (index === 1 || index === 4 || index === 5) {
         material.roughness = 0.5;
       }
@@ -175,7 +154,7 @@ export const useBookMaterials = (cover, initialPosition, bookID) => {
     return !allLoaded;
   }, [textures, refreshKey, timeoutReached, bookID]);
 
-  // 🔄 Periodic refresh to check texture loading with timeout safety
+  // 🔄 Periodic refresh with timeout safety to prevent infinite loading
   useEffect(() => {
     if (isLoading && !timeoutReached) {
       console.log(`🔄 Starting refresh timer for book ${bookID}`);
@@ -198,11 +177,28 @@ export const useBookMaterials = (cover, initialPosition, bookID) => {
     }
   }, [isLoading, timeoutReached, bookID]);
 
-  // � Debug logging
+  // 📊 Enhanced debug logging
   useEffect(() => {
     const loadedCount = textures.filter(t => t && t.image && t.image.complete).length;
-    console.log(`📖 Book ${bookID}: ${loadedCount}/${textures.length} textures loaded, isLoading: ${isLoading}`);
-  }, [bookID, textures, isLoading]);
+    const loadingDetails = textures.map((t, i) => ({
+      index: i,
+      hasTexture: !!t,
+      hasImage: !!(t && t.image),
+      isComplete: !!(t && t.image && t.image.complete)
+    }));
+    
+    console.log(`📖 Book ${bookID}: ${loadedCount}/${textures.length} textures loaded`, {
+      isLoading,
+      timeoutReached,
+      refreshKey,
+      details: loadingDetails
+    });
+    
+    // Log when book finally loads completely
+    if (!isLoading && loadedCount === textures.length) {
+      console.log(`🎉 Book ${bookID} fully loaded!`);
+    }
+  }, [bookID, textures, isLoading, refreshKey, timeoutReached]);
 
   return {
     materials: isLoading ? loadingMaterials : textureMaterials,
@@ -212,7 +208,7 @@ export const useBookMaterials = (cover, initialPosition, bookID) => {
   };
 };
 
-// 🧹 Utility to clear caches
+// 🧹 Utility to clear caches (useful for memory management)
 export const clearMaterialCaches = () => {
   console.log('🧹 Clearing material caches...');
   textureCache.clear();
@@ -220,4 +216,3 @@ export const clearMaterialCaches = () => {
 };
 
 export default useBookMaterials;
-

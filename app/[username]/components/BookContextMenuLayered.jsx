@@ -149,6 +149,8 @@ const BookContextMenu = ({
   };
 
   const getMenuItems = () => {
+    const baseMenuHeight = 240; // Minimum consistent height
+    
     if (isOwnerShelf) {
       // User's own shelf - full control options
       return [
@@ -332,7 +334,7 @@ const BookContextMenu = ({
         }
       ];
     } else if (isLoggedIn) {
-      // Logged in user viewing someone else's shelf
+      // Logged in user viewing someone else's shelf - pad with placeholders for consistent height
       return [
         {
           icon: (
@@ -424,10 +426,19 @@ const BookContextMenu = ({
             // You could show a toast notification here
             onClose();
           }
+        },
+        // Add placeholder items for consistent height
+        {
+          type: "spacer",
+          height: 48
+        },
+        {
+          type: "spacer", 
+          height: 48
         }
       ];
     } else {
-      // Guest user (not logged in)
+      // Guest user (not logged in) - pad with placeholders for consistent height
       return [
         {
           icon: (
@@ -507,6 +518,15 @@ const BookContextMenu = ({
             // Redirect to signup or open signup modal
             window.location.href = "/signup";
           }
+        },
+        // Add placeholder items for consistent height
+        {
+          type: "spacer",
+          height: 48
+        },
+        {
+          type: "spacer",
+          height: 48
         }
       ];
     }
@@ -520,6 +540,16 @@ const BookContextMenu = ({
         <div 
           key={`divider-${index}`} 
           className="h-px bg-white/20 mx-2 my-1"
+        />
+      );
+    }
+
+    if (item.type === "spacer") {
+      return (
+        <div 
+          key={`spacer-${index}`} 
+          className="w-full"
+          style={{ height: item.height || 48 }}
         />
       );
     }
@@ -804,7 +834,7 @@ const BookContextMenu = ({
       <div
         ref={menuRef}
         className={`
-          flex flex-col gap-0 p-1 w-[280px] min-h-[200px]
+          flex flex-col gap-0 p-1 w-[280px] min-h-[240px] max-h-[500px] overflow-y-auto
           bg-black/90 backdrop-blur-md border border-white/20 
           rounded-xl shadow-2xl
           transition-all duration-300 ease-out

@@ -21,6 +21,7 @@ export const useMenuStore = create((set) => ({
     toggleLoginScreen: () => set((state) => ({ loginScreen: !state.loginScreen })),
     toggleDnaTimeline: () => set((state) => ({ dnaTimeline: !state.dnaTimeline })),
     toggleGeo: () => set((state) => ({ geo: !state.geo })),
+    toggleAdd: () => set((state) => ({ add: !state.add })),
     toggleSearch: () => set((state) => ({ searchOpen: !state.searchOpen })),
     toggleFilter: () => set((state) => ({ FilterOpen: !state.FilterOpen })),
     setIsBookOpen: (value) => set({ isBookOpen: value }),

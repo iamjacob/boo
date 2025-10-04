@@ -372,7 +372,7 @@
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
     "position": {"x":-1.84528, "y":1.655, "z":-6.232571},
     "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/responsible-js.jpg"}
+    "cover": {"front":"./covers/responsible-js.webp"}
   }
   ,
     {
@@ -389,7 +389,7 @@
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
     "position": {"x":0.690422, "y":0.655, "z":-6.463228},
     "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/elo-js-third-ed.jpg"}
+    "cover": {"front":"./covers/elo-js-third-ed.webp"}
   }
    ,
     {
@@ -465,7 +465,7 @@
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
     "position": {"x":1.89737, "y":0.655, "z":-6.216911},
     "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/definitivejs.jpg"}
+    "cover": {"front":"./covers/definitivejs.webp"}
   },
     {
     "id": "book-030",

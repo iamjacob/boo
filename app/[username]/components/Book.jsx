@@ -16,7 +16,7 @@ import { Html, useCursor, PivotControls } from "@react-three/drei";
 import { useDrag } from "@use-gesture/react";
 import * as THREE from "three";
 import gsap from "gsap";
-import useSafeLoader from "./useSafeLoader";
+import useBookMaterials from "./useBookMaterials";
 import BookContextMenu from "./BookContextMenuLayered";
 import FloatingTransformPanel from "./FloatingTransformPanel";
 
@@ -63,7 +63,6 @@ const Book = forwardRef(
     ]);
 
     // Add this state for pulsing animation
-    const [isLoading, setIsLoading] = useState(true);
     const [wireframePulse, setWireframePulse] = useState(0.4);
 
     // Click delay to prevent interference with double-click
@@ -703,70 +702,12 @@ const Book = forwardRef(
     // console.log("scale[1] on render:", scale[1]);
     // console.log("scale[1]/2 on render:", scale[1]/2);
 
-    const textures = [
-      useSafeLoader("./books/booktextureRotated.webp"),
-      // useSafeLoader(cover?.spine || "./books/covers/000.jpg"),
-      useSafeLoader(cover || "./covers/000.webp"),
-      useSafeLoader("./books/booktexture.webp"),
-      useSafeLoader("./books/booktexture.webp"),
-      // useSafeLoader(cover?.front || "./books/covers/000.jpg"),
-      useSafeLoader(cover || "./covers/000.webp"),
-      // useSafeLoader(cover?.back || "./books/covers/000.jpg"),
-      useSafeLoader(cover || "./covers/000.webp"),
-    ];
-// Replace your current materials useMemo with this safe version:
-// Replace your current materials useMemo with this multi-color version:
-// Simple consistent colors per book
-// Replace your current materials useMemo with this simple version:
-// Replace your current materials useMemo with this simple version:
-// Replace your current materials useMemo with this rainbow version:
-// Replace your current materials useMemo with this SUPER SIMPLE version:
-const materials = useMemo(() => {
-  if (isLoading) {
-    const colors = [
-      "#ff6b6b", // Red
-      "#ff9f43", // Orange  
-      "#feca57", // Yellow
-      "#48ca9f", // Green
-      "#0abde3", // Light Blue
-      "#3742fa", // Blue
-      "#9c88ff", // Purple
-      "#f876d4", // Pink
-      "#ff3838", // Bright Red
-      "#70a1ff", // Sky Blue
-      "#5f27cd", // Deep Purple
-      "#00d2d3", // Cyan
-    ];
-    
-    // Use position to create unique color per book
-    const positionIndex = Math.abs(Math.floor(initialPosition[0] * 10 + initialPosition[2] * 10)) % colors.length;
-    const bookColor = colors[positionIndex];
-    
-    // All 6 faces get the same color
-    return Array(6).fill(null).map(() => new THREE.MeshBasicMaterial({
-      color: bookColor,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.7,
-      side: THREE.DoubleSide,
-    }));
-  }
-
-  // Texture materials when loaded
-  return textures.map(texture => new THREE.MeshStandardMaterial({ map: texture }));
-}, [textures, initialPosition, isLoading]);
-
-
-// Also make the useEffect safer:
-useEffect(() => {
-  if (!Array.isArray(textures) || textures.length === 0) {
-    setIsLoading(true);
-    return;
-  }
-  
-  const allTexturesLoaded = textures.every(t => t && t.image && t.image.complete);
-  setIsLoading(!allTexturesLoaded);
-}, [textures]);
+    // 🚀 Use the optimized materials hook with caching
+    const { materials, isLoading, texturesLoaded, bookColor } = useBookMaterials(
+      cover, 
+      initialPosition, 
+      bookID
+    );
 
     //saveToDB();
     //console.log(meshRef.current.scale.set(1,1,1))

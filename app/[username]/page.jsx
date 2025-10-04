@@ -31,7 +31,7 @@ export default function Page() {
   const { selectedBook: infoBook, showBookInfo, hideBookInfo } = useBookInfoStore();
 
   // Debug logging
-  console.log('Book info state:', { showBookInfo, infoBook: infoBook?.title });
+  // console.log('Book info state:', { showBookInfo, infoBook: infoBook?.title });
 
   
   const bookRefs = useRef({}); // Store refs by book id
@@ -398,11 +398,11 @@ export default function Page() {
       </Experience>
 
       {/* Debug info */}
-      {showBookInfo && (
+      {/* {showBookInfo && (
         <div className="absolute top-4 left-4 bg-red-500 text-white p-2 rounded">
           DEBUG: showBookInfo = {showBookInfo.toString()}, book = {infoBook?.title || 'none'}
         </div>
-      )}
+      )} */}
 
       {/* Book Info Overlay */}
       {showBookInfo && infoBook && (

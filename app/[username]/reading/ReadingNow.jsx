@@ -77,8 +77,8 @@ const ReadingNow = () => {
               );
             })}
           </group>
-          <group position={[0, -1, 0]}>
-            {/* Big reflexive screen */}
+          {/* Big reflexive screen */}
+          {/* <group position={[0, -1, 0]}>
             <mesh>
               <planeGeometry args={[5, 3]} />
               <meshPhysicalMaterial
@@ -90,7 +90,7 @@ const ReadingNow = () => {
                 reflectivity={1}
               />
             </mesh>
-          </group>
+          </group> */}
         </>
       )}
     </>

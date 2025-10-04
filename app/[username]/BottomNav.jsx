@@ -102,7 +102,7 @@ const BottomNav = () => {
         <nav className="flex w-[fit-content] justify-between items-center gap-1 rounded-[44px] px-6">
 
 
-<a href="#scanner"
+{/* <a href="#scanner"
           onClick={() => toggleScanner(!scanner)}
           className={` ${
             scanner ? "border-[#ff0000]" : "border-[#ff000050]"
@@ -124,7 +124,7 @@ const BottomNav = () => {
             <path d="M12 10a2 2 0 1 1-2-2 2 2 0 0 1 2 2z" />
             <path d="M16 4h2a2 2 0 0 1 2 2v2" />
           </svg>
-          </a>
+          </a> */}
 
           <a
             href="#filter"
@@ -292,7 +292,9 @@ const BottomNav = () => {
             </svg>
           </a>
 
-          {level >= 5 && (
+              {/* <Image src={'/assets/coin.svg'} alt="Coin to donations" width={24} height={24} className="rounded"/> */}
+
+          {/* {level >= 5 && (
             <a
               href="#donate"
               onClick={() => setThrowCoins(!throwCoins)}
@@ -306,7 +308,6 @@ const BottomNav = () => {
                 <path d="M7 6h1v4" />
                 <path d="m16.71 13.88.7.71-2.82 2.82" />
               </svg>
-              {/* <Image src={'/assets/coin.svg'} alt="Coin to donations" width={24} height={24} className="rounded"/> */}
             </a>
           )}
   
@@ -338,7 +339,7 @@ const BottomNav = () => {
               <path d="M11 20H9" />
             </svg>
           </a>
-)}
+)} */}
 
           
           

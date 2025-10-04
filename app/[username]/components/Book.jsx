@@ -749,22 +749,21 @@ if (closeHandler) {
   // console.log("scale[1] on render:", scale[1]);
   // console.log("scale[1]/2 on render:", scale[1]/2);
 
-  // Memoize textures to prevent recreation every render
-  const textures = useMemo(() => [
+  const textures = [
     useSafeLoader("./books/booktextureRotated.png"),
-    useSafeLoader(cover || "./books/covers/000.jpg"), // Cover - only load once
-    useSafeLoader("./books/booktexture.png"), // Generic texture
-  ], [cover]);
+    // useSafeLoader(cover?.spine || "./books/covers/000.jpg"),
+    useSafeLoader(cover || "./books/covers/000.jpg"),
+    useSafeLoader("./books/booktexture.png"),
+    useSafeLoader("./books/booktexture.png"),
+    // useSafeLoader(cover?.front || "./books/covers/000.jpg"),
+    useSafeLoader(cover || "./books/covers/000.jpg"),
+    // useSafeLoader(cover?.back || "./books/covers/000.jpg"),
+    useSafeLoader(cover || "./books/covers/000.jpg"),
+  ];
 
-  // Memoize materials to prevent recreation every render  
-  const materials = useMemo(() => [
-    new THREE.MeshStandardMaterial({ map: textures[0] }), // Top
-    new THREE.MeshStandardMaterial({ map: textures[1] }), // Front (cover)
-    new THREE.MeshStandardMaterial({ map: textures[2] }), // Right
-    new THREE.MeshStandardMaterial({ map: textures[2] }), // Left  
-    new THREE.MeshStandardMaterial({ map: textures[1] }), // Back (cover)
-    new THREE.MeshStandardMaterial({ map: textures[1] }), // Bottom (cover)
-  ], [textures]);
+  const materials = textures.map(
+    (texture) => new THREE.MeshStandardMaterial({ map: texture })
+  );
   //saveToDB();
   //console.log(meshRef.current.scale.set(1,1,1))
   return (

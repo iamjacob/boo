@@ -11,7 +11,7 @@ import Header from "../Header";
 import init from "./boooks.json";
 import BottomNav from "./BottomNav";
 import Search from "../Search";
-import Add from "./Add";
+import Add from "./AddReal"
 import Timeline from "./timeline/Timeline";
 import Levels from "./Levels";
 import { useLevelStore } from "../../stores/useLevelStore";

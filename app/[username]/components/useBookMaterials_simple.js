@@ -15,7 +15,7 @@ const LOADING_COLORS = [
 
 // 🧹 Utility to normalize image paths to WebP (since we optimized them)
 const normalizeImagePath = (path) => {
-  if (!path) return path;
+  if (!path || typeof path !== 'string') return path;
   // Convert any image extension to .webp
   return path.replace(/\.(jpg|jpeg|png|gif|bmp)$/i, '.webp');
 };

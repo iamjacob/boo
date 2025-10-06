@@ -406,7 +406,7 @@
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
     "position": {"x":1.239148, "y":0.655, "z":-6.380792},
     "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/accessible-ux.png"}
+    "cover": {"front":"./covers/accessible-ux.webp"}
   },
     {
     "id": "book-026",
@@ -438,7 +438,7 @@
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
     "position": {"x":-1.826509, "y":-1.345, "z":-6.238098},
     "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/click-cover.png"}
+    "cover": {"front":"./covers/click-cover.webp"}
   },
     {
     "id": "book-028",
@@ -460,6 +460,11 @@
     "id": "book-029",
     "title": "eloquent javascript 4rd edition",
     "author": "Sun Tzu",
+    "categories": {
+      "main": ["Science & Technology"],
+      "sub": ["javascript", "web development", "programming"]
+    },
+    "tags": ["javascript", "web development", "programming"],
     "year": null,
     "pages": null,
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
@@ -471,6 +476,10 @@
     "id": "book-030",
     "title": "Distributed systems with node.js",
     "author": "unknown",
+    "categories": {
+      "main": ["Science & Technology"],
+      "sub": ["distributed systems", "node.js", "programming"]
+    },
     "tags": ["distributed systems", "node.js", "programming"],
     "year": null,
     "pages": null,

@@ -2,6 +2,7 @@
 import { useEffect, useState, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Stars, OrbitControls, Html } from "@react-three/drei";
+import * as THREE from 'three';
 import Shelves from "./shelves/Shelves";
 import ShelvesSquare from "./secrets/ShelvesSquare";
 import ShelfZoom from "./components/ShelfZoom";
@@ -22,8 +23,12 @@ import FullScreen from '../Fullscreen'
 
 import { useMenuStore } from "../../stores/useMenuStore";
 import { useOpenBookStore } from "../../stores/useOpenBookStore";
+import { useParticleStore } from "../../stores/useParticleStore";
+import { useBooksStore } from "../../stores/useBooksStore";
 
 import CameraIntro from "./components/CameraIntro";
+import ParticleFormation from "./components/ParticleFormation";
+import Book from "./components/Book";
 
 import LiveScanner from "./LiveScanner";
 
@@ -48,6 +53,33 @@ export const Experience = ({ children, drag, setDrag, onClick }) => {
   const activeOpenBook = useOpenBookStore((s) => s.activeOpenBook);
   const animateBack = useOpenBookStore((s) => s.animateBack);
   const throwCoins = useMenuStore((s) => s.throwCoins);
+
+  // Particle formation state
+  const isFormingBook = useParticleStore((s) => s.isFormingBook);
+  const formingBookData = useParticleStore((s) => s.formingBookData);
+  const completeBookFormation = useParticleStore((s) => s.completeBookFormation);
+  const addBook = useBooksStore((s) => s.addBook);
+  
+  // State for showing the formed book
+  const [formedBook, setFormedBook] = useState(null);
+
+  const handleBookFormation = (bookData) => {
+    console.log('📖 Book formation complete, showing book:', bookData);
+    setFormedBook(bookData);
+  };
+
+  const handleParticleComplete = (updatedBookData) => {
+    console.log('🎯 Particle animation complete, adding book to shelf:', updatedBookData);
+    
+    // Clear the formed book (remove the temporary one)
+    setFormedBook(null);
+    
+    // Add the final book to the shelf
+    if (updatedBookData) {
+      addBook(updatedBookData);
+    }
+    completeBookFormation();
+  };
 
   useEffect(() => {
   // const openBookId = useOpenBookStore((s) => s.openBookId);
@@ -185,6 +217,35 @@ export const Experience = ({ children, drag, setDrag, onClick }) => {
 
         {activeOpenBook && <OpenBook bookId={openBookId} />}
         {/* {activeOpenBook && <Html><div onClick={() => animateBack()}>closeBook</div></Html>} */}
+
+        {/* Particle Formation Effect */}
+        {isFormingBook && formingBookData && (
+          <ParticleFormation
+            bookData={formingBookData}
+            isActive={isFormingBook}
+            onBookFormed={handleBookFormation}
+            onComplete={handleParticleComplete}
+          />
+        )}
+        
+        {/* Show the formed book during pause */}
+        {formedBook && (
+          <Book
+            id={`forming-${formedBook.id || 'temp'}`}
+            bookID={formedBook.id || 'temp'}
+            scale={[formedBook.scale?.width || 0.4, formedBook.scale?.height || 0.75, formedBook.scale?.thickness || 0.2]}
+            initialPosition={[0, 0, 0]}
+            initialRotation={[0, 0, 0]}
+            cover={formedBook.cover}
+            title={formedBook.title}
+            bookObject={formedBook}
+            drag={false}
+            setDrag={() => {}}
+            selectedBook={null}
+            setSelectedBook={() => {}}
+            otherBooks={[]}
+          />
+        )}
 
         {/* {isScannerShowing && } */}
 

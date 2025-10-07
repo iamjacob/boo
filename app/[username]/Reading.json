@@ -8,7 +8,7 @@
     "scale": { "width": 0.3, "height": 0.44, "thickness": 0.07 },
     "position": { "x": 1, "y": -1.19, "z": -5.914373 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
-    "cover": { "front": "./covers/radical-candor.jpg" },
+    "cover": { "front": "./covers/radical-candor.webp" },
     "lastPage": 260,
     "lastRead": "2025-09-21T10:30:00Z"
   },
@@ -21,7 +21,7 @@
     "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
     "position": { "x": 0.951649, "y": 1.7, "z": -5.92405 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
-    "cover": { "front": "./covers/10xiseasierthan2x.jpg" },
+    "cover": { "front": "./covers/10xiseasierthan2x.webp" },
     "lastPage": 200,
     "lastRead": "2024-06-15"
   },
@@ -34,7 +34,7 @@
     "scale": { "width": 0.36, "height": 0.44, "thickness": 0.07 },
     "position": { "x": 1.423513, "y": 1.7, "z": -5.828689 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
-    "cover": { "front": "./covers/TheDevOpsHandbook.jpg" },
+    "cover": { "front": "./covers/TheDevOpsHandbook.webp" },
     "lastPage": 300,
     "lastRead": "2024-06-20"
   },
@@ -47,7 +47,7 @@
     "scale": { "width": 0.36, "height": 0.44, "thickness": 0.07 },
     "position": { "x": 1.423513, "y": 1.7, "z": -5.828689 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
-    "cover": { "front": "./covers/HowToAvoidAClimateDisaster.png" },
+    "cover": { "front": "./covers/HowToAvoidAClimateDisaster.webp" },
     "lastPage": 15,
     "lastRead": "2024-06-22"
   },
@@ -72,7 +72,7 @@
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
     "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
     "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/Learning-GitHub-Actions-Cover.jpg"},
+    "cover": {"front":"./covers/Learning-GitHub-Actions-Cover.webp"},
     "lastPage": 10,
     "lastRead": "2024-06-28"
   },
@@ -85,7 +85,7 @@
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
     "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
     "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/ArticulatingDesignDecisions.jpg"},
+    "cover": {"front":"./covers/ArticulatingDesignDecisions.webp"},
     "lastPage": 30,
     "lastRead": "2024-06-30"
   },
@@ -97,7 +97,7 @@
     "scale": {"width":0.4, "height":0.75, "thickness":0.2},
     "position": {"x":-1.196352, "y":1.57, "z":-6.388955},
     "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/the-daily-stoic-366.jpg"},
+    "cover": {"front":"./covers/the-daily-stoic-366.webp"},
     "lastPage": 66,
     "lastRead": "2024-07-01"
   }

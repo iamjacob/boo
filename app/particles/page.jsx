@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
@@ -7,15 +7,15 @@ import ParticleBook from './components/ParticleBook'
 import ParticleSystem3D from './components/ParticleSystem3D'
 import { useParticleStore } from '../../stores/useParticleStore'
 
-// Sample book data for testing
+// Sample book data for testing - Better size matching
 const sampleBookData = {
   id: "learningweb",
   title: "Learning Web Development",
   cover: "./covers/learningweb.webp",
   scale: {
-    width: 2,
-    height: 3,
-    thickness: 0.3
+    width: 0.4,      // Match particle system width
+    height: 0.75,     // Match particle system height
+    thickness: 0.2 // Match particle system thickness
   }
 }
 
@@ -24,8 +24,8 @@ const ParticleController = ({ targetProgress, onProgressUpdate }) => {
   const progressRef = useRef(0)
   
   useFrame(() => {
-    // Smooth interpolation towards target
-    const speed = 0.02
+    // Smooth interpolation towards target - MUCH FASTER (3x speed)
+    const speed = 0.015 // 3x faster than 0.005
     const diff = targetProgress - progressRef.current
     
     if (Math.abs(diff) > 0.001) {
@@ -48,66 +48,48 @@ const page = () => {
   const startBookFormation = useParticleStore((s) => s.startBookFormation)
   const completeBookFormation = useParticleStore((s) => s.completeBookFormation)
 
-  const handleSwitchToParticles = () => {
+  const handleShowBook = () => {
     setIsParticleMode(true)
     setTargetProgress(1)
     startBookFormation(sampleBookData)
   }
 
-  const handleSwitchToBook = () => {
+  const handleRestart = () => {
     setTargetProgress(0)
-    setTimeout(() => {
-      setIsParticleMode(false)
-      completeBookFormation()
-    }, 1000) // Wait for animation to complete
+    setIsParticleMode(false)
+    completeBookFormation()
   }
 
   const handleProgressUpdate = (progress) => {
     setParticleProgress(progress)
   }
 
+    useEffect(() => {
+      const splash = document.getElementById("splash");
+  
+      if (splash) {
+        splash.classList.add("fade-out");
+        setTimeout(() => splash.remove(), 1200);
+      }
+    }, []);
+
   return (
     <div className="w-full h-screen bg-gray-900 relative">
-      {/* Controls */}
+      {/* Simple Controls - Just two buttons */}
       <div className="absolute top-4 left-4 z-10 space-x-4">
         <button
-          onClick={handleSwitchToParticles}
+          onClick={handleShowBook}
           disabled={isParticleMode}
           className="px-6 py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-purple-400 text-white rounded-lg font-semibold transition-colors"
         >
-          {isParticleMode ? 'Particles Active' : 'Switch to Particles'}
+          Show Book
         </button>
         <button
-          onClick={handleSwitchToBook}
-          disabled={!isParticleMode}
-          className="px-6 py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-lg font-semibold transition-colors"
+          onClick={handleRestart}
+          className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition-colors"
         >
-          Switch to Book
+          Restart
         </button>
-      </div>
-
-      {/* Progress indicator */}
-      <div className="absolute top-20 left-4 z-10 text-white">
-        <div className="text-sm mb-2">
-          Mode: {isParticleMode ? 'Particles' : 'Book'} | Progress: {Math.round(particleProgress * 100)}%
-        </div>
-        <div className="w-48 h-2 bg-gray-700 rounded">
-          <div 
-            className="h-full bg-purple-500 rounded transition-all duration-100"
-            style={{ width: `${particleProgress * 100}%` }}
-          />
-        </div>
-      </div>
-
-      {/* Book info */}
-      <div className="absolute top-32 left-4 z-10 text-white text-sm">
-        <div>Book: {sampleBookData.title}</div>
-        <div>Colors extracted from: {sampleBookData.cover}</div>
-        <div>Store state: {isFormingBook ? 'Forming' : 'Idle'}</div>
-        <div>🔥 Ultra High-Res 3D Particle Field (200+ resolution)</div>
-        <div>📖 All 6 faces: Cover, Back, Spine, Sides, Edges</div>
-        <div>📏 Size matches book dimensions exactly</div>
-        <div>🎨 Face-specific colors and sizing</div>
       </div>
 
       {/* R3F Canvas */}

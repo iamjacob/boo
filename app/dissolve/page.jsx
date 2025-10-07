@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import { useFrame } from '@react-three/fiber'
@@ -41,6 +41,15 @@ const page = () => {
   const handleProgressUpdate = (progress) => {
     setDissolveProgress(progress)
   }
+
+    useEffect(() => {
+    const splash = document.getElementById("splash");
+
+    if (splash) {
+      splash.classList.add("fade-out");
+      setTimeout(() => splash.remove(), 1200);
+    }
+  }, []);
 
   return (
     <div className="w-full h-screen bg-gray-900 relative">

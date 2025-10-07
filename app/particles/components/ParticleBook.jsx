@@ -33,14 +33,19 @@ const useSafeLoader = (url, fallbackUrl = "./covers/000.webp") => {
   return texture
 }
 
-const ParticleBook = ({ isParticleMode, particleProgress = 0 }) => {
+const ParticleBook = ({ bookData, isParticleMode, particleProgress = 0 }) => {
   const meshRef = useRef()
   const materialRefs = useRef([])
 
-  // Create the book geometry with more subdivisions for better particle distribution
+  // Use exact same dimensions as particle system
+  const bookWidth = bookData?.scale?.width || 2
+  const bookHeight = bookData?.scale?.height || 3
+  const bookThickness = bookData?.scale?.thickness || 0.3
+
+  // Create the book geometry with exact same dimensions as particle system
   const geometry = useMemo(() => {
-    return new THREE.BoxGeometry(2, 3, 0.3, 64, 96, 16) // Higher subdivisions for more particles
-  }, [])
+    return new THREE.BoxGeometry(bookWidth, bookHeight, bookThickness, 64, 96, 16)
+  }, [bookWidth, bookHeight, bookThickness])
 
   // Load textures with proper aspect ratio handling
   const textures = [
@@ -57,28 +62,15 @@ const ParticleBook = ({ isParticleMode, particleProgress = 0 }) => {
     return textures.map((texture, index) => {
       if (!texture) return new THREE.MeshStandardMaterial({ color: '#8B4513' })
       
-      if (isParticleMode) {
-        // Use shader material when in particle mode
-        return new THREE.ShaderMaterial({
-          vertexShader: fadeVertexShader,
-          fragmentShader: fadeFragmentShader,
-          uniforms: {
-            uProgress: { value: 0 },
-            uTexture: { value: texture },
-            uColor: { value: new THREE.Color('#ffffff') }
-          },
-          side: THREE.DoubleSide,
-          transparent: true
-        })
-      } else {
-        // Use standard material when showing book
-        return new THREE.MeshStandardMaterial({
-          map: texture,
-          side: THREE.DoubleSide
-        })
-      }
+      // Always use standard material for clean book display
+      return new THREE.MeshStandardMaterial({
+        map: texture,
+        side: THREE.DoubleSide,
+        transparent: false,
+        opacity: 1.0
+      })
     })
-  }, [textures, isParticleMode])
+  }, [textures])
 
   // Update progress uniform when particleProgress changes
   useEffect(() => {
@@ -100,8 +92,11 @@ const ParticleBook = ({ isParticleMode, particleProgress = 0 }) => {
 
   return (
     <group>
-      {/* Only render the mesh if it's not completely dissolved or if not in particle mode */}
-      {(!isParticleMode || particleProgress < 0.9) && (
+      {/* Show the book only when:
+          1. Not in particle mode AND progress is 0 (shows static book after restart)
+          2. In particle mode and progress >= 0.98 (book appears instantly when particles reach position)
+      */}
+      {((!isParticleMode && particleProgress === 0) || (isParticleMode && particleProgress >= 0.98)) && (
         <mesh ref={meshRef} geometry={geometry} position={[0, 0, 0]}>
           {materials.map((material, index) => (
             <primitive 

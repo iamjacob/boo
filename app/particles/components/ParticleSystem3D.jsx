@@ -7,7 +7,7 @@ const ParticleSystem3D = ({
   bookData, 
   isParticleMode = false, 
   particleProgress = 0,
-  resolution = 500 // Much higher resolution for more detail
+  resolution = 300 // Reduced from 500 for better performance
 }) => {
   const pointsRef = useRef()
   const materialRef = useRef()
@@ -285,16 +285,30 @@ const ParticleSystem3D = ({
         vColor = color;
         vFaceId = faceId;
         
-        // Interpolate between scattered and target positions
-        vec3 pos = mix(position, targetPosition, uProgress);
+        vec3 pos;
         
-        // Add gentle floating motion when scattered
-        if (uProgress < 0.9) {
-          pos += velocity * uTime * 3.0;
+        if (uProgress < 1.0) {
+          // Particles flying in and forming book (0.0-1.0)
+          float phase1Progress = uProgress;
+          pos = mix(position, targetPosition, smoothstep(0.0, 1.0, phase1Progress));
+          
+          // Add swirling motion as they fly in, reduces as they get closer
+          float swirl = sin(uTime * 2.0 + length(position) * 0.1) * (1.0 - phase1Progress) * 1.5;
+          pos.x += swirl * sin(uTime * 1.5);
+          pos.y += swirl * cos(uTime * 1.3) * 0.5;
+          
+          // When particles reach end position (progress = 1.0), make them transparent
+          if (phase1Progress >= 0.98) {
+            vAlpha = 0.0; // Instant transparency when at end position
+          } else {
+            vAlpha = mix(0.3, 1.0, phase1Progress);
+          }
+          
+        } else {
+          // Should never reach here, but just in case
+          pos = targetPosition;
+          vAlpha = 0.0;
         }
-        
-        // Calculate alpha based on progress
-        vAlpha = mix(0.6, 1.0, uProgress);
         
         // Transform position
         vec4 viewPosition = modelViewMatrix * vec4(pos, 1.0);
@@ -373,6 +387,7 @@ const ParticleSystem3D = ({
     }
   })
 
+  // Show particles only when in particle mode
   if (!geometry || !material || !isParticleMode) return null
 
   return (

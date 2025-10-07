@@ -115,6 +115,7 @@ export const useBookMaterials = (cover, initialPosition, bookID) => {
       new THREE.MeshBasicMaterial({
         color: bookColor,
         wireframe: true,
+        args: 14,
         transparent: true,
         opacity: 0.6,
         side: THREE.DoubleSide,

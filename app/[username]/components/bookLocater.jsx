@@ -1,7 +1,3 @@
-import React from 'react';
-
-// Dummy function for book location logic
-// This will eventually handle finding/positioning books in the 3D scene
 const bookLocater = (bookData) => {
   console.log('🔍 Book Locater called with:', bookData);
   

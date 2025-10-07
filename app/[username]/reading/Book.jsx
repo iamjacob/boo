@@ -68,16 +68,16 @@ const Book = ({ book, position, rotation, readPos }) => {
   );
 
   const textures = [
-    useSafeLoader("./books/booktextureRotated.png"),
+    useSafeLoader("./books/booktextureRotated.webp"),
     // useSafeLoader(cover?.spine || "./books/covers/000.jpg"),
-    useSafeLoader(book.cover.front || "./books/covers/000.jpg"),
-    useSafeLoader("./books/booktexture.png"),
-    useSafeLoader("./books/booktexture.png"),
+    useSafeLoader(book.cover.front || "./books/covers/000.webp"),
+    useSafeLoader("./books/booktexture.webp"),
+    useSafeLoader("./books/booktexture.webp"),
     // useSafeLoader(cover?.front || "./books/covers/000.jpg"),
-    useSafeLoader(book.cover.front || "./books/covers/000.jpg"),
+    useSafeLoader(book.cover.front || "./books/covers/000.webp"),
     // useSafeLoader(cover?.back || "./books/covers/000.jpg"),
     // useSafeLoader(book.cover.front || "./books/covers/000.jpg"),
-    useSafeLoader("./books/placeholderPage.jpg"),
+    useSafeLoader("./books/placeholderPage.webp"),
   ];
 
   // extrude geometry bruger 3 materialer

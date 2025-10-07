@@ -13,7 +13,11 @@ export const extractBookColorsAndPixels = async (imageUrl, maxColors = 8) => {
     img.onload = () => {
       // Set canvas size (reasonable resolution for particles)
       const maxSize = 150; // Reduced for performance but enough detail
+        
+      //We need it here to keep aspect ratio!
+
       const scale = Math.min(maxSize / img.width, maxSize / img.height);
+
       canvas.width = img.width * scale;
       canvas.height = img.height * scale;
       

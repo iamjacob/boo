@@ -1,10 +1,12 @@
 import React, { useRef } from 'react'
 import { useBooksStore } from '../../stores/useBooksStore'
+import { useMenuStore } from '../../stores/useMenuStore'
 import { useParticleStore } from '../../stores/useParticleStore'
 
 const Add = () => {
   const [bookTitle, setBookTitle] = React.useState("");
   const addBook = useBooksStore((s) => s.addBook);
+  const toggleAdd = useMenuStore((s) => s.toggleAdd);
   const startBookFormation = useParticleStore((s) => s.startBookFormation);
   const inputRef = useRef();
 
@@ -23,6 +25,7 @@ const Add = () => {
     // Trigger particle formation via Zustand
     startBookFormation(newBook);
     setBookTitle("");
+    toggleAdd();
   };
 
   return (

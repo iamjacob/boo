@@ -121,11 +121,9 @@ export const useBookContextMenu = ({
    */
   const handlePointerUp = useCallback(() => {
     clearTimeout(longPressTimer.current);
-    setTimeout(() => {
-      if (onSwitchPlace) onSwitchPlace("home");
-      hideContextMenu();
-    }, 6000);
-  }, [onSwitchPlace, hideContextMenu]);
+    // Removed auto-close timer - let the menu handle its own closing logic
+    if (onSwitchPlace) onSwitchPlace("home");
+  }, [onSwitchPlace]);
 
   /**
    * Handle context menu (right-click)

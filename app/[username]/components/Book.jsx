@@ -7,6 +7,7 @@ import React, {
   useState,
   forwardRef,
   useImperativeHandle,
+  useCallback,
 } from "react";
 import { useOpenBookStore } from "../../../stores/useOpenBookStore";
 import { useBookInfoStore } from "../../../stores/useBookInfoStore";
@@ -15,7 +16,7 @@ import { useCursor, Html } from "@react-three/drei";
 import * as THREE from "three";
 import gsap from "gsap";
 import useBookMaterials from "./useBookMaterials_simple";
-import BookContextMenu from "./BookContextMenuLayered";
+import FloatingBlobsMenu from "./floatingBlobsMenu";
 import FloatingTransformPanel from "./FloatingTransformPanel";
 import FloatingDragRotationMenu from "./FloatingDragRotationMenu";
 
@@ -23,7 +24,6 @@ import FloatingDragRotationMenu from "./FloatingDragRotationMenu";
 import {
   useBookDatabase,
   useBookDrag,
-  useBookContextMenu,
   useBookTransform
 } from "./hooks";
 
@@ -94,25 +94,24 @@ const Book = forwardRef(
       saveToDB(meshRef, rotationRef);
     };
 
-    // Context menu hook
-    const {
-      contextMenuProps,
-      handlePointerDown: contextMenuPointerDown,
-      handlePointerUp: contextMenuPointerUp,
-      handleContextMenu,
-      showTransformControls: showContextFromMenu,
-      handleEditRotation,
-    } = useBookContextMenu({
-      meshRef,
-      camera,
-      bookID,
-      title,
-      bookObject,
-      setDrag,
-      setSelectedBook,
-      onSwitchPlace: switchPlace,
-      drag // Pass drag state to prevent context menu when dragging
-    });
+    // Simple context menu replacement - just prevent default right-click
+    const handleContextMenu = useCallback((e) => {
+      if (e && e.preventDefault) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      
+      // Prevent context menu when drag mode is active
+      if (drag) {
+        console.log("🚫 Right-click context menu blocked - drag mode is active");
+        return;
+      }
+    }, [drag]);
+
+    const handleEditRotation = useCallback(() => {
+      // Simple rotation edit - could be expanded later
+      console.log("Edit rotation for book:", bookID);
+    }, [bookID]);
 
     // Transform controls hook
     const {
@@ -167,8 +166,16 @@ const Book = forwardRef(
       otherBooks,
       drag,
       onSave: handleSave,
-      onPointerDown: contextMenuPointerDown,
-      onPointerUp: contextMenuPointerUp,
+      onPointerDown: (e) => {
+        // Simple pointer down handler
+        if (setSelectedBook) {
+          setSelectedBook(bookID);
+        }
+      },
+      onPointerUp: () => {
+        // Simple pointer up handler
+        console.log('Book pointer up');
+      },
       onDragStart: () => {
         // Auto-select this book when dragging starts
         if (setSelectedBook) {
@@ -366,12 +373,14 @@ const Book = forwardRef(
                 lastTapTimeRef.current = now;
               }
 
-              // Also handle the original pointer down logic
-              contextMenuPointerDown(e);
+              // Select the book when clicked (simplified)
+              if (setSelectedBook) {
+                setSelectedBook(bookID);
+              }
             },
             onPointerUp: (e) => {
               e.stopPropagation();
-              contextMenuPointerUp();
+              // Simple pointer up handler for non-drag mode
             },
             onContextMenu: handleContextMenu
           })}
@@ -397,19 +406,12 @@ const Book = forwardRef(
           ))}
         </mesh>
 
-        {/* Context Menu */}
-        <BookContextMenu
-          {...contextMenuProps}
-          onEditRotation={enhancedHandleEditRotation}
-        />
-
-        {/* Floating Transform Panel */}
+        {/* Floating Transform Panel
         <FloatingTransformPanel
           {...transformPanelProps}
           camera={camera}
         />
 
-        {/* Floating Drag Rotation Menu - Shows when drag mode is enabled and book is selected */}
         <FloatingDragRotationMenu
           visible={shouldEnableDrag && selectedBook === bookID}
           meshRef={meshRef}
@@ -420,7 +422,7 @@ const Book = forwardRef(
             y: rotationRef.current.y,
             z: rotationRef.current.z
           }}
-        />
+        /> */}
       </Suspense>
     );
   }

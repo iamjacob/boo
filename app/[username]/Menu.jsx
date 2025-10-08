@@ -1,6 +1,4 @@
 import React from 'react'
-import FullScreen from '../Fullscreen'
-
 
 export const Menu = ({ drag, setDrag, resetCamera }) => {
 
@@ -31,7 +29,7 @@ export const Menu = ({ drag, setDrag, resetCamera }) => {
           </svg>
         </div>
 
-        <div
+        {/* <div
           onClick={() => {
             setDrag(!drag);
           }}
@@ -75,11 +73,9 @@ export const Menu = ({ drag, setDrag, resetCamera }) => {
               <path d="M18 11a2 2 0 1 1 4 0v3a8 8 0 0 1-8 8h-4a8 8 0 0 1-8-8 2 2 0 1 1 4 0" />
             </svg>
           )}
-        </div>
+        </div> */}
 
-        <div className="cursor-pointer">
-          <FullScreen />
-        </div>
+       
       </div>
   )
 }

@@ -150,6 +150,10 @@ export default function Page() {
   const [selectedSubCat, setSelectedSubCat] = useState(null);
   const {setBooksFromJson} = useBooksStore();
   
+  // iOS-style long press to activate drag mode
+  const longPressTimer = useRef(null);
+  const [isLongPressing, setIsLongPressing] = useState(false);
+  
   // // const isInit = 
    useEffect(()=>{
      setBooksFromJson(init)
@@ -343,9 +347,47 @@ export default function Page() {
 
       {!activeOpenBook && <Header />}
 
+      {/* Long press visual indicator */}
+      {isLongPressing && (
+        <div className="fixed inset-0 pointer-events-none z-50 flex items-center justify-center">
+          <div className="bg-black/60 backdrop-blur-sm text-white px-6 py-3 rounded-full border border-white/30 animate-pulse">
+            <div className="flex items-center gap-2">
+              <div className="w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin"></div>
+              <span className="text-sm font-medium">Hold to activate drag mode...</span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Drag mode indicator */}
+      {drag && (
+        <div className="fixed top-4 right-4 z-50">
+          <div className="bg-blue-500/80 backdrop-blur-sm text-white px-4 py-2 rounded-full border border-blue-400/50">
+            <div className="flex items-center gap-3">
+              <div className="w-3 h-3 bg-white rounded-full"></div>
+              <span className="text-sm font-semibold">Drag Mode Active</span>
+              <button
+                onClick={() => setDrag(false)}
+                className="ml-2 w-6 h-6 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors"
+                title="Exit drag mode"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <line x1="18" y1="6" x2="6" y2="18"/>
+                  <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Experience 
         drag={drag} 
         setDrag={setDrag}
+        isLongPressing={isLongPressing}
+        onLongPressStart={() => setIsLongPressing(true)}
+        onLongPressEnd={() => setIsLongPressing(false)}
+        onDragToggle={(newDragState) => setDrag(newDragState)}
         onClick={(e) => {
           // Close book info when clicking on 3D scene background
           if (showBookInfo) {
@@ -406,8 +448,8 @@ export default function Page() {
 
       {/* Book Info Overlay */}
       {showBookInfo && infoBook && (
-        <div className="absolute bottom-4 left-4 pointer-events-auto">
-          <div className="bg-black/80 backdrop-blur-md p-4 rounded-lg border border-white/30 text-white max-w-xs relative">
+        <div className="absolute bottom-4 left-4 pointer-events-auto clickable-element">
+          <div className="bg-black/80 backdrop-blur-md p-4 rounded-lg border border-white/30 text-white max-w-xs relative clickable-element">
             {/* Close button */}
             <button
               onClick={hideBookInfo}
@@ -453,26 +495,28 @@ export default function Page() {
         </div>
       )}
 
-      {searchOpen && (<div className="flex justify-center items-center absolute top-0 left-0 w-screen h-screen"><Search /></div>)}
+      {searchOpen && (<div className="flex justify-center items-center absolute top-0 left-0 w-screen h-screen clickable-element"><Search /></div>)}
 
-      {add && <Add />}
+      {add && <div className="clickable-element"><Add /></div>}
 
-      {dnaTimeline && <Timeline />}
+      {dnaTimeline && <div className="clickable-element"><Timeline /></div>}
 
       {/* Level system with confetti */}
-      <Levels />
+      <div className="clickable-element"><Levels /></div>
 
       {/* FilterMenu */}
-      <Filter
-        books={books}
-        selectedMainCat={selectedMainCat}
-        setSelectedMainCat={setSelectedMainCat}
-        selectedSubCat={selectedSubCat}
-        setSelectedSubCat={setSelectedSubCat}
-        onFilter={handleFilter}
-      />
+      <div className="clickable-element">
+        <Filter
+          books={books}
+          selectedMainCat={selectedMainCat}
+          setSelectedMainCat={setSelectedMainCat}
+          selectedSubCat={selectedSubCat}
+          setSelectedSubCat={setSelectedSubCat}
+          onFilter={handleFilter}
+        />
+      </div>
 
-      {!activeOpenBook && <BottomNav />}
+      {!activeOpenBook && <div className="clickable-element"><BottomNav /></div>}
     </div>
   );
 }

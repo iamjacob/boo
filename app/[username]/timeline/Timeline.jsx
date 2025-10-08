@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useRef } from "react";
-import { div } from "three/tsl";
 
 export default function Timeline() {
   const canvasRef = useRef(null);
@@ -265,6 +264,8 @@ export default function Timeline() {
       window.removeEventListener("resize", resize);
     };
   }, []);
+
+  
 
   return (
     <div className="timeline bg-black/20 fixed bottom-0 right-0 z-50 w-screen h-[100px]">

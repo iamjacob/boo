@@ -1,0 +1,538 @@
+[
+  {
+    "id": "book-001",
+    "title": "David & Goliat",
+    "author": "Malcolm Gladwell",
+    "categories": {
+      "main": ["Social Sciences", "Economics & Business"],
+      "sub": ["Psychology", "Sociology", "Business", "decision making", "behavioral science"]
+    },
+    "tags": [
+      "psychology",
+      "sociology",
+      "business",
+      "decision making",
+      "behavioral science"
+    ],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2011-03-15",
+    "scale": { "width": 0.3, "height": 0.44, "thickness": 0.07 },
+    "position": { "x": -0.73149, "y": 1.5, "z": -6.458709 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "/covers/david-goliat.webp" }
+  },
+  {
+    "id": "book-002",
+    "title": "Afvigere",
+    "author": "Malcolm Gladwell",
+    "categories": {
+      "main": ["Social Sciences"],
+      "sub": ["Psychology", "Sociology", "Business"]
+    },
+    "tags": ["psychology", "sociology", "business"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2011-07-22",
+    "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
+    "position": { "x": -0.379287, "y": 1.5, "z": -6.488924 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "/covers/afvigere.webp" }
+  },
+  {
+    "id": "book-003",
+    "title": "Blink",
+    "author": "Malcolm Gladwell",
+    "categories": {
+      "main": ["Social Sciences"],
+      "sub": ["Psychology", "Sociology", "Business"]
+    },
+    "tags": ["psychology", "sociology", "business"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2011-11-08",
+    "scale": { "width": 0.36, "height": 0.44, "thickness": 0.07 },
+    "position": { "x": 0.437679, "y": 1.5, "z": -6.485248 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "/covers/blink.webp" }
+  },
+  {
+    "id": "book-004",
+    "title": "Det Magiske Vendepunkt",
+    "author": "Malcolm Gladwell",
+    "categories": {
+      "main": ["Social Sciences"],
+      "sub": ["Psychology", "Sociology", "Business"]
+    },
+    "tags": ["psychology", "sociology", "business"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2012-02-14",
+    "scale": { "width": 0.26, "height": 0.44, "thickness": 0.07 },
+    "position": { "x": -0.018833, "y": 1.5, "z": -6.499973 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "/covers/vendepunkt.webp" }
+  },
+  {
+    "id": "book-005",
+    "title": "Nelson Mandela",
+    "author": "Nelson Mandela",
+    "categories": {
+      "main": ["Biographies & True Stories", "History & Culture"],
+      "sub": ["Politics"]
+    },
+    "tags": ["biography", "history", "politics"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2012-06-30",
+    "scale": { "width": 0.28, "height": 0.44, "thickness": 0.07 },
+    "position": { "x": 1.508958, "y": 1.5, "z": -6.322424 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "/covers/nelson-mandela.webp" }
+  },
+  {
+    "id": "book-006",
+    "title": "Social Engineering",
+    "author": null,
+    "categories": {
+      "main": ["Science & Technology"],
+      "sub": ["Security", "Psychology", "Hacking"]
+    },
+    "tags": ["security", "psychology", "hacking"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2012-10-17",
+    "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
+    "position": { "x": 1.103153, "y": -1.5, "z": -6.405705 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "/covers/social-engineering.webp" }
+  },
+  {
+    "id": "book-007",
+    "title": "Trafficking Data",
+    "author": "Aynne Kokas",
+    "categories": {
+      "main": ["Science & Technology", "Social Sciences"],
+      "sub": ["Security", "Psychology", "Politics", "Data", "Privacy", "Surveillance", "Big Data"]
+    },
+    "tags": ["security", "psychology", "politics", "data", "privacy", "surveillance", "big data"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2013-01-25",
+    "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
+    "position": { "x": 1.051364, "y": 1.5, "z": -6.414408 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "/covers/trafficking-data.webp" }
+  },
+  {
+    "id": "book-008",
+    "title": "Think Again",
+    "author": "Adam Grant",
+    "categories": {
+      "main": ["Practical Life & Self-Help", "Social Sciences"],
+      "sub": ["Psychology", "Self-help", "Business"]
+    },
+    "tags": ["psychology", "self-help", "business"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2013-05-12",
+    "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
+    "position": { "x": 1.520536, "y": -1.5, "z": -6.31965 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "/covers/think-again.webp" }
+  },
+  {
+    "id": "book-009",
+    "title": "Permanent Record",
+    "author": "Edward Snowden",
+    "categories": {
+      "main": ["Biographies & True Stories"],
+      "sub": ["Privacy", "Surveillance", "Politics"]
+    },
+    "tags": ["biography", "privacy", "surveillance", "politics"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2013-09-03",
+    "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
+    "position": { "x": 1.389435, "y": -0.5, "z": -6.349761 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "/covers/permanent-record.webp" }
+  },
+  {
+    "id": "book-010",
+    "title": "Mastering Blockchain",
+    "author": "Imran Bashir",
+    "categories": {
+      "main": ["Science & Technology"],
+      "sub": ["Blockchain", "Cryptocurrency", "Technology"]
+    },
+    "tags": ["blockchain", "cryptocurrency", "technology"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2014-01-19",
+    "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
+    "position": { "x": 1.856746, "y": -0.5, "z": -6.229165 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "/covers/mastering-blockchain.webp" }
+  },
+    {
+    "id": "book-011",
+    "title": "The Art of the impossible",
+    "categories": {
+      "main": ["Philosophy"],
+      "sub": ["strategy", "military"]
+    },
+    "tags": ["strategy", "military", "philosophy"],
+    "author": "Steven Kotler",
+    "year": null,
+    "pages": null,
+    "dateAdded": "2014-04-27",
+
+    "scale": {"width":0.42, "height":0.55, "thickness":0.09},
+    "position": {"x":0.724871, "y":-0.43, "z":-6.459455},
+    "rotation": {"x":0, "y":0, "z":0},
+    "cover": {"front":"./covers/000.webp"}
+  },
+  {
+    "id": "book-012",
+    "title": "Tough",
+    "author": "Terry Crews",
+    "categories": {
+      "main": ["Biographies & True Stories", "Practical Life & Self-Help"],
+      "sub": ["motivation"]
+    },
+    "tags": ["biography", "self-help", "motivation"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2014-08-14",
+    "scale": {"width":0.55, "height":0.7, "thickness":0.2},
+    "position": {"x":-0.178521, "y":-1.37, "z":-6.497548},
+    "rotation": {"x":0, "y":0, "z":0},
+    "cover": {"front":"./covers/111.webp"}
+  },
+  {
+    "id": "book-013",
+    "title": "Why have nobody told me this before",
+    "author": "Dr. Julie Smith",
+    "categories": {
+      "main": ["Practical Life & Self-Help", "Social Sciences"],
+      "sub": ["mental health", "psychology"]
+    },
+    "tags": ["mental health", "self-help", "psychology"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2014-12-05",
+    "scale": {"width":0.4, "height":0.6, "thickness":0.15},
+    "position": {"x":0.504387, "y":-1.43, "z":-6.480401},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/444.webp"}
+  },
+  {
+    "id": "book-014",
+    "title": "Blitzscaling",
+    "author": "Reid Hoffman",
+    "categories": {
+      "main": ["Economics & Business"],
+      "sub": ["entrepreneurship", "strategy"]
+    },
+    "tags": ["business", "entrepreneurship", "strategy"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2015-03-23",
+    "scale": {"width":0.4, "height":0.65, "thickness":0.18},
+    "position": {"x":-0.848035, "y":-1.43, "z":-6.444442},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/222.webp"}
+  },
+  {
+    "id": "book-015",
+    "title": "Sapiens",
+    "author": "Yuval Noah Harari",
+    "categories": {
+      "main": ["History & Culture", "Social Sciences", "Science & Technology"],
+      "sub": ["anthropology", "science"]
+    },
+    "tags": ["history", "anthropology", "science"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2015-07-09",
+    "scale": {"width":0.4, "height":0.62, "thickness":0.2},
+    "position": {"x":-1.927214, "y":-0.41, "z":-6.207725},
+    "rotation": {"x":0, "y": 2, "z":0},
+    "cover": {"front":"./covers/333.webp"}
+  },
+  {
+    "id": "book-016",
+    "title": "Vanedyr",
+    "author": "Nicklas Brendborg",
+    "categories": {
+      "main": ["Practical Life & Self-Help", "Social Sciences"],
+      "sub": ["habits"]
+    },
+    "tags": ["psychology", "self-help", "habits"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2015-11-26",
+    "scale": {"width":0.4, "height":0.71, "thickness":0.15},
+    "position": {"x":-0.786191, "y":0.57, "z":-6.452279},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/555.webp"}
+  },
+  {
+    "id": "book-017",
+    "title": "Success at scale",
+    "author": "Addy Osmani",
+    "categories": {
+      "main": ["Economics & Business", "Science & Technology"],
+      "sub": ["web development"]
+    },
+    "tags": ["business", "technology", "web development"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2016-02-11",
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":0.039865, "y":0.655, "z":-6.499958},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/666.webp"}
+  },
+  {
+    "id": "book-018",
+    "title": "Creativity, Inc.",
+    "author": "Ed Catmull",
+    "categories": {
+      "main": ["Economics & Business", "Arts, Design & Creativity"],
+      "sub": ["management"]
+    },
+    "tags": ["business", "creativity", "management"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2016-06-18",
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-1.72178, "y":0.655, "z":-6.267813},
+    "rotation": {"x":0, "y": 2, "z":0},
+    "cover": {"front":"./covers/777.webp"}
+  },
+  {
+    "id": "book-019",
+    "title": "Nudge",
+    "author": "Richard Thaler",
+    "categories": {
+      "main": ["Social Sciences", "Economics & Business"],
+      "sub": ["behavioral economics", "decision making"]
+    },
+    "tags": ["behavioral economics", "psychology", "decision making"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2016-10-04",
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-1.373081, "y":-1.43, "z":-6.353318},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/888.webp"}
+  },
+  {
+    "id": "book-020",
+    "title": "Grit",
+    "author": "Angela Duckworth",
+    "categories": {
+      "main": ["Practical Life & Self-Help", "Social Sciences"],
+      "sub": ["grit"]
+    },
+    "tags": ["psychology", "self-help", "grit"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2017-01-20",
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-0.861802, "y":-0.43, "z":-6.442616},
+    "rotation": {"x":0, "y": 2, "z":0},
+    "cover": {"front":"./covers/999.webp"}
+  },
+  {
+    "id": "book-021",
+    "title": "The mountain is you",
+    "author": "Brianna Wiest",
+    "categories": {
+      "main": ["Practical Life & Self-Help"],
+      "sub": ["personal development", "motivation"]
+    },
+    "tags": ["self-help", "personal development", "motivation"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2017-05-16",
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-1.489202, "y":-0.43, "z":-6.327107},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/101010.webp"}
+  },
+  {
+    "id": "book-022",
+    "title": "Brandwashed",
+    "author": "Martin Lindstrom",
+    "categories": {
+      "main": ["Economics & Business", "Social Sciences"],
+      "sub": ["marketing", "consumer behavior"]
+    },
+    "tags": ["marketing", "psychology", "consumer behavior"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2017-09-07",
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-1.34512, "y":1.655, "z":-6.359296},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/111111.webp"}
+  },
+    {
+    "id": "book-023",
+    "title": "Responsible JavaScript",
+    "author": "Jeremy Wagner",
+    "categories": {
+      "main": ["Science & Technology"],
+      "sub": ["javascript", "web development", "programming"]
+    },
+    "tags": ["javascript", "web development", "programming"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2018-01-13",
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-1.84528, "y":1.655, "z":-6.232571},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/responsible-js.webp"}
+  }
+  ,
+    {
+    "id": "book-024",
+    "title": "eloquent javascript 3rd edition",
+    "author": "Marijn Haverbeke",
+    "categories": {
+      "main": ["Science & Technology"],
+      "sub": ["javascript", "web development", "programming"]
+    },
+    "tags": ["javascript", "web development", "programming"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2018-04-29",
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":0.690422, "y":0.655, "z":-6.463228},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/elo-js-third-ed.webp"}
+  }
+   ,
+    {
+    "id": "book-025",
+    "title": "Accesible UX",
+    "author": "Regine Gilbert",
+    "categories": {
+      "main": ["Arts, Design & Creativity"],
+      "sub": ["design", "accessibility", "user experience"]
+    },
+    "tags": ["design", "accessibility", "user experience"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2018-08-15",
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":1.239148, "y":0.655, "z":-6.380792},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/accessible-ux.webp"}
+  },
+    {
+    "id": "book-026",
+    "title": "Learning web design",
+    "author": "Jennifer Niederst Robbins",
+    "categories": {
+      "main": ["Science & Technology"],
+      "sub": ["web design", "user experience", "programming"]
+    },
+    "tags": ["web design", "user experience", "programming"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2018-12-02",
+    "scale": {"width":0.55, "height":0.77, "thickness":0.2},
+    "position": {"x":-1.242111, "y":0.655, "z":-6.380216},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/learningweb.webp"}
+  },
+    {
+    "id": "book-027",
+    "title": "click",
+    "author": "Poul Boag",
+    "categories": {
+      "main": ["Arts, Design & Creativity", "Social Sciences"],
+      "sub": ["design", "user experience", "psychology"]
+    },
+    "tags": ["design", "user experience", "psychology"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2019-03-18",
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-1.826509, "y":-1.345, "z":-6.238098},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/click-cover.webp"}
+  },
+    {
+    "id": "book-028",
+    "title": "Designing Data-Intensive Applications",
+    "author": "Martin Kleppmann",
+    "categories": {
+      "main": ["Science & Technology"],
+      "sub": ["data", "databases", "distributed systems"]
+    },
+    "tags": ["data", "databases", "distributed systems"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2019-07-05",
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-0.37393, "y":0.655, "z":-6.489235},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/DDIA.webp"}
+  },
+    {
+    "id": "book-029",
+    "title": "eloquent javascript 4rd edition",
+    "author": "Sun Tzu",
+    "categories": {
+      "main": ["Science & Technology"],
+      "sub": ["javascript", "web development", "programming"]
+    },
+    "tags": ["javascript", "web development", "programming"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2019-10-21",
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":1.89737, "y":0.655, "z":-6.216911},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/definitivejs.webp"}
+  },
+    {
+    "id": "book-030",
+    "title": "Distributed systems with node.js",
+    "author": "unknown",
+    "categories": {
+      "main": ["Science & Technology"],
+      "sub": ["distributed systems", "node.js", "programming"]
+    },
+    "tags": ["distributed systems", "node.js", "programming"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2020-02-08",
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":0.150142, "y":-0.345, "z":-6.498266},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/distributed.webp"}
+  },
+    {
+    "id": "book-031",
+    "title": "hands on machine learning",
+    "author": "Aurelien Geron",
+    "categories": {
+      "main": ["Science & Technology"],
+      "sub": ["machine learning", "artificial intelligence", "data science"]
+    },
+    "tags": ["machine learning", "artificial intelligence", "data science"],
+    "year": null,
+    "pages": null,
+    "dateAdded": "2025-10-08",
+    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
+    "position": {"x":-0.415756, "y":-0.345, "z":-6.48669},
+    "rotation": {"x":0, "y":2, "z":0},
+    "cover": {"front":"./covers/handsonmachine.webp"}
+  }
+]

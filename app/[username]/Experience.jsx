@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Canvas } from "@react-three/fiber";
 import { Stars, OrbitControls, Html } from "@react-three/drei";
 import * as THREE from 'three';
@@ -32,7 +32,16 @@ import Book from "./components/Book";
 
 import LiveScanner from "./LiveScanner";
 
-export const Experience = ({ children, drag, setDrag, onClick }) => {
+export const Experience = ({ 
+  children, 
+  drag, 
+  setDrag, 
+  onClick,
+  isLongPressing,
+  onLongPressStart,
+  onLongPressEnd,
+  onDragToggle
+}) => {
   const zoom = useCameraStore((s) => s.zoom);
   const rotation = useCameraStore((s) => s.rotation);
   const position = useCameraStore((s) => s.position);
@@ -62,6 +71,55 @@ export const Experience = ({ children, drag, setDrag, onClick }) => {
   
   // State for showing the formed book
   const [formedBook, setFormedBook] = useState(null);
+
+  // Long press functionality for drag mode
+  const longPressTimer = useRef(null);
+  const isDraggingBook = useRef(false);
+
+  const handleBackgroundPointerDown = (e) => {
+    e.stopPropagation();
+    
+    // Start long press for drag activation
+    onLongPressStart();
+    longPressTimer.current = setTimeout(() => {
+      onDragToggle(true);
+      onLongPressEnd();
+      console.log('🚀 Long press completed - Drag mode activated!');
+    }, 800); // 800ms like iOS
+  };
+
+  const handleBackgroundPointerUp = (e) => {
+    e.stopPropagation();
+    
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      onLongPressEnd();
+    }
+  };
+
+  const handleBackgroundPointerLeave = (e) => {
+    e.stopPropagation();
+    
+    if (longPressTimer.current) {
+      clearTimeout(longPressTimer.current);
+      onLongPressEnd();
+    }
+  };
+
+  const handleDragModeExit = (e) => {
+    e.stopPropagation();
+    
+    // Add a small delay to ensure book interactions have a chance to take precedence
+    setTimeout(() => {
+      onDragToggle(false);
+      console.log('🛑 Tap to exit drag mode');
+    }, 50);
+  };
+
+  // Console log drag state changes
+  useEffect(() => {
+    console.log(`🎯 Drag mode ${drag ? 'ACTIVATED' : 'DEACTIVATED'}`);
+  }, [drag]);
 
   const handleBookFormation = (bookData) => {
     console.log('📖 Book formation complete, showing book:', bookData);
@@ -251,14 +309,29 @@ export const Experience = ({ children, drag, setDrag, onClick }) => {
 
         {children}
 
-        {/* Invisible background for click-outside detection */}
+        {/* Invisible background for click-outside detection and long press */}
         <mesh
           position={[0, 0, -10]}
           onClick={onClick}
+          onPointerDown={!drag ? handleBackgroundPointerDown : undefined}
+          onPointerUp={!drag ? handleBackgroundPointerUp : undefined}
+          onPointerLeave={!drag ? handleBackgroundPointerLeave : undefined}
         >
           <planeGeometry args={[100, 100]} />
           <meshBasicMaterial transparent opacity={0} />
         </mesh>
+
+        {/* Exit drag mode mesh - only active during drag mode */}
+        {/* Temporarily disabled to prevent interference with book dragging */}
+        {false && drag && (
+          <mesh 
+            position={[0, 0, -9]} 
+            onPointerDown={handleDragModeExit}
+            >
+            <planeGeometry args={[100, 100]} />
+            <meshBasicMaterial transparent opacity={0} />
+          </mesh>
+        )}
 
         <OrbitControls
           minPolarAngle={minPolarAngle}

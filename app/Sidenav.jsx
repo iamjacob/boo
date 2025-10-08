@@ -6,6 +6,7 @@ import { useAuthStore } from "../stores/useAuthStore";
 import {useLevelStore} from "../stores/useLevelStore";
 import {useUserStore} from "../stores/useUserStore";
 import user from "./user.json";
+import FullScreen from "./Fullscreen";
 
 const Sidenav = ({ menu }) => {
   let { isLoggedIn, setLogin } = useAuthStore();
@@ -56,6 +57,10 @@ const Sidenav = ({ menu }) => {
           </div>
         </div>
       </div> */}
+      <div className="topBar">
+          <FullScreen />
+      
+      </div>
 
       <ul className="mt-2 space-y-2 p-4">
         {/* <li>

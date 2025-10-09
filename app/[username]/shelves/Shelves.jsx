@@ -68,7 +68,7 @@ const Shelf = ({ position = [0, 0, 0], rotation = [-Math.PI / 2, 0, 0], fraction
   return (
     <group position={position} rotation={rotation} name={`shelf-group-${index}`}>
       {/* Visible shelf */}
-      <mesh ref={meshRef}>
+      <mesh ref={meshRef} onDoubleClick={() => toggle()}>
         <primitive object={geometry} attach="geometry" />
         <meshStandardMaterial
           map={colorMap}
@@ -79,7 +79,7 @@ const Shelf = ({ position = [0, 0, 0], rotation = [-Math.PI / 2, 0, 0], fraction
       </mesh>
       
       {/* Invisible click area - covers the shelf area */}
-      <mesh 
+      {/* <mesh 
         position={[0, 0, 0]}
         // onClick={handleShelfClick}
         // onPointerEnter={() => document.body.style.cursor = 'pointer'}
@@ -88,7 +88,7 @@ const Shelf = ({ position = [0, 0, 0], rotation = [-Math.PI / 2, 0, 0], fraction
       >
         <cylinderGeometry args={[6.5, 6.5, 0.2, 32]} />
         <meshBasicMaterial transparent opacity={0} />
-      </mesh>
+      </mesh> */}
     </group>
   );
 };
@@ -107,29 +107,29 @@ const Shelves = () => {
 // [1, 1, 1, 1] --- IGNORE ---
 
 
-  // const toggle = () => {
-  //   fractions.forEach((f, i) => {
-  //     gsap.to({ value: f }, {
-  //       value: f === 1 ? 0.11 : 1,
-  //       duration: 1.2,
-  //       delay: i * 0.2, // forskydning pr. hylde
-  //       ease: "power2.inOut",
-  //       onUpdate: function () {
-  //         setFractions((prev) => {
-  //           const copy = [...prev];
-  //           copy[i] = this.targets()[0].value;
-  //           return copy;
-  //         });
-  //       }
-  //     });
-  //   });
-  // };
+  const toggle = () => {
+    fractions.forEach((f, i) => {
+      gsap.to({ value: f }, {
+        value: f === 1 ? 0.11 : 1,
+        duration: 1.2,
+        delay: i * 0.2, // forskydning pr. hylde
+        ease: "power2.inOut",
+        onUpdate: function () {
+          setFractions((prev) => {
+            const copy = [...prev];
+            copy[i] = this.targets()[0].value;
+            return copy;
+          });
+        }
+      });
+    });
+  };
 
   return (
     <group position={[0, -0.8, 0]} rotation={[0, Math.PI / 2, 0]} >
       {fractions.map((fraction, i) => {
         if(fraction == 0) return null;
-        return <Shelf key={i} position={[0, i - 1, 0]} fraction={fraction} index={i} />;
+        return <Shelf key={i} position={[0, i - 1, 0]} fraction={fraction} />;
       })}
     </group>
   );

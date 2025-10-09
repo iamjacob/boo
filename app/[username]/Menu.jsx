@@ -1,15 +1,31 @@
 import React from 'react'
 
-export const Menu = ({ drag, setDrag, resetCamera }) => {
+export const Menu = ({ resetCamera }) => {
 
 
 //const Menu = () => {
 
-  return (
-      <div className="flex fixed bottom-32 right-4 flex-col gap-4 z-50">
+  const showProfile = ()=>{
+    // show profile menu
+    // const if camera is not centered then show reset camera button
+    
+    // and if it is centered then make menu overlay come in
 
-        <div onClick={resetCamera} className="cursor-pointer">
-          <svg
+//Should be overlay menu from the top? :D
+
+
+  }
+
+
+
+
+  return (
+      <div className="flex fixed top-1/2 right-4 flex-col gap-4 z-50">
+
+        <div onClick={resetCamera } className="cursor-pointer hover:bg-gray-700 transition ">
+
+          <img className='h-[25px] w-[25px] rounded-full border border-red-500 border-[2px]' src="./assets/images/profile_image.jpeg" alt="username" />
+          {/* <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
             height="24"
@@ -26,7 +42,7 @@ export const Menu = ({ drag, setDrag, resetCamera }) => {
             <circle cx="12" cy="12" r="3" />
             <circle cx="19" cy="5" r="2" />
             <circle cx="5" cy="19" r="2" />
-          </svg>
+          </svg> */}
         </div>
 
         {/* <div

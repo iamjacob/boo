@@ -16,8 +16,10 @@ export const useMenuStore = create((set) => ({
     loginScreen:false,
     throwCoins: false,
     scannerActive: false,
+    stackBooks: false,
     setScannerActive: (value) => set({ scannerActive: value }),
     setThrowCoins: (value) => set({ throwCoins: value }),
+    toggleStackBooks: () => set((state) => ({ stackBooks: !state.stackBooks })),
     toggleLoginScreen: () => set((state) => ({ loginScreen: !state.loginScreen })),
     toggleDnaTimeline: () => set((state) => ({ dnaTimeline: !state.dnaTimeline })),
     toggleGeo: () => set((state) => ({ geo: !state.geo })),
@@ -30,5 +32,5 @@ export const useMenuStore = create((set) => ({
     setReadingNow: (value) => set({ ReadingNow: value }),
     setWishList: (value) => set({ WishList: value }),
     setSecret: (value) => set({ Secret: value }),
-    closeAll: () => set({ WishList: false, Secret: false, ReadingNow: false, Scanner: false, MenuOpen: false, FilterOpen: false, isBookOpen: false, searchOpen: false, geo: false, add: false, dnaTimeline: false }),
+    closeAll: () => set({ WishList: false, Secret: false, ReadingNow: false, Scanner: false, MenuOpen: false, FilterOpen: false, isBookOpen: false, searchOpen: false, geo: false, add: false, dnaTimeline: false, stackBooks: false }),
 }));

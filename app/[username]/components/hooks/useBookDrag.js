@@ -112,7 +112,7 @@ export const useBookDrag = ({
       const { x, z, angle } = constrainToCircle(
         intersectionVecRef.current.x,
         intersectionVecRef.current.z,
-        !active ? 6.5 : shelfRadius
+        !active ? 5.5 : shelfRadius
       );
 
       let newPos = new THREE.Vector3(x, intersectionVecRef.current.y, z);
@@ -129,7 +129,7 @@ export const useBookDrag = ({
       // Handle shelf switching based on vertical movement
       if (!active && Math.abs(my) > 8) {
         const index = shelfLevels.indexOf(closestShelf);
-        if (my < 10 && index < shelfLevels.length - 1) {
+        if (my < 30 && index < shelfLevels.length - 1) {
           newPos.y = shelfLevels[index + 1];
         } else if (my > 0 && index > 0) {
           newPos.y = shelfLevels[index - 1];

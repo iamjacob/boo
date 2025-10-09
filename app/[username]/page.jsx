@@ -143,6 +143,42 @@ export default function Page() {
       position: book.position || { x: 0, y: 0, z: 0 }
     }));
   };
+
+  // Stack books function - creates beautiful stack like in the image
+  const createStackPositions = () => {
+    const stackCenter = { x: 0, y: -1.5, z: 0 }; // Start at -1.5 like before
+    const maxOffset = 0.1; // Small offset for natural look
+    let currentHeight = stackCenter.y;
+
+    return books.map((book, index) => {
+      // Get actual book thickness for proper stacking
+      const bookThickness = book.scale?.thickness || 0.2;
+      
+      // Create slight random variations for natural stacking (only X/Z, no rotation)
+      const randomOffsetX = (Math.random() - 0.5) * maxOffset;
+      const randomOffsetZ = (Math.random() - 0.5) * maxOffset;
+      
+      // Calculate position for this book
+      const position = {
+        x: stackCenter.x + randomOffsetX,
+        y: currentHeight + (bookThickness / 2), // Center the book at this height
+        z: stackCenter.z + randomOffsetZ
+      };
+      
+      // Add this book's thickness for the next book
+      currentHeight += bookThickness;
+      
+      return {
+        id: book.id,
+        position,
+        rotation: {
+          x: Math.PI / 2, // 90 degrees - lay the book flat
+          y: Math.PI, // 180 degrees - align all spines in same direction
+          z: 0
+        }
+      };
+    });
+  };
   
   const [selectedBook, setSelectedBook] = useState(null);
   const [drag, setDrag] = useState(false);
@@ -152,7 +188,28 @@ export default function Page() {
   
   // iOS-style long press to activate drag mode
   const longPressTimer = useRef(null);
+  const visualIndicatorTimer = useRef(null);
   const [isLongPressing, setIsLongPressing] = useState(false);
+  const [showVisualIndicator, setShowVisualIndicator] = useState(false);
+
+  // Handle long press start with delayed visual feedback
+  const handleLongPressStart = () => {
+    setIsLongPressing(true);
+    // Delay showing visual indicator by 150ms
+    visualIndicatorTimer.current = setTimeout(() => {
+      setShowVisualIndicator(true);
+    }, 150);
+  };
+
+  // Handle long press end
+  const handleLongPressEnd = () => {
+    setIsLongPressing(false);
+    setShowVisualIndicator(false);
+    if (visualIndicatorTimer.current) {
+      clearTimeout(visualIndicatorTimer.current);
+      visualIndicatorTimer.current = null;
+    }
+  };
   
   // // const isInit = 
    useEffect(()=>{
@@ -164,6 +221,7 @@ export default function Page() {
   const add = useMenuStore((s) => s.add);
   const dnaTimeline = useMenuStore((s) => s.dnaTimeline);
   const geo = useMenuStore((s) => s.geo);
+  const stackBooks = useMenuStore((s) => s.stackBooks);
   const activeOpenBook = useOpenBookStore((s) => s.activeOpenBook);
   const { setZoom, setPosition, setOrbitRules } = useCameraStore();
   const throwCoins = useMenuStore((s) => s.throwCoins);
@@ -341,6 +399,138 @@ export default function Page() {
     }
   }, [geo, books, setZoom, setPosition, setOrbitRules]);
 
+  // Handle stack books activation/deactivation
+  useEffect(() => {
+    if (stackBooks) {
+      // Configure camera for stack view
+      setZoom(2.5);
+      setPosition([0, 2, 8]);
+      setOrbitRules({
+        minPolarAngle: 0,
+        maxPolarAngle: Math.PI / 2,
+        minAzimuthAngle: undefined,
+        maxAzimuthAngle: undefined,
+        enablePan: true,
+        minDistance: 4,
+        maxDistance: 20,
+        enableDamping: true,
+        dampingFactor: 0.05,
+        enableZoom: true,
+      });
+
+      // Create stacked positions
+      const stackPositions = createStackPositions();
+      
+      // Animate books to stack positions with beautiful staggered effect
+      stackPositions.forEach((stackBook, index) => {
+        const mesh = bookRefs.current[stackBook.id];
+        if (mesh) {
+          // Kill all ongoing animations for this mesh
+          gsap.killTweensOf(mesh.rotation);
+          gsap.killTweensOf(mesh.position);
+          gsap.killTweensOf(mesh.scale);
+          
+          // Staggered animation delay for dramatic effect
+          const staggerDelay = index * 0.08; // 80ms between each book
+          
+          gsap.to(mesh.position, {
+            x: stackBook.position.x,
+            y: stackBook.position.y,
+            z: stackBook.position.z,
+            duration: 1.5 + Math.random() * 0.5, // Slightly random duration
+            delay: staggerDelay,
+            ease: "power3.out",
+          });
+          
+          // Animate rotation for natural stacking look
+          if (stackBook.rotation) {
+            gsap.to(mesh.rotation, {
+              x: stackBook.rotation.x,
+              y: stackBook.rotation.y,
+              z: stackBook.rotation.z,
+              duration: 1.5,
+              delay: staggerDelay,
+              ease: "power2.out",
+            });
+          }
+
+          // Ensure scale is correct
+          const book = books.find(b => b.id === stackBook.id);
+          gsap.to(mesh.scale, {
+            x: book?.scale?.width || 1,
+            y: book?.scale?.height || 1.5,
+            z: book?.scale?.thickness || 0.2,
+            duration: 1.5,
+            delay: staggerDelay,
+            ease: "back.out(1.2)",
+          });
+        }
+      });
+    } else {
+      // Return books to original shelf positions
+      books.forEach((book, index) => {
+        const mesh = bookRefs.current[book.id];
+        if (mesh && book.position) {
+          // Kill all ongoing animations for this mesh
+          gsap.killTweensOf(mesh.rotation);
+          gsap.killTweensOf(mesh.position);
+          gsap.killTweensOf(mesh.scale);
+          
+          // Reverse staggered animation (from top of stack down)
+          const reverseIndex = books.length - index - 1;
+          const staggerDelay = reverseIndex * 0.06; // Faster return animation
+          
+          gsap.to(mesh.position, {
+            x: book.position.x,
+            y: book.position.y,
+            z: book.position.z,
+            duration: 2,
+            delay: staggerDelay,
+            ease: "power2.out",
+          });
+          
+          // Reset rotation
+          if (book.rotation) {
+            gsap.to(mesh.rotation, {
+              x: book.rotation.x,
+              y: book.rotation.y,
+              z: book.rotation.z,
+              duration: 2,
+              delay: staggerDelay,
+              ease: "power2.out",
+            });
+          }
+
+          // Reset scale
+          gsap.to(mesh.scale, {
+            x: book.scale?.width || 1,
+            y: book.scale?.height || 1.5,
+            z: book.scale?.thickness || 0.2,
+            duration: 2,
+            delay: staggerDelay,
+            ease: "power2.out",
+          });
+        }
+      });
+
+      // Reset camera to original settings
+      setZoom(3.5);
+      setPosition([0, 0.0001, 5]);
+      setOrbitRules({
+        minPolarAngle: -Math.PI / 2,
+        maxPolarAngle: Math.PI / 2,
+        minAzimuthAngle: undefined,
+        maxAzimuthAngle: undefined,
+        enablePan: false,
+        minDistance: 0,
+        maxDistance: 16,
+        enableDamping: true,
+        dampingFactor: 0.4,
+        enableZoom: true,
+      });
+    }
+  }, [stackBooks, books, setZoom, setPosition, setOrbitRules]);
+
 
   return (
     <div className="fixed top-0 left-0 w-full h-full">
@@ -348,7 +538,7 @@ export default function Page() {
       {!activeOpenBook && <Header />}
 
       {/* Long press visual indicator */}
-      {isLongPressing && (
+      {showVisualIndicator && (
         <div className="fixed inset-0 pointer-events-none z-50 flex items-center justify-center">
           <div className="bg-black/60 backdrop-blur-sm text-white px-6 py-3 rounded-full border border-white/30 animate-pulse">
             <div className="flex items-center gap-2">
@@ -385,8 +575,8 @@ export default function Page() {
         drag={drag} 
         setDrag={setDrag}
         isLongPressing={isLongPressing}
-        onLongPressStart={() => setIsLongPressing(true)}
-        onLongPressEnd={() => setIsLongPressing(false)}
+        onLongPressStart={handleLongPressStart}
+        onLongPressEnd={handleLongPressEnd}
         onDragToggle={(newDragState) => setDrag(newDragState)}
         onClick={(e) => {
           // Close book info when clicking on 3D scene background

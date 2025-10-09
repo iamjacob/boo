@@ -113,6 +113,81 @@ const Book = forwardRef(
       console.log("Edit rotation for book:", bookID);
     }, [bookID]);
 
+    // FloatingBlobsMenu state
+    const [showBlobsMenu, setShowBlobsMenu] = useState(false);
+    const [blobsMenuPosition, setBlobsMenuPosition] = useState([0, 0, 0]);
+    const longPressTimer = useRef(null);
+    const longPressTriggered = useRef(false);
+
+    // Long press detection for book context menu
+    const handleBookPointerDown = useCallback((e) => {
+      e.stopPropagation();
+
+      // Reset long press flag
+      longPressTriggered.current = false;
+
+      // Don't show menu in drag mode
+      if (drag) {
+        console.log("🚫 Book menu blocked - drag mode is active");
+        return;
+      }
+
+      // Select the book
+      if (setSelectedBook) {
+        setSelectedBook(bookID);
+      }
+
+      // Start long press timer for context menu
+      longPressTimer.current = setTimeout(() => {
+        longPressTriggered.current = true; // Mark that long press occurred
+        // Calculate position for the menu relative to book
+        const bookPosition = meshRef.current?.position;
+        if (bookPosition) {
+          setBlobsMenuPosition([
+            bookPosition.x + 1, // Offset to the right
+            bookPosition.y + 0.5, // Slightly above
+            bookPosition.z
+          ]);
+          setShowBlobsMenu(true);
+          console.log("📋 Book context menu activated via long press");
+        }
+      }, 500); // 500ms long press
+    }, [drag, setSelectedBook, bookID]);
+
+    const handleBookPointerUp = useCallback(() => {
+      if (longPressTimer.current) {
+        clearTimeout(longPressTimer.current);
+        longPressTimer.current = null;
+      }
+      
+      // Add a small delay to ensure long press has time to set the flag
+      setTimeout(() => {
+        // Reset the flag after a short delay to allow for next interaction
+        longPressTriggered.current = false;
+      }, 100);
+    }, []);
+
+    // Menu action handlers
+    const handleAddToCollection = useCallback((bookId, collectionType) => {
+      console.log("Add to collection:", bookId, "Type:", collectionType);
+      setShowBlobsMenu(false);
+    }, []);
+
+    const handleEditBook = useCallback((bookId) => {
+      console.log("Edit book:", bookId);
+      setShowBlobsMenu(false);
+    }, []);
+
+    const handleRemoveFromShelf = useCallback((bookId) => {
+      console.log("Remove from shelf:", bookId);
+      setShowBlobsMenu(false);
+    }, []);
+
+    const handleDeleteBook = useCallback((bookId) => {
+      console.log("Delete book:", bookId);
+      setShowBlobsMenu(false);
+    }, []);
+
     // Transform controls hook
     const {
       transformPanelProps,
@@ -367,20 +442,25 @@ const Book = forwardRef(
               } else {
                 // This might be a single tap - wait to see if another comes
                 clickTimeoutRef.current = setTimeout(() => {
-                  toggleBookInfo(bookObject);
+                  // Only show book info if long press wasn't triggered
+                  if (!longPressTriggered.current) {
+                    toggleBookInfo(bookObject);
+                    console.log("📖 Showing book info - no long press detected");
+                  } else {
+                    console.log("🚫 Book info blocked - long press was detected");
+                  }
                   lastTapTimeRef.current = 0;
-                }, 250);
+                }, 600); // Increased delay to ensure long press detection (500ms + buffer)
                 lastTapTimeRef.current = now;
               }
 
-              // Select the book when clicked (simplified)
-              if (setSelectedBook) {
-                setSelectedBook(bookID);
-              }
+              // Handle book menu long press
+              handleBookPointerDown(e);
             },
             onPointerUp: (e) => {
               e.stopPropagation();
-              // Simple pointer up handler for non-drag mode
+              // Handle book menu pointer up
+              handleBookPointerUp();
             },
             onContextMenu: handleContextMenu
           })}
@@ -405,6 +485,31 @@ const Book = forwardRef(
             />
           ))}
         </mesh>
+
+        {/* FloatingBlobsMenu - Shows on book long press */}
+        {showBlobsMenu && (
+          <Html
+            center={true}
+            distanceFactor={5}
+            position={blobsMenuPosition}
+            style={{
+              transform: `translate3d(0px, 0px, 0)`,
+              pointerEvents: 'auto',
+              zIndex: 1000
+            }}
+          >
+            <FloatingBlobsMenu 
+              visible={showBlobsMenu}
+              onClose={() => setShowBlobsMenu(false)}
+              onAddToCollection={handleAddToCollection}
+              onEditBook={handleEditBook}
+              onEditRotation={handleEditRotation}
+              onRemoveFromShelf={handleRemoveFromShelf}
+              onDeleteBook={handleDeleteBook}
+              bookId={bookID}
+            />
+          </Html>
+        )}
 
         {/* Floating Transform Panel
         <FloatingTransformPanel

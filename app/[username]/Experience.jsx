@@ -72,12 +72,17 @@ export const Experience = ({
   // State for showing the formed book
   const [formedBook, setFormedBook] = useState(null);
 
-  // Long press functionality for drag mode
+  // Long press functionality for drag mode with movement detection
   const longPressTimer = useRef(null);
   const isDraggingBook = useRef(false);
+  const initialPointerPos = useRef({ x: 0, y: 0 });
+  const movementThreshold = 10; // pixels - cancel long press if moved more than this
 
   const handleBackgroundPointerDown = (e) => {
     e.stopPropagation();
+    
+    // Store initial position for movement detection
+    initialPointerPos.current = { x: e.clientX, y: e.clientY };
     
     // Start long press for drag activation
     onLongPressStart();
@@ -86,6 +91,23 @@ export const Experience = ({
       onLongPressEnd();
       console.log('🚀 Long press completed - Drag mode activated!');
     }, 800); // 800ms like iOS
+  };
+
+  const handleBackgroundPointerMove = (e) => {
+    // Check if we've moved too much during the long press
+    if (longPressTimer.current && initialPointerPos.current) {
+      const dx = e.clientX - initialPointerPos.current.x;
+      const dy = e.clientY - initialPointerPos.current.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      
+      if (distance > movementThreshold) {
+        // Cancel long press if moved too much
+        clearTimeout(longPressTimer.current);
+        longPressTimer.current = null;
+        onLongPressEnd();
+        console.log('❌ Long press cancelled - movement detected');
+      }
+    }
   };
 
   const handleBackgroundPointerUp = (e) => {
@@ -314,6 +336,7 @@ export const Experience = ({
           position={[0, 0, -10]}
           onClick={onClick}
           onPointerDown={!drag ? handleBackgroundPointerDown : undefined}
+          onPointerMove={!drag ? handleBackgroundPointerMove : undefined}
           onPointerUp={!drag ? handleBackgroundPointerUp : undefined}
           onPointerLeave={!drag ? handleBackgroundPointerLeave : undefined}
         >

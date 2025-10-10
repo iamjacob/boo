@@ -216,7 +216,7 @@ const LibStage = ({
       <Html transform
           className="text-black text-[4px] top-[-20px] absolute left-1/2 -translate-x-1/2"
         >
-          {id}
+          {/* {id} */}
         </Html>
       <RoundedBox
         name={id}

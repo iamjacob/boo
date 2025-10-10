@@ -1,3 +1,4 @@
+'use client'
 import { CameraControls, Html, RoundedBox, useCursor } from "@react-three/drei";
 // import { BookOpen, Eye, Earth, ChevronDown } from "lucide-react";
 import * as THREE from "three";

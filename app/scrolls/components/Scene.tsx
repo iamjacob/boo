@@ -7,7 +7,7 @@ import { BookOpen, Eye, SquareLibrary, Calendar, Earth, ChevronDown, ChevronUp }
 import BoooksHeart from '../../BoooksHeart'
 
 
-export function Scene({id}) {
+export function Scene({ id }: { id: string }) {
   const meshRef = useRef<Mesh>(null);
   const { pointer } = useThree();
   const [hasOrientation, setHasOrientation] = useState(false);
@@ -88,13 +88,12 @@ export function Scene({id}) {
 
   return (
     <>
-      <ambientLight intensity={0.6} />
+      <ambientLight intensity={1} />
       <pointLight position={[10, 10, 10]} intensity={1} color="#ffffff" />
       <pointLight position={[-10, 5, -10]} intensity={0.8} color="#bae6fd" />
       <pointLight position={[5, -10, -5]} intensity={0.6} color="#818cf8" />
       <directionalLight position={[0, 10, 0]} intensity={0.5} />
       <pointLight position={[0, -10, 0]} intensity={0.4} color="#ffffff" />
-<ambientLight intensity={2}></ambientLight>
       <mesh ref={meshRef}>
         <Portal id={id}/>
         {/*

@@ -161,6 +161,11 @@ const LibStage = ({
           x: book.rotation?.x || 0,
           y: book.rotation?.y || 0,
           z: book.rotation?.z || 0
+        },
+        cover: {
+          front: book.cover?.front || "./books/covers/000.jpg",
+          back: book.cover?.back || "./books/covers/000.jpg",
+          spine: book.cover?.spine || "./books/covers/000.jpg",
         }
       };
     });

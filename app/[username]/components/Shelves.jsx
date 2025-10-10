@@ -5,9 +5,9 @@ import * as THREE from "three";
 const Shelves = () => {
   const Shelf = ({ position = [0, 0, 0], rotation = [(Math.PI / 180) * 90, 0, 0] }) => {
     const textures = useLoader(THREE.TextureLoader, [
-      "/experience/shelf/Wood051_1K-JPG_Color.jpg",
-      "/experience/shelf/Wood051_1K-JPG_NormalDX.jpg",
-      "/experience/shelf/Wood051_1K-JPG_Roughness.jpg",
+      "/experience/shelf/Wood051_1K-JPG_Color.webp",
+      "/experience/shelf/Wood051_1K-JPG_NormalDX.webp",
+      "/experience/shelf/Wood051_1K-JPG_Roughness.webp",
     ]);
 
     const [colorMap, normalMap, roughnessMap] = useMemo(() => {

@@ -23,6 +23,8 @@ import ThrowCoins from "./ThrowCoins";
 
 // import Map from "../maps/";
 
+import BookForm from "./components/book_form_stepper";
+//
 
 export default function Page() {
   const level = useLevelStore((s) => s.level);
@@ -549,24 +551,25 @@ export default function Page() {
         </div>
       )}
 
-      {/* Drag mode indicator */}
+      {/* Drag mode indicator - moved to bottom */}
       {drag && (
-        <div className="fixed top-4 right-4 z-50">
-          <div className="bg-blue-500/80 backdrop-blur-sm text-white px-4 py-2 rounded-full border border-blue-400/50">
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-3 bg-white rounded-full"></div>
-              <span className="text-sm font-semibold">Drag Mode Active</span>
-              <button
-                onClick={() => setDrag(false)}
-                className="ml-2 w-6 h-6 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors"
-                title="Exit drag mode"
-              >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <line x1="18" y1="6" x2="6" y2="18"/>
-                  <line x1="6" y1="6" x2="18" y2="18"/>
-                </svg>
-              </button>
-            </div>
+        <div className="fixed bottom-4 left-1/2 transform -translate-x-1/2 z-50">
+          <div className="bg-black/80 backdrop-blur-sm text-white px-4 py-2 rounded-lg border border-white/20 flex items-center gap-2">
+            <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+            <span className="text-sm font-semibold">Drag Mode Active</span>
+            {selectedBook && (
+              <span className="text-sm opacity-75">- {/* Book title would go here */}</span>
+            )}
+            <button
+              onClick={() => setDrag(false)}
+              className="ml-2 w-5 h-5 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-colors"
+              title="Exit drag mode"
+            >
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
           </div>
         </div>
       )}
@@ -687,7 +690,12 @@ export default function Page() {
 
       {searchOpen && (<div className="flex justify-center items-center absolute top-0 left-0 w-screen h-screen clickable-element"><Search /></div>)}
 
-      {add && <div className="clickable-element"><Add /></div>}
+      {add && 
+      <div className="clickable-element">
+        <BookForm/>
+        {/* <Add /> */}
+      
+      </div>}
 
       {dnaTimeline && <div className="clickable-element"><Timeline /></div>}
 

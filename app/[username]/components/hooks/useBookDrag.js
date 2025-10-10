@@ -112,7 +112,7 @@ export const useBookDrag = ({
       const { x, z, angle } = constrainToCircle(
         intersectionVecRef.current.x,
         intersectionVecRef.current.z,
-        !active ? 5.5 : shelfRadius
+        !active ? 6.5 : shelfRadius
       );
 
       let newPos = new THREE.Vector3(x, intersectionVecRef.current.y, z);

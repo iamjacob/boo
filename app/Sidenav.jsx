@@ -21,14 +21,14 @@ const Sidenav = ({ menu }) => {
       ${menu ? "open-menu" : "closed-menu"}`}
       onClick={(e) => e.stopPropagation()}
     >
-      <div className="logo flex p-[8px] cursor-pointer items-center">
-        {/* <a onClick={() => setMenu(!menu)} href="#menu" className="h-[40px]">
+      {/* <div className="logo flex p-[8px] cursor-pointer items-center">
+        <a onClick={() => setMenu(!menu)} href="#menu" className="h-[40px]">
             <BookMenuButton />
-          </a> */}
+          </a> 
         <a href="/">
           <BoooksFull width="80px" height="30px" />
         </a>
-      </div>
+      </div> */}
       {/* <div className="profile flex flex-col bg-white/10 backdrop-blur rounded-lg p-2 m-2">
         <div className="username text-center font-semibold">Username</div>
         <div className="avatar flex justify-center items-center p-2">
@@ -57,9 +57,9 @@ const Sidenav = ({ menu }) => {
           </div>
         </div>
       </div> */}
-      <div className="topBar">
+      <div className="topBar flex justify-end gap-2 p-2">
           <FullScreen />
-      
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-cast-icon lucide-cast"><path d="M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"/><path d="M2 12a9 9 0 0 1 8 8"/><path d="M2 16a5 5 0 0 1 4 4"/><line x1="2" x2="2.01" y1="20" y2="20"/></svg>
       </div>
 
       <ul className="mt-2 space-y-2 p-4">
@@ -175,7 +175,7 @@ const Sidenav = ({ menu }) => {
             </a>
           </li> */}
 
-        <li>
+        {/* <li>
           <a
             href="/drafts"
             className="block p-2 rounded-lg hover:bg-white/10 flex items-center gap-2"
@@ -198,7 +198,7 @@ const Sidenav = ({ menu }) => {
             </svg>
             Drafts
           </a>
-        </li>
+        </li> */}
         <li>
           <a
             href="#section1"
@@ -322,7 +322,7 @@ const Sidenav = ({ menu }) => {
             </svg>
           </a>
         </li>
-        <li>
+        {/* <li>
           <a href="#" className="block p-2 rounded-lg hover:bg-white/10">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -342,7 +342,7 @@ const Sidenav = ({ menu }) => {
             </svg>
             Apps
           </a>
-        </li>
+        </li> */}
         <li>
           <a href="#" className="block p-2 rounded-lg hover:bg-white/10">
             <svg
@@ -365,6 +365,38 @@ const Sidenav = ({ menu }) => {
             Scrolls
           </a>
         </li>
+        <li>
+          <a href="#section4" className="block p-2 rounded-lg hover:bg-white/10">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-book-down-icon lucide-book-down"><path d="M12 13V7"/><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H19a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1H6.5a1 1 0 0 1 0-5H20"/><path d="m9 10 3 3 3-3"/></svg>
+          Books
+          </a>
+        </li>
+       <li className="flex justify-between items-center p-2">
+          <span>Lite mode</span>
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input 
+              type="checkbox" 
+              className="sr-only"
+              onChange={(e) => {
+                const toggle = e.target.nextElementSibling;
+                const circle = toggle.querySelector('.toggle-circle');
+                if (e.target.checked) {
+                  toggle.classList.add('bg-green-500');
+                  toggle.classList.remove('bg-gray-600');
+                  circle.style.transform = 'translateX(20px)';
+                } else {
+                  toggle.classList.add('bg-gray-600');
+                  toggle.classList.remove('bg-green-500');
+                  circle.style.transform = 'translateX(0px)';
+                }
+              }}
+            />
+            <div className="relative w-11 h-6 bg-gray-600 rounded-full transition-colors duration-300">
+              <div className="toggle-circle absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 ease-in-out"></div>
+            </div>
+          </label>
+        </li>
+
       </ul>
       {/* <h2>Pages</h2>
             <ul> */}

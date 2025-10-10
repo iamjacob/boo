@@ -19,6 +19,7 @@ import useBookMaterials from "./useBookMaterials_simple";
 import FloatingBlobsMenu from "./floatingBlobsMenu";
 import FloatingTransformPanel from "./FloatingTransformPanel";
 import FloatingDragRotationMenu from "./FloatingDragRotationMenu";
+import FloatingBookDragMenu from "./FloatingBookDragMenu";
 
 // Custom hooks for separated concerns
 import {
@@ -205,6 +206,71 @@ const Book = forwardRef(
       title,
       onSave: handleSave
     });
+
+    // Handlers for the new drag menu (must be after useBookTransform hook)
+    const handleViewChange = useCallback((viewType) => {
+      if (!meshRef.current) return;
+
+      switch (viewType) {
+        case 'front':
+          // Rotate to show front face
+          gsap.to(meshRef.current.rotation, {
+            x: 0,
+            y: 0,
+            z: 0,
+            duration: 0.5,
+            ease: "power2.out"
+          });
+          break;
+        case 'spine':
+          // Rotate to show spine
+          gsap.to(meshRef.current.rotation, {
+            x: 0,
+            y: Math.PI / 2,
+            z: 0,
+            duration: 0.5,
+            ease: "power2.out"
+          });
+          break;
+      }
+      
+      // Update rotation reference
+      setTimeout(() => {
+        if (meshRef.current) {
+          rotationRef.current.copy(meshRef.current.rotation);
+          handleSave();
+        }
+      }, 500);
+    }, [handleSave]);
+
+    const handleCustomRotate = useCallback(() => {
+      // Show the transform controls for custom rotation
+      showTransformControls();
+    }, [showTransformControls]);
+
+    // Handler for 10-degree rotation increments
+    const handleRotateBy = useCallback((axis, degrees) => {
+      if (!meshRef.current) return;
+
+      const radians = (degrees * Math.PI) / 180;
+      const currentRotation = meshRef.current.rotation[axis];
+      const newRotation = currentRotation + radians;
+
+      // Animate the rotation
+      gsap.to(meshRef.current.rotation, {
+        [axis]: newRotation,
+        duration: 0.3,
+        ease: "power2.out"
+      });
+
+      // Update rotation reference to preserve during drag
+      setTimeout(() => {
+        if (meshRef.current) {
+          rotationRef.current[axis] = newRotation;
+          handleSave();
+        }
+      }, 300);
+    }, [handleSave]);
 
     // Enhanced handleEditRotation to work with transform controls
     const enhancedHandleEditRotation = (bookId, transformType) => {
@@ -510,6 +576,16 @@ const Book = forwardRef(
             />
           </Html>
         )}
+
+        {/* New Floating Book Drag Menu */}
+        <FloatingBookDragMenu
+          visible={shouldEnableDrag && selectedBook === bookID}
+          meshRef={meshRef}
+          camera={camera}
+          onViewChange={handleViewChange}
+          onCustomRotate={handleCustomRotate}
+          onRotateBy={handleRotateBy}
+        />
 
         {/* Floating Transform Panel
         <FloatingTransformPanel

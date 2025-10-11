@@ -39,10 +39,11 @@ export function Scene({ id }: { id: string }) {
       }
     };
 
-    // Request permission for device orientation on iOS
-    if (typeof DeviceOrientationEvent.requestPermission === 'function') {
-      DeviceOrientationEvent.requestPermission()
-        .then(permissionState => {
+    // Request permission for device orientation on iOS (type-safe)
+    const DeviceOrientationEventAny = DeviceOrientationEvent as any;
+    if (typeof DeviceOrientationEventAny.requestPermission === 'function') {
+      DeviceOrientationEventAny.requestPermission()
+        .then((permissionState: string) => {
           if (permissionState === 'granted') {
             window.addEventListener('deviceorientation', handleOrientation);
           }

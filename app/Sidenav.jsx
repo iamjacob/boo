@@ -371,6 +371,31 @@ const Sidenav = ({ menu }) => {
           Books
           </a>
         </li>
+        <li className="flex justify-between items-center p-2">
+          <span>Light mode</span>
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input 
+              type="checkbox" 
+              className="sr-only"
+              onChange={(e) => {
+                const toggle = e.target.nextElementSibling;
+                const circle = toggle.querySelector('.toggle-circle');
+                if (e.target.checked) {
+                  toggle.classList.add('bg-green-500');
+                  toggle.classList.remove('bg-gray-600');
+                  circle.style.transform = 'translateX(20px)';
+                } else {
+                  toggle.classList.add('bg-gray-600');
+                  toggle.classList.remove('bg-green-500');
+                  circle.style.transform = 'translateX(0px)';
+                }
+              }}
+            />
+            <div className="relative w-11 h-6 bg-gray-600 rounded-full transition-colors duration-300">
+              <div className="toggle-circle absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 ease-in-out"></div>
+            </div>
+          </label>
+        </li>
        <li className="flex justify-between items-center p-2">
           <span>Lite mode</span>
           <label className="relative inline-flex items-center cursor-pointer">

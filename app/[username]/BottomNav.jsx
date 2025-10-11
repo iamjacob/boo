@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import BoooksHeart from "../BoooksHeart";
 // import { Cast, CastIcon, Fullscreen } from "lucide-react";
@@ -8,6 +8,7 @@ import { useLevelStore } from "../../stores/useLevelStore";
 
 const BottomNav = () => {
   const [share, setShare] = useState(false);
+  const [profileData, setProfileData] = useState(null);
   const {
     throwCoins,
     setThrowCoins,
@@ -26,8 +27,8 @@ const BottomNav = () => {
     toggleAdd,
     dnaTimeline,
     toggleDnaTimeline,
-    stackBooks,
-    toggleStackBooks
+    profileOpen,
+    toggleProfile
   } = useMenuStore();
   const filter = useMenuStore((s) => s.FilterOpen);
 
@@ -35,6 +36,23 @@ const BottomNav = () => {
   const toggleScanner = useMenuStore((s) => s.setScannerActive);
 
   const { levelUp, level, levelDown } = useLevelStore();
+
+  // Load profile data
+  useEffect(() => {
+    const loadProfileData = async () => {
+      try {
+        const response = await fetch('/[username]/profile.json');
+        const data = await response.json();
+        setProfileData(data.profile);
+      } catch (error) {
+        console.error('Failed to load profile data:', error);
+      }
+    };
+
+    if (profileOpen && !profileData) {
+      loadProfileData();
+    }
+  }, [profileOpen, profileData]);
 
   return (
     <>
@@ -157,13 +175,13 @@ const BottomNav = () => {
             </svg>
           </a>
 
-          <a
-            href="#stack"
+          {/* <a
+            href="#profile"
             className={` ${
-              stackBooks ? "border-[#ff0000]" : "border-[#ff000050]"
+              profileOpen ? "border-[#ff0000]" : "border-[#ff000050]"
             } border border-1 bg-black/20 p-3 backdrop-blur rounded-[44px]`}
             onClick={() => {
-              toggleStackBooks();
+              toggleProfile();
             }}
           >
             <svg
@@ -176,13 +194,12 @@ const BottomNav = () => {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              className="lucide lucide-layers-icon lucide-layers"
+              className="lucide lucide-user-icon lucide-user"
             >
-              <path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"/>
-              <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"/>
-              <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"/>
+              <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+              <circle cx="12" cy="7" r="4"/>
             </svg>
-          </a>
+          </a> */}
 
           {/* <a href="#align/tune/calibrate">
           <svg
@@ -421,6 +438,124 @@ const BottomNav = () => {
           <BoooksHeart />
         </a>
       </div> */}
+
+      {/* Profile Overlay */}
+      {profileOpen && profileData && (
+        <div 
+          className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-end p-4"
+          onClick={(e) => {
+            // Close if clicking on backdrop
+            if (e.target === e.currentTarget) {
+              toggleProfile();
+            }
+          }}
+        >
+          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-lg max-w-sm w-full max-h-[90vh] overflow-y-auto mr-8 mt-8">
+            {/* Profile Header */}
+            <div className="relative p-6 text-center">
+              <button
+                onClick={() => toggleProfile()}
+                className="absolute top-2 right-2 text-white hover:text-red-400 transition-colors text-xl"
+                title="Close Profile"
+              >
+                ✕
+              </button>
+              
+              <img
+                src={profileData.personal?.avatar || '/assets/avatars/default.jpg'}
+                alt={profileData.personal?.displayName || 'Profile'}
+                className="w-24 h-24 rounded-full mx-auto mb-4 border-2 border-white/30"
+              />
+              
+              <h2 className="text-2xl font-bold text-white mb-2">
+                {profileData.personal?.displayName || 'User'}
+              </h2>
+              
+              <p className="text-white/80 text-sm mb-2">
+                @{profileData.personal?.username || 'username'}
+              </p>
+              
+              <p className="text-white/70 text-sm">
+                {profileData.personal?.bio || 'No bio available'}
+              </p>
+              
+              {profileData.personal?.status && (
+                <p className="text-blue-300 text-sm mt-2 italic">
+                  "{profileData.personal.status}"
+                </p>
+              )}
+            </div>
+
+            {/* Stats Section */}
+            {profileData.stats && (
+              <div className="px-6 pb-4">
+                <h3 className="text-white font-semibold mb-3">Stats</h3>
+                <div className="grid grid-cols-2 gap-3 text-sm">
+                  <div className="bg-white/5 rounded-lg p-3 text-center">
+                    <div className="text-2xl font-bold text-blue-400">{profileData.stats.booksRead}</div>
+                    <div className="text-white/70">Books Read</div>
+                  </div>
+                  <div className="bg-white/5 rounded-lg p-3 text-center">
+                    <div className="text-2xl font-bold text-green-400">{profileData.stats.level}</div>
+                    <div className="text-white/70">Level</div>
+                  </div>
+                  <div className="bg-white/5 rounded-lg p-3 text-center">
+                    <div className="text-2xl font-bold text-purple-400">{profileData.stats.streakDays}</div>
+                    <div className="text-white/70">Day Streak</div>
+                  </div>
+                  <div className="bg-white/5 rounded-lg p-3 text-center">
+                    <div className="text-2xl font-bold text-yellow-400">{profileData.stats.coinsCollected}</div>
+                    <div className="text-white/70">Coins</div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Current Projects */}
+            {profileData.currentProjects && profileData.currentProjects.length > 0 && (
+              <div className="px-6 pb-4">
+                <h3 className="text-white font-semibold mb-3">Current Projects</h3>
+                <div className="space-y-2">
+                  {profileData.currentProjects.slice(0, 2).map((project, index) => (
+                    <div key={index} className="bg-white/5 rounded-lg p-3">
+                      <div className="font-medium text-white text-sm">{project.name}</div>
+                      <div className="text-white/70 text-xs">{project.description}</div>
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {project.technologies?.slice(0, 3).map((tech, techIndex) => (
+                          <span key={techIndex} className="bg-blue-500/30 text-blue-200 text-xs px-2 py-1 rounded">
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Recent Thoughts */}
+            {profileData.thoughts && profileData.thoughts.length > 0 && (
+              <div className="px-6 pb-6">
+                <h3 className="text-white font-semibold mb-3">Recent Thoughts</h3>
+                <div className="space-y-3">
+                  {profileData.thoughts.slice(0, 2).map((thought, index) => (
+                    <div key={thought.id} className="bg-white/5 rounded-lg p-3">
+                      <p className="text-white/90 text-sm italic">"{thought.content}"</p>
+                      <div className="flex flex-wrap gap-1 mt-2">
+                        {thought.tags?.slice(0, 3).map((tag, tagIndex) => (
+                          <span key={tagIndex} className="text-white/50 text-xs">#{tag}</span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+     
     </>
   );
 };

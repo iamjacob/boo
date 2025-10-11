@@ -1,0 +1,474 @@
+{
+  "profile": {
+    "personal": {
+      "username": "iamjacob",
+      "displayName": "Jacob",
+      "bio": "Digital architect of experiences, book collector, and dream weaver",
+      "location": "Digital Realm",
+      "timezone": "UTC-5",
+      "joinDate": "2024-01-15T00:00:00Z",
+      "lastActive": "2025-10-11T12:00:00Z",
+      "avatar": "/assets/avatars/jacob.jpg",
+      "coverImage": "/assets/covers/jacob-cover.jpg",
+      "pronouns": "he/him",
+      "languages": ["English", "JavaScript", "Dreams"],
+      "status": "Building something amazing",
+      "mood": "inspired"
+    },
+    "contact": {
+      "email": "jacob@boo.app",
+      "website": "https://jacob.boo",
+      "social": {
+        "github": "iamjacob",
+        "twitter": "@iamjacob_dev",
+        "linkedin": "jacob-developer",
+        "discord": "jacob#1234"
+      }
+    },
+    "preferences": {
+      "theme": "dark",
+      "notifications": {
+        "email": true,
+        "push": true,
+        "reading": true,
+        "social": false
+      },
+      "privacy": {
+        "profileVisibility": "public",
+        "readingActivity": "friends",
+        "collections": "public"
+      },
+      "reading": {
+        "preferredFormats": ["digital", "physical", "audio"],
+        "genres": ["sci-fi", "philosophy", "biography", "technology"],
+        "readingSpeed": "fast",
+        "dailyGoal": 30
+      }
+    },
+    "stats": {
+      "booksRead": 247,
+      "booksOwned": 412,
+      "wishlistItems": 89,
+      "totalReadingTime": "1,247 hours",
+      "streakDays": 45,
+      "reviewsWritten": 156,
+      "friendsCount": 234,
+      "badgesEarned": 28,
+      "level": 42,
+      "experience": 15670,
+      "coinsCollected": 2340
+    },
+    "achievements": [
+      {
+        "id": "speed_reader",
+        "name": "Speed Reader",
+        "description": "Read 100 books in a year",
+        "unlockedAt": "2024-12-31T23:59:59Z",
+        "rarity": "rare"
+      },
+      {
+        "id": "collector",
+        "name": "Book Collector",
+        "description": "Own 400+ books",
+        "unlockedAt": "2025-09-15T10:30:00Z",
+        "rarity": "epic"
+      },
+      {
+        "id": "philosopher",
+        "name": "Deep Thinker",
+        "description": "Complete 50 philosophy books",
+        "unlockedAt": "2025-08-22T14:20:00Z",
+        "rarity": "legendary"
+      }
+    ],
+    "thoughts": [
+      {
+        "id": 1,
+        "content": "The intersection of technology and human consciousness is where the most profound discoveries await us",
+        "timestamp": "2025-10-11T08:30:00Z",
+        "tags": ["philosophy", "technology", "consciousness"],
+        "mood": "contemplative",
+        "visibility": "public"
+      },
+      {
+        "id": 2,
+        "content": "Every book is a portal to another dimension of understanding. Reading is interdimensional travel.",
+        "timestamp": "2025-10-10T22:15:00Z",
+        "tags": ["reading", "metaphysics", "learning"],
+        "mood": "inspired",
+        "visibility": "public"
+      },
+      {
+        "id": 3,
+        "content": "Code is poetry written in logic. Each function tells a story, each variable holds a secret.",
+        "timestamp": "2025-10-10T14:45:00Z",
+        "tags": ["programming", "creativity", "art"],
+        "mood": "creative",
+        "visibility": "friends"
+      },
+      {
+        "id": 4,
+        "content": "The future belongs to those who can bridge the gap between human intuition and artificial intelligence",
+        "timestamp": "2025-10-09T19:22:00Z",
+        "tags": ["AI", "future", "humanity"],
+        "mood": "visionary",
+        "visibility": "public"
+      },
+      {
+        "id": 5,
+        "content": "Sometimes the most profound insights come not from reading, but from the silence between the words",
+        "timestamp": "2025-10-09T11:30:00Z",
+        "tags": ["wisdom", "silence", "meditation"],
+        "mood": "peaceful",
+        "visibility": "public"
+      },
+      {
+        "id": 6,
+        "content": "Digital minimalism isn't about using less technology—it's about using technology more intentionally",
+        "timestamp": "2025-10-08T16:10:00Z",
+        "tags": ["minimalism", "technology", "intentionality"],
+        "mood": "focused",
+        "visibility": "public"
+      }
+    ],
+    "goals": [
+      {
+        "id": 1,
+        "title": "Master Quantum Computing Principles",
+        "description": "Deeply understand quantum algorithms and their practical applications",
+        "category": "learning",
+        "priority": "high",
+        "deadline": "2026-06-01T00:00:00Z",
+        "progress": 25,
+        "milestones": [
+          "Complete 'Quantum Computing: An Applied Approach'",
+          "Implement basic quantum algorithms",
+          "Build a quantum simulation project",
+          "Contribute to open-source quantum libraries"
+        ],
+        "resources": [
+          "IBM Qiskit tutorials",
+          "Microsoft Quantum Development Kit",
+          "University quantum courses"
+        ],
+        "status": "in_progress",
+        "tags": ["quantum", "computing", "science"]
+      },
+      {
+        "id": 2,
+        "title": "Build Revolutionary Reading Platform",
+        "description": "Create an AI-powered reading experience that adapts to user's cognitive patterns",
+        "category": "project",
+        "priority": "critical",
+        "deadline": "2025-12-31T00:00:00Z",
+        "progress": 60,
+        "milestones": [
+          "Complete MVP with basic features",
+          "Implement AI recommendation engine",
+          "Add immersive 3D book experience",
+          "Launch beta with 1000 users",
+          "Achieve product-market fit"
+        ],
+        "resources": [
+          "React Three Fiber documentation",
+          "Machine learning libraries",
+          "User feedback systems"
+        ],
+        "status": "in_progress",
+        "tags": ["development", "AI", "reading", "innovation"]
+      },
+      {
+        "id": 3,
+        "title": "Read 365 Books in 365 Days",
+        "description": "Challenge myself to read one book per day for an entire year",
+        "category": "personal",
+        "priority": "medium",
+        "deadline": "2025-12-31T23:59:59Z",
+        "progress": 284,
+        "milestones": [
+          "Reach 100 books (✓)",
+          "Reach 200 books (✓)",
+          "Reach 300 books (✓)",
+          "Complete the full challenge",
+          "Document the journey"
+        ],
+        "resources": [
+          "Speed reading techniques",
+          "Audiobook subscriptions",
+          "Digital library access"
+        ],
+        "status": "in_progress",
+        "tags": ["reading", "challenge", "self-improvement"]
+      },
+      {
+        "id": 4,
+        "title": "Establish Digital Philosophy Framework",
+        "description": "Develop a comprehensive philosophy for ethical technology use in the digital age",
+        "category": "intellectual",
+        "priority": "high",
+        "deadline": "2026-03-15T00:00:00Z",
+        "progress": 15,
+        "milestones": [
+          "Research existing digital ethics frameworks",
+          "Interview 50 technology leaders",
+          "Draft core principles",
+          "Publish research papers",
+          "Create educational content"
+        ],
+        "resources": [
+          "Ethics research databases",
+          "Philosophy journals",
+          "Technology conference networks"
+        ],
+        "status": "planning",
+        "tags": ["philosophy", "ethics", "technology", "research"]
+      },
+      {
+        "id": 5,
+        "title": "Mentor 100 Developers",
+        "description": "Guide the next generation of developers through mentorship programs",
+        "category": "community",
+        "priority": "medium",
+        "deadline": "2026-12-31T00:00:00Z",
+        "progress": 23,
+        "milestones": [
+          "Establish mentorship program",
+          "Mentor 25 developers (✓)",
+          "Create curriculum resources",
+          "Build mentorship platform",
+          "Scale to 100 mentees"
+        ],
+        "resources": [
+          "Developer communities",
+          "Educational platforms",
+          "Mentorship frameworks"
+        ],
+        "status": "in_progress",
+        "tags": ["mentorship", "community", "education", "giving-back"]
+      }
+    ],
+    "dreams": [
+      {
+        "id": 1,
+        "title": "Consciousness Transfer Library",
+        "description": "Create a system where human consciousness can interface directly with digital knowledge",
+        "type": "technological",
+        "timeline": "10-20 years",
+        "feasibility": "experimental",
+        "impact": "revolutionary",
+        "inspiration": "The idea that knowledge could be directly downloaded into consciousness, eliminating the barrier between learning and knowing",
+        "components": [
+          "Brain-computer interface technology",
+          "Quantum information processing",
+          "Consciousness mapping algorithms",
+          "Ethical safeguards framework"
+        ],
+        "challenges": [
+          "Understanding consciousness itself",
+          "Technological limitations",
+          "Ethical implications",
+          "Safety concerns"
+        ],
+        "first_steps": [
+          "Study neuroscience fundamentals",
+          "Research current BCI technology",
+          "Explore quantum consciousness theories"
+        ],
+        "tags": ["consciousness", "technology", "learning", "future"]
+      },
+      {
+        "id": 2,
+        "title": "Universal Knowledge Garden",
+        "description": "An infinite digital space where all human knowledge grows organically and interconnectedly",
+        "type": "conceptual",
+        "timeline": "5-15 years",
+        "feasibility": "challenging",
+        "impact": "transformative",
+        "inspiration": "Imagine a living ecosystem of information where ideas pollinate each other and new insights emerge naturally",
+        "components": [
+          "Semantic knowledge graphs",
+          "AI-powered connections",
+          "Immersive visualization",
+          "Collaborative curation"
+        ],
+        "challenges": [
+          "Information organization at scale",
+          "Quality control mechanisms",
+          "User interface complexity",
+          "Cultural sensitivity"
+        ],
+        "first_steps": [
+          "Prototype knowledge visualization",
+          "Study graph database technologies",
+          "Research semantic web standards"
+        ],
+        "tags": ["knowledge", "visualization", "collaboration", "AI"]
+      },
+      {
+        "id": 3,
+        "title": "Temporal Reading Experience",
+        "description": "Books that exist across multiple timelines, allowing readers to experience stories from different temporal perspectives",
+        "type": "creative",
+        "timeline": "3-8 years",
+        "feasibility": "achievable",
+        "impact": "artistic",
+        "inspiration": "What if reading could be a time travel experience where you witness events from multiple perspectives across time?",
+        "components": [
+          "Branching narrative engines",
+          "Temporal user interfaces",
+          "Multi-perspective storytelling",
+          "Time-based interactions"
+        ],
+        "challenges": [
+          "Narrative complexity",
+          "User experience design",
+          "Author collaboration tools",
+          "Technical implementation"
+        ],
+        "first_steps": [
+          "Create prototype with simple branching",
+          "Collaborate with experimental authors",
+          "Design temporal UI patterns"
+        ],
+        "tags": ["storytelling", "time", "interactive", "innovation"]
+      },
+      {
+        "id": 4,
+        "title": "Empathy Amplification Network",
+        "description": "A global system that allows people to truly experience life from another person's perspective",
+        "type": "social",
+        "timeline": "15-25 years",
+        "feasibility": "visionary",
+        "impact": "world-changing",
+        "inspiration": "If people could literally walk in someone else's shoes, would we still have conflict and misunderstanding?",
+        "components": [
+          "Advanced VR/AR technology",
+          "Emotional state mapping",
+          "Cultural context systems",
+          "Privacy protection protocols"
+        ],
+        "challenges": [
+          "Privacy and consent",
+          "Emotional safety",
+          "Cultural authenticity",
+          "Psychological impact"
+        ],
+        "first_steps": [
+          "Research empathy psychology",
+          "Explore VR emotional experiences",
+          "Study cultural anthropology"
+        ],
+        "tags": ["empathy", "social", "VR", "understanding"]
+      },
+      {
+        "id": 5,
+        "title": "Living Code Ecosystems",
+        "description": "Programming environments where code evolves, adapts, and grows like living organisms",
+        "type": "technological",
+        "timeline": "5-12 years",
+        "feasibility": "challenging",
+        "impact": "revolutionary",
+        "inspiration": "Code that learns, adapts, and evolves on its own, creating software that grows more intelligent over time",
+        "components": [
+          "Evolutionary algorithms",
+          "Self-modifying code",
+          "Adaptive architectures",
+          "Organic development patterns"
+        ],
+        "challenges": [
+          "Code safety and control",
+          "Debugging evolving systems",
+          "Performance optimization",
+          "Security implications"
+        ],
+        "first_steps": [
+          "Study genetic programming",
+          "Experiment with self-modifying code",
+          "Research adaptive systems"
+        ],
+        "tags": ["programming", "evolution", "AI", "adaptive"]
+      },
+      {
+        "id": 6,
+        "title": "Memory Palace Cloud",
+        "description": "A shared digital memory palace where humanity stores and accesses collective knowledge through spatial memory",
+        "type": "cognitive",
+        "timeline": "7-15 years",
+        "feasibility": "ambitious",
+        "impact": "educational",
+        "inspiration": "Ancient memory palace techniques combined with modern technology to create a shared cognitive space for all human knowledge",
+        "components": [
+          "3D spatial environments",
+          "Memory association algorithms",
+          "Collaborative knowledge building",
+          "Personalized navigation"
+        ],
+        "challenges": [
+          "Spatial design at scale",
+          "Individual learning differences",
+          "Knowledge organization",
+          "Cultural memory patterns"
+        ],
+        "first_steps": [
+          "Study memory palace techniques",
+          "Create 3D prototypes",
+          "Research spatial cognition"
+        ],
+        "tags": ["memory", "learning", "spatial", "collective"]
+      }
+    ],
+    "favorites": {
+      "books": [
+        "Gödel, Escher, Bach by Douglas Hofstadter",
+        "The Structure of Scientific Revolutions by Thomas Kuhn",
+        "Consciousness Explained by Daniel Dennett",
+        "The Pragmatic Programmer by David Thomas"
+      ],
+      "quotes": [
+        "The future is already here — it's just not very evenly distributed. - William Gibson",
+        "Any sufficiently advanced technology is indistinguishable from magic. - Arthur C. Clarke",
+        "The best way to predict the future is to invent it. - Alan Kay"
+      ],
+      "technologies": ["React", "Three.js", "Python", "Quantum Computing", "AI/ML"],
+      "concepts": ["Emergence", "Consciousness", "Complexity Theory", "Digital Philosophy"]
+    },
+    "currentProjects": [
+      {
+        "name": "Boo - Immersive Reading Platform",
+        "description": "Revolutionary 3D reading experience with AI-powered recommendations",
+        "status": "active",
+        "role": "Lead Developer",
+        "technologies": ["Next.js", "Three.js", "AI/ML", "WebGL"]
+      },
+      {
+        "name": "Quantum Consciousness Research",
+        "description": "Exploring the intersection of quantum mechanics and consciousness",
+        "status": "research",
+        "role": "Researcher",
+        "technologies": ["Qiskit", "Python", "Mathematical Modeling"]
+      }
+    ],
+    "skills": {
+      "programming": {
+        "expert": ["JavaScript", "React", "Node.js", "Python"],
+        "advanced": ["Three.js", "WebGL", "Machine Learning", "Database Design"],
+        "intermediate": ["Quantum Computing", "Blockchain", "DevOps"],
+        "learning": ["Rust", "Go", "Advanced AI", "Neuroscience"]
+      },
+      "soft": {
+        "communication": 9,
+        "leadership": 8,
+        "creativity": 10,
+        "problem_solving": 9,
+        "empathy": 8,
+        "adaptability": 9
+      }
+    },
+    "personality": {
+      "type": "INTJ",
+      "traits": ["Visionary", "Analytical", "Independent", "Innovative", "Thoughtful"],
+      "values": ["Knowledge", "Innovation", "Authenticity", "Growth", "Impact"],
+      "motivations": ["Creating meaningful technology", "Expanding human potential", "Solving complex problems"]
+    }
+  }
+}

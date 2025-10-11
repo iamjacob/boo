@@ -43,6 +43,7 @@ function Frame() {
   const frameRef = useRef();
 
   return (
+    <>
     <mesh ref={frameRef} scale={1}>
       {frameParts.map((part, index) => (
         <mesh key={index} position={part.position}>
@@ -51,6 +52,9 @@ function Frame() {
         </mesh>
       ))}
     </mesh>
+    <ambientLight intensity={1} />
+    </>
+
   );
 }
 

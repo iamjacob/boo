@@ -16,7 +16,7 @@ const Sidenav = ({ menu }) => {
 
   return (
     <aside
-      className={`absolute left-0 top-0 h-screen w-60 z-[100] flex flex-col rounded-lg border p-[8px] border-white/30 bg-black/70 text-white backdrop-blur shadow-lg
+      className={`absolute left-0 top-0 h-screen w-60 z-[100] flex flex-col space-between rounded-lg border p-[8px] border-white/30 bg-black/70 text-white backdrop-blur shadow-lg
       transform transition-transform duration-300
       ${menu ? "open-menu" : "closed-menu"}`}
       onClick={(e) => e.stopPropagation()}
@@ -57,6 +57,8 @@ const Sidenav = ({ menu }) => {
           </div>
         </div>
       </div> */}
+      <div>
+
       <div className="topBar flex justify-end gap-2 p-2">
           <FullScreen />
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-cast-icon lucide-cast"><path d="M2 8V6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-6"/><path d="M2 12a9 9 0 0 1 8 8"/><path d="M2 16a5 5 0 0 1 4 4"/><line x1="2" x2="2.01" y1="20" y2="20"/></svg>
@@ -344,7 +346,7 @@ const Sidenav = ({ menu }) => {
           </a>
         </li> */}
         <li>
-          <a href="#" className="block p-2 rounded-lg hover:bg-white/10">
+          <a href="/scrolls" className="block p-2 rounded-lg hover:bg-white/10">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="24"
@@ -371,58 +373,12 @@ const Sidenav = ({ menu }) => {
           Books
           </a>
         </li>
-        <li className="flex justify-between items-center p-2">
-          <span>Light mode</span>
-          <label className="relative inline-flex items-center cursor-pointer">
-            <input 
-              type="checkbox" 
-              className="sr-only"
-              onChange={(e) => {
-                const toggle = e.target.nextElementSibling;
-                const circle = toggle.querySelector('.toggle-circle');
-                if (e.target.checked) {
-                  toggle.classList.add('bg-green-500');
-                  toggle.classList.remove('bg-gray-600');
-                  circle.style.transform = 'translateX(20px)';
-                } else {
-                  toggle.classList.add('bg-gray-600');
-                  toggle.classList.remove('bg-green-500');
-                  circle.style.transform = 'translateX(0px)';
-                }
-              }}
-            />
-            <div className="relative w-11 h-6 bg-gray-600 rounded-full transition-colors duration-300">
-              <div className="toggle-circle absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 ease-in-out"></div>
-            </div>
-          </label>
-        </li>
-       <li className="flex justify-between items-center p-2">
-          <span>Lite mode</span>
-          <label className="relative inline-flex items-center cursor-pointer">
-            <input 
-              type="checkbox" 
-              className="sr-only"
-              onChange={(e) => {
-                const toggle = e.target.nextElementSibling;
-                const circle = toggle.querySelector('.toggle-circle');
-                if (e.target.checked) {
-                  toggle.classList.add('bg-green-500');
-                  toggle.classList.remove('bg-gray-600');
-                  circle.style.transform = 'translateX(20px)';
-                } else {
-                  toggle.classList.add('bg-gray-600');
-                  toggle.classList.remove('bg-green-500');
-                  circle.style.transform = 'translateX(0px)';
-                }
-              }}
-            />
-            <div className="relative w-11 h-6 bg-gray-600 rounded-full transition-colors duration-300">
-              <div className="toggle-circle absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 ease-in-out"></div>
-            </div>
-          </label>
-        </li>
+        </ul>
+      </div>
 
-      </ul>
+<div>
+
+
       {/* <h2>Pages</h2>
             <ul> */}
       {/* <li>
@@ -519,8 +475,63 @@ const Sidenav = ({ menu }) => {
         </div>
       )}
       
+              <ul>
+        <li className="flex justify-between items-center p-2">
+          <span>Light mode</span>
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input 
+              type="checkbox" 
+              className="sr-only"
+              onChange={(e) => {
+                const toggle = e.target.nextElementSibling;
+                const circle = toggle.querySelector('.toggle-circle');
+                if (e.target.checked) {
+                  toggle.classList.add('bg-green-500');
+                  toggle.classList.remove('bg-gray-600');
+                  circle.style.transform = 'translateX(20px)';
+                } else {
+                  toggle.classList.add('bg-gray-600');
+                  toggle.classList.remove('bg-green-500');
+                  circle.style.transform = 'translateX(0px)';
+                }
+              }}
+            />
+            <div className="relative w-11 h-6 bg-gray-600 rounded-full transition-colors duration-300">
+              <div className="toggle-circle absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 ease-in-out"></div>
+            </div>
+          </label>
+        </li>
+       <li className="flex justify-between items-center p-2">
+          <span>Lite mode</span>
+          <label className="relative inline-flex items-center cursor-pointer">
+            <input 
+              type="checkbox" 
+              className="sr-only"
+              onChange={(e) => {
+                const toggle = e.target.nextElementSibling;
+                const circle = toggle.querySelector('.toggle-circle');
+                if (e.target.checked) {
+                  toggle.classList.add('bg-green-500');
+                  toggle.classList.remove('bg-gray-600');
+                  circle.style.transform = 'translateX(20px)';
+                } else {
+                  toggle.classList.add('bg-gray-600');
+                  toggle.classList.remove('bg-green-500');
+                  circle.style.transform = 'translateX(0px)';
+                }
+              }}
+            />
+            <div className="relative w-11 h-6 bg-gray-600 rounded-full transition-colors duration-300">
+              <div className="toggle-circle absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow-md transition-transform duration-300 ease-in-out"></div>
+            </div>
+          </label>
+        </li>
+
+      </ul>
 
       <Footer />
+</div>
+
     </aside>
   );
 };

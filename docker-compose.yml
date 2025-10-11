@@ -31,17 +31,21 @@ services:
     ports:
       - "5678:5678"
     environment:
-      N8N_BASIC_AUTH_ACTIVE: 'true'
-      N8N_BASIC_AUTH_USER: admin
-      N8N_BASIC_AUTH_PASSWORD: admin
-      DB_TYPE: postgres
-      DB_POSTGRESDB_HOST: postgres
-      DB_POSTGRESDB_PORT: 5432
-      DB_POSTGRESDB_DATABASE: boooks_db
-      DB_POSTGRESDB_USER: boooks
-      DB_POSTGRESDB_PASSWORD: boooks_pass
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=boooks_admin
+      - N8N_BASIC_AUTH_PASSWORD=D!gital_B00ks_2025!
+      - N8N_EMAIL=admin@boooks.com
+      - N8N_USER_MANAGEMENT_DISABLED=true
+      - DB_TYPE=postgres
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=boooks_db
+      - DB_POSTGRESDB_USER=boooks
+      - DB_POSTGRESDB_PASSWORD=boooks_pass
     depends_on:
       - postgres
+    volumes:
+      - ./n8n_data:/home/node/.n8n
 
   nextjs:
     build: .

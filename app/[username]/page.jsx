@@ -227,6 +227,152 @@ export default function Page() {
   const activeOpenBook = useOpenBookStore((s) => s.activeOpenBook);
   const { setZoom, setPosition, setOrbitRules } = useCameraStore();
   const throwCoins = useMenuStore((s) => s.throwCoins);
+  const profileOpen = useMenuStore((s) => s.profileOpen);
+
+  // Add event listener for book stacking from Menu component
+  useEffect(() => {
+    const handleStackBooks = (event) => {
+      const { stackPositions } = event.detail;
+      console.log('📚 Received stack books event with positions:', stackPositions);
+      
+      // Update camera rules for stack view
+      setOrbitRules({
+        minPolarAngle: 0,
+        maxPolarAngle: Math.PI,
+        minAzimuthAngle: undefined,
+        maxAzimuthAngle: undefined,
+        enablePan: true,
+        minDistance: 4,
+        maxDistance: 20,
+        enableDamping: true,
+        dampingFactor: 0.05,
+        enableZoom: true,
+      });
+
+      // Animate books to stack positions with beautiful staggered effect
+      stackPositions.forEach((stackBook, index) => {
+        const mesh = bookRefs.current[stackBook.id];
+        if (mesh) {
+          // Kill all ongoing animations for this mesh
+          gsap.killTweensOf(mesh.rotation);
+          gsap.killTweensOf(mesh.position);
+          gsap.killTweensOf(mesh.scale);
+          
+          // Staggered animation delay for dramatic effect
+          const staggerDelay = index * 0.08; // 80ms between each book
+          
+          gsap.to(mesh.position, {
+            x: stackBook.position.x,
+            y: stackBook.position.y,
+            z: stackBook.position.z,
+            duration: 1.5 + Math.random() * 0.5, // Slightly random duration
+            delay: staggerDelay,
+            ease: "power3.out",
+          });
+          
+          // Animate rotation for natural stacking look
+          if (stackBook.rotation) {
+            gsap.to(mesh.rotation, {
+              x: stackBook.rotation.x,
+              y: stackBook.rotation.y,
+              z: stackBook.rotation.z,
+              duration: 1.5,
+              delay: staggerDelay,
+              ease: "power2.out",
+            });
+          }
+
+          // Ensure scale is correct
+          const book = books.find(b => b.id === stackBook.id);
+          gsap.to(mesh.scale, {
+            x: book?.scale?.width || 1,
+            y: book?.scale?.height || 1.5,
+            z: book?.scale?.thickness || 0.2,
+            duration: 1.5,
+            delay: staggerDelay,
+            ease: "back.out(1.2)",
+          });
+        }
+      });
+    };
+
+    // Add event listener
+    window.addEventListener('stackBooks', handleStackBooks);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('stackBooks', handleStackBooks);
+    };
+  }, [books, setOrbitRules]);
+
+  // Watch for profile state changes to return books to shelf when profile closes
+  useEffect(() => {
+    if (!profileOpen) {
+      // Profile was closed, return books to their original shelf positions
+      console.log('📚 Profile closed, returning books to shelf...');
+      
+      // Reset camera rules to original shelf view
+      setOrbitRules({
+        minPolarAngle: Math.PI / 2 - Math.PI / 14,
+        maxPolarAngle: Math.PI / 2 + Math.PI / 14,
+        minAzimuthAngle: -Math.PI / 14,
+        maxAzimuthAngle: Math.PI / 14,
+        dampingFactor: 0.05,
+        enablePan: false,
+        minDistance: 3,
+        maxDistance: 8,
+        enableDamping: true,
+        enableZoom: true,
+      });
+
+      // Return books to original shelf positions
+      books.forEach((book, index) => {
+        const mesh = bookRefs.current[book.id];
+        if (mesh && book.position) {
+          // Kill all ongoing animations for this mesh
+          gsap.killTweensOf(mesh.rotation);
+          gsap.killTweensOf(mesh.position);
+          gsap.killTweensOf(mesh.scale);
+          
+          // Reverse staggered animation (from top of stack down)
+          const reverseIndex = books.length - index - 1;
+          const staggerDelay = reverseIndex * 0.06; // Faster return animation
+          
+          gsap.to(mesh.position, {
+            x: book.position.x,
+            y: book.position.y,
+            z: book.position.z,
+            duration: 2,
+            delay: staggerDelay,
+            ease: "power2.out",
+          });
+          
+          // Reset rotation to original shelf rotation
+          if (book.rotation) {
+            gsap.to(mesh.rotation, {
+              x: book.rotation.x,
+              y: book.rotation.y,
+              z: book.rotation.z,
+              duration: 2,
+              delay: staggerDelay,
+              ease: "power2.out",
+            });
+          }
+
+          // Reset scale to original
+          gsap.to(mesh.scale, {
+            x: book?.scale?.width || 1,
+            y: book?.scale?.height || 1.5,
+            z: book?.scale?.thickness || 0.2,
+            duration: 2,
+            delay: staggerDelay,
+            ease: "back.out(1.2)",
+          });
+        }
+      });
+    }
+  }, [profileOpen, books, setOrbitRules]);
+
   // const filter = useMenuStore((s) => s.FilterOpen);
 
   // Main filtering handler - clean and simple

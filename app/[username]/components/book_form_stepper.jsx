@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { Upload, ChevronRight, Check, Plus, Link, X } from 'lucide-react';
+import { useBooksStore } from '../../../stores/useBooksStore'
+import { useMenuStore } from '../../../stores/useMenuStore'
+
 
 export default function BookForm() {
+  const addBook = useBooksStore((s) => s.addBook);
+  const { toggleAdd } = useMenuStore();
+
   const [currentStep, setCurrentStep] = useState(0);
   const [coverPreview, setCoverPreview] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState('');
@@ -98,13 +104,63 @@ export default function BookForm() {
     }
   };
 
+  const handleAdd = () => {
+    if (!formData.title.trim()) return;
+    
+    const newBook = {
+      id: Date.now().toString(),
+      title: formData.title,
+      author: formData.author,
+      year: formData.year,
+      isbn: formData.isbn,
+      size: formData.size,
+      format: formData.format,
+      language: formData.language,
+      category: selectedCategory,
+      subcategory: selectedSubcategory,
+      tags: selectedTags,
+      rating: rating,
+      notes: formData.notes,
+      position: { x: 0.1, y: 0.1, z: 0.1 },
+      rotation: { x: 0, y: 0, z: 0 },
+      scale: { "width": 0.3, "height": 0.44, "thickness": 0.07 },
+      cover: { 
+        front: coverPreview || "./books/learningweb.webp" 
+      },
+      dateAdded: new Date().toISOString()
+    };
+    
+    addBook(newBook);
+    
+    // Reset form after successful addition
+    setFormData({
+      title: '',
+      author: '',
+      year: '',
+      isbn: '',
+      size: '',
+      format: '',
+      language: 'English',
+      coverImage: null,
+      notes: ''
+    });
+    setCoverPreview(null);
+    setSelectedCategory('');
+    setSelectedSubcategory('');
+    setSelectedTags([]);
+    setRating(0);
+    setCurrentStep(0);
+  };
+
   const handleSubmit = () => {
-    alert('Book added successfully!');
-    console.log('Form data:', formData, 'Category:', selectedCategory, 'Subcategory:', selectedSubcategory, 'Tags:', selectedTags, 'Rating:', rating);
+    handleAdd();
+    // alert('Book added successfully!');
+    // setAdd(false);
+    toggleAdd();
   };
 
   return (
-    <div className="absolute w-screen top-0 left-0 z-1000 min-h-screen flex items-center justify-center p-4">
+    <div className="absolute w-screen top-0 left-0 z-1000 min-h-screen flex items-center justify-center p-4 ">
       <div className="w-full max-w-2xl">
         {/* Step Indicator */}
         <div className="flex justify-center items-center mb-12 space-x-2 bg-balck/50 rounded-full">

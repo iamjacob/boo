@@ -37,7 +37,7 @@ const Boooks = ({
           shelfRadius={6}
           otherBooks={books.filter((b) => b.id !== book.id)}
           id={book.id}
-          cover={book.cover.front}
+          cover={book.cover}
           selectedBook={selectedBook}
           setSelectedBook={setSelectedBook}
           drag={drag}

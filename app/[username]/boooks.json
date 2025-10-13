@@ -5,7 +5,13 @@
     "author": "Malcolm Gladwell",
     "categories": {
       "main": ["Social Sciences", "Economics & Business"],
-      "sub": ["Psychology", "Sociology", "Business", "decision making", "behavioral science"]
+      "sub": [
+        "Psychology",
+        "Sociology",
+        "Business",
+        "decision making",
+        "behavioral science"
+      ]
     },
     "tags": [
       "psychology",
@@ -32,7 +38,7 @@
     "tags": ["psychology", "sociology", "business"],
     "year": null,
     "pages": null,
-    "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
+    "scale": { "width": 0.3, "height": 0.44, "thickness": 0.07 },
     "position": { "x": -0.379287, "y": 1.5, "z": -6.488924 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
     "cover": { "front": "/covers/afvigere.webp" }
@@ -96,7 +102,7 @@
     "tags": ["security", "psychology", "hacking"],
     "year": null,
     "pages": null,
-    "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
+    "scale": { "width": 0.3, "height": 0.44, "thickness": 0.07 },
     "position": { "x": 1.103153, "y": -1.5, "z": -6.405705 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
     "cover": { "front": "/covers/social-engineering.webp" }
@@ -107,12 +113,28 @@
     "author": "Aynne Kokas",
     "categories": {
       "main": ["Science & Technology", "Social Sciences"],
-      "sub": ["Security", "Psychology", "Politics", "Data", "Privacy", "Surveillance", "Big Data"]
+      "sub": [
+        "Security",
+        "Psychology",
+        "Politics",
+        "Data",
+        "Privacy",
+        "Surveillance",
+        "Big Data"
+      ]
     },
-    "tags": ["security", "psychology", "politics", "data", "privacy", "surveillance", "big data"],
+    "tags": [
+      "security",
+      "psychology",
+      "politics",
+      "data",
+      "privacy",
+      "surveillance",
+      "big data"
+    ],
     "year": null,
     "pages": null,
-    "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
+    "scale": { "width": 0.3, "height": 0.44, "thickness": 0.07 },
     "position": { "x": 1.051364, "y": 1.5, "z": -6.414408 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
     "cover": { "front": "/covers/trafficking-data.webp" }
@@ -128,7 +150,7 @@
     "tags": ["psychology", "self-help", "business"],
     "year": null,
     "pages": null,
-    "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
+    "scale": { "width": 0.3, "height": 0.44, "thickness": 0.07 },
     "position": { "x": 1.520536, "y": -1.5, "z": -6.31965 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
     "cover": { "front": "/covers/think-again.webp" }
@@ -144,7 +166,7 @@
     "tags": ["biography", "privacy", "surveillance", "politics"],
     "year": null,
     "pages": null,
-    "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
+    "scale": { "width": 0.3, "height": 0.44, "thickness": 0.07 },
     "position": { "x": 1.389435, "y": -0.5, "z": -6.349761 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
     "cover": { "front": "/covers/permanent-record.webp" }
@@ -160,12 +182,12 @@
     "tags": ["blockchain", "cryptocurrency", "technology"],
     "year": null,
     "pages": null,
-    "scale": { "width": 0.30, "height": 0.44, "thickness": 0.07 },
+    "scale": { "width": 0.3, "height": 0.44, "thickness": 0.07 },
     "position": { "x": 1.856746, "y": -0.5, "z": -6.229165 },
     "rotation": { "x": 0, "y": 0, "z": 0 },
     "cover": { "front": "/covers/mastering-blockchain.webp" }
   },
-    {
+  {
     "id": "book-011",
     "title": "The Art of the impossible",
     "categories": {
@@ -177,10 +199,10 @@
     "year": null,
     "pages": null,
 
-    "scale": {"width":0.42, "height":0.55, "thickness":0.09},
-    "position": {"x":0.724871, "y":-0.43, "z":-6.459455},
-    "rotation": {"x":0, "y":0, "z":0},
-    "cover": {"front":"./covers/000.webp"}
+    "scale": { "width": 0.42, "height": 0.55, "thickness": 0.09 },
+    "position": { "x": 0.724871, "y": -0.43, "z": -6.459455 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "./covers/000.webp" }
   },
   {
     "id": "book-012",
@@ -193,10 +215,10 @@
     "tags": ["biography", "self-help", "motivation"],
     "year": null,
     "pages": null,
-    "scale": {"width":0.55, "height":0.7, "thickness":0.2},
-    "position": {"x":-0.178521, "y":-1.37, "z":-6.497548},
-    "rotation": {"x":0, "y":0, "z":0},
-    "cover": {"front":"./covers/111.webp"}
+    "scale": { "width": 0.55, "height": 0.7, "thickness": 0.2 },
+    "position": { "x": -0.178521, "y": -1.37, "z": -6.497548 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": { "front": "./covers/111.webp" }
   },
   {
     "id": "book-013",
@@ -209,10 +231,10 @@
     "tags": ["mental health", "self-help", "psychology"],
     "year": null,
     "pages": null,
-    "scale": {"width":0.4, "height":0.6, "thickness":0.15},
-    "position": {"x":0.504387, "y":-1.43, "z":-6.480401},
-    "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/444.webp"}
+    "scale": { "width": 0.4, "height": 0.6, "thickness": 0.15 },
+    "position": { "x": 0.504387, "y": -1.43, "z": -6.480401 },
+    "rotation": { "x": 0, "y": 2, "z": 0 },
+    "cover": { "front": "./covers/444.webp" }
   },
   {
     "id": "book-014",
@@ -225,10 +247,10 @@
     "tags": ["business", "entrepreneurship", "strategy"],
     "year": null,
     "pages": null,
-    "scale": {"width":0.4, "height":0.65, "thickness":0.18},
-    "position": {"x":-0.848035, "y":-1.43, "z":-6.444442},
-    "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/222.webp"}
+    "scale": { "width": 0.4, "height": 0.65, "thickness": 0.18 },
+    "position": { "x": -0.848035, "y": -1.43, "z": -6.444442 },
+    "rotation": { "x": 0, "y": 2, "z": 0 },
+    "cover": { "front": "./covers/222.webp" }
   },
   {
     "id": "book-015",
@@ -241,10 +263,10 @@
     "tags": ["history", "anthropology", "science"],
     "year": null,
     "pages": null,
-    "scale": {"width":0.4, "height":0.62, "thickness":0.2},
-    "position": {"x":-1.927214, "y":-0.41, "z":-6.207725},
-    "rotation": {"x":0, "y": 2, "z":0},
-    "cover": {"front":"./covers/333.webp"}
+    "scale": { "width": 0.4, "height": 0.62, "thickness": 0.2 },
+    "position": { "x": -1.927214, "y": -0.41, "z": -6.207725 },
+    "rotation": { "x": 0, "y": 2, "z": 0 },
+    "cover": { "front": "./covers/333.webp" }
   },
   {
     "id": "book-016",
@@ -257,10 +279,10 @@
     "tags": ["psychology", "self-help", "habits"],
     "year": null,
     "pages": null,
-    "scale": {"width":0.4, "height":0.71, "thickness":0.15},
-    "position": {"x":-0.786191, "y":0.57, "z":-6.452279},
-    "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/555.webp"}
+    "scale": { "width": 0.4, "height": 0.71, "thickness": 0.15 },
+    "position": { "x": -0.786191, "y": 0.57, "z": -6.452279 },
+    "rotation": { "x": 0, "y": 2, "z": 0 },
+    "cover": { "front": "./covers/555.webp" }
   },
   {
     "id": "book-017",
@@ -273,10 +295,10 @@
     "tags": ["business", "technology", "web development"],
     "year": null,
     "pages": null,
-    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
-    "position": {"x":0.039865, "y":0.655, "z":-6.499958},
-    "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/666.webp"}
+    "scale": { "width": 0.4, "height": 0.75, "thickness": 0.2 },
+    "position": { "x": 0.039865, "y": 0.655, "z": -6.499958 },
+    "rotation": { "x": 0, "y": 2, "z": 0 },
+    "cover": { "front": "./covers/666.webp" }
   },
   {
     "id": "book-018",
@@ -289,10 +311,10 @@
     "tags": ["business", "creativity", "management"],
     "year": null,
     "pages": null,
-    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
-    "position": {"x":-1.72178, "y":0.655, "z":-6.267813},
-    "rotation": {"x":0, "y": 2, "z":0},
-    "cover": {"front":"./covers/777.webp"}
+    "scale": { "width": 0.4, "height": 0.75, "thickness": 0.2 },
+    "position": { "x": -1.72178, "y": 0.655, "z": -6.267813 },
+    "rotation": { "x": 0, "y": 2, "z": 0 },
+    "cover": { "front": "./covers/777.webp" }
   },
   {
     "id": "book-019",
@@ -305,10 +327,10 @@
     "tags": ["behavioral economics", "psychology", "decision making"],
     "year": null,
     "pages": null,
-    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
-    "position": {"x":-1.373081, "y":-1.43, "z":-6.353318},
-    "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/888.webp"}
+    "scale": { "width": 0.4, "height": 0.75, "thickness": 0.2 },
+    "position": { "x": -1.373081, "y": -1.43, "z": -6.353318 },
+    "rotation": { "x": 0, "y": 2, "z": 0 },
+    "cover": { "front": "./covers/888.webp" }
   },
   {
     "id": "book-020",
@@ -321,10 +343,10 @@
     "tags": ["psychology", "self-help", "grit"],
     "year": null,
     "pages": null,
-    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
-    "position": {"x":-0.861802, "y":-0.43, "z":-6.442616},
-    "rotation": {"x":0, "y": 2, "z":0},
-    "cover": {"front":"./covers/999.webp"}
+    "scale": { "width": 0.4, "height": 0.75, "thickness": 0.2 },
+    "position": { "x": -0.861802, "y": -0.43, "z": -6.442616 },
+    "rotation": { "x": 0, "y": 2, "z": 0 },
+    "cover": { "front": "./covers/999.webp" }
   },
   {
     "id": "book-021",
@@ -337,10 +359,10 @@
     "tags": ["self-help", "personal development", "motivation"],
     "year": null,
     "pages": null,
-    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
-    "position": {"x":-1.489202, "y":-0.43, "z":-6.327107},
-    "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/101010.webp"}
+    "scale": { "width": 0.4, "height": 0.75, "thickness": 0.2 },
+    "position": { "x": -1.489202, "y": -0.43, "z": -6.327107 },
+    "rotation": { "x": 0, "y": 2, "z": 0 },
+    "cover": { "front": "./covers/101010.webp" }
   },
   {
     "id": "book-022",
@@ -353,12 +375,12 @@
     "tags": ["marketing", "psychology", "consumer behavior"],
     "year": null,
     "pages": null,
-    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
-    "position": {"x":-1.34512, "y":1.655, "z":-6.359296},
-    "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/111111.webp"}
+    "scale": { "width": 0.4, "height": 0.75, "thickness": 0.2 },
+    "position": { "x": -1.34512, "y": 1.655, "z": -6.359296 },
+    "rotation": { "x": 0, "y": 2, "z": 0 },
+    "cover": { "front": "./covers/111111.webp" }
   },
-    {
+  {
     "id": "book-023",
     "title": "Responsible JavaScript",
     "author": "Jeremy Wagner",
@@ -369,13 +391,12 @@
     "tags": ["javascript", "web development", "programming"],
     "year": null,
     "pages": null,
-    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
-    "position": {"x":-1.84528, "y":1.655, "z":-6.232571},
-    "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/responsible-js.webp"}
-  }
-  ,
-    {
+    "scale": { "width": 0.4, "height": 0.75, "thickness": 0.2 },
+    "position": { "x": -1.84528, "y": 1.655, "z": -6.232571 },
+    "rotation": { "x": 0, "y": 2, "z": 0 },
+    "cover": { "front": "./covers/responsible-js.webp" }
+  },
+  {
     "id": "book-024",
     "title": "eloquent javascript 3rd edition",
     "author": "Marijn Haverbeke",
@@ -386,13 +407,12 @@
     "tags": ["javascript", "web development", "programming"],
     "year": null,
     "pages": null,
-    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
-    "position": {"x":0.690422, "y":0.655, "z":-6.463228},
-    "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/elo-js-third-ed.webp"}
-  }
-   ,
-    {
+    "scale": { "width": 0.4, "height": 0.75, "thickness": 0.2 },
+    "position": { "x": 0.690422, "y": 0.655, "z": -6.463228 },
+    "rotation": { "x": 0, "y": 2, "z": 0 },
+    "cover": { "front": "./covers/elo-js-third-ed.webp" }
+  },
+  {
     "id": "book-025",
     "title": "Accesible UX",
     "author": "Regine Gilbert",
@@ -403,12 +423,12 @@
     "tags": ["design", "accessibility", "user experience"],
     "year": null,
     "pages": null,
-    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
-    "position": {"x":1.239148, "y":0.655, "z":-6.380792},
-    "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/accessible-ux.webp"}
+    "scale": { "width": 0.4, "height": 0.75, "thickness": 0.2 },
+    "position": { "x": 1.239148, "y": 0.655, "z": -6.380792 },
+    "rotation": { "x": 0, "y": 2, "z": 0 },
+    "cover": { "front": "./covers/accessible-ux.webp" }
   },
-    {
+  {
     "id": "book-026",
     "title": "Learning web design",
     "author": "Jennifer Niederst Robbins",
@@ -419,12 +439,12 @@
     "tags": ["web design", "user experience", "programming"],
     "year": null,
     "pages": null,
-    "scale": {"width":0.55, "height":0.77, "thickness":0.2},
-    "position": {"x":-1.242111, "y":0.655, "z":-6.380216},
-    "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/learningweb.webp"}
+    "scale": { "width": 0.55, "height": 0.77, "thickness": 0.2 },
+    "position": { "x": -1.242111, "y": 0.655, "z": -6.380216 },
+    "rotation": { "x": 0, "y": 2, "z": 0 },
+    "cover": { "front": "./covers/learningweb.webp" }
   },
-    {
+  {
     "id": "book-027",
     "title": "click",
     "author": "Poul Boag",
@@ -435,12 +455,12 @@
     "tags": ["design", "user experience", "psychology"],
     "year": null,
     "pages": null,
-    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
-    "position": {"x":-1.826509, "y":-1.345, "z":-6.238098},
-    "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/click-cover.webp"}
+    "scale": { "width": 0.4, "height": 0.75, "thickness": 0.2 },
+    "position": { "x": -1.826509, "y": -1.345, "z": -6.238098 },
+    "rotation": { "x": 0, "y": 2, "z": 0 },
+    "cover": { "front": "./covers/click-cover.webp" }
   },
-    {
+  {
     "id": "book-028",
     "title": "Designing Data-Intensive Applications",
     "author": "Martin Kleppmann",
@@ -451,12 +471,12 @@
     "tags": ["data", "databases", "distributed systems"],
     "year": null,
     "pages": null,
-    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
-    "position": {"x":-0.37393, "y":0.655, "z":-6.489235},
-    "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/DDIA.webp"}
+    "scale": { "width": 0.4, "height": 0.75, "thickness": 0.2 },
+    "position": { "x": -0.37393, "y": 0.655, "z": -6.489235 },
+    "rotation": { "x": 0, "y": 2, "z": 0 },
+    "cover": { "front": "./covers/DDIA.webp" }
   },
-    {
+  {
     "id": "book-029",
     "title": "eloquent javascript 4rd edition",
     "author": "Sun Tzu",
@@ -467,12 +487,12 @@
     "tags": ["javascript", "web development", "programming"],
     "year": null,
     "pages": null,
-    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
-    "position": {"x":1.89737, "y":0.655, "z":-6.216911},
-    "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/definitivejs.webp"}
+    "scale": { "width": 0.4, "height": 0.75, "thickness": 0.2 },
+    "position": { "x": 1.89737, "y": 0.655, "z": -6.216911 },
+    "rotation": { "x": 0, "y": 2, "z": 0 },
+    "cover": { "front": "./covers/definitivejs.webp" }
   },
-    {
+  {
     "id": "book-030",
     "title": "Distributed systems with node.js",
     "author": "unknown",
@@ -483,12 +503,12 @@
     "tags": ["distributed systems", "node.js", "programming"],
     "year": null,
     "pages": null,
-    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
-    "position": {"x":0.150142, "y":-0.345, "z":-6.498266},
-    "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/distributed.webp"}
+    "scale": { "width": 0.4, "height": 0.75, "thickness": 0.2 },
+    "position": { "x": 0.150142, "y": -0.345, "z": -6.498266 },
+    "rotation": { "x": 0, "y": 2, "z": 0 },
+    "cover": { "front": "./covers/distributed.webp" }
   },
-    {
+  {
     "id": "book-031",
     "title": "hands on machine learning",
     "author": "Aurelien Geron",
@@ -499,9 +519,35 @@
     "tags": ["machine learning", "artificial intelligence", "data science"],
     "year": null,
     "pages": null,
-    "scale": {"width":0.4, "height":0.75, "thickness":0.2},
-    "position": {"x":-0.415756, "y":-0.345, "z":-6.48669},
-    "rotation": {"x":0, "y":2, "z":0},
-    "cover": {"front":"./covers/handsonmachine.webp"}
+    "scale": { "width": 0.4, "height": 0.75, "thickness": 0.2 },
+    "position": { "x": -0.415756, "y": -0.345, "z": -6.48669 },
+    "rotation": { "x": 0, "y": 2, "z": 0 },
+    "cover": { "front": "./covers/handsonmachine.webp" }
+  },
+  {
+    "id": "book-032",
+    "title": "Mit liv med fangekoret",
+    "author": "Louise Adrian",
+    "categories": {
+      "main": [
+        "Biography",
+        "True Stories",
+        "History & Culture",
+        "Social Sciences"
+      ],
+      "sub": ["prison", "music", "personal development", "motivation"]
+    },
+    "tags": ["prison", "music", "personal development", "motivation"],
+    "year": null,
+    "pages": 220,
+    "scale": { "width": 0.4, "height": 0.55, "thickness": 0.05 },
+    "position": { "x": 1.884189, "y": 1.655, "z": -6.220919 },
+    "rotation": { "x": 0, "y": 0, "z": 0 },
+    "cover": {
+      "front": "./blockchain/m/i/mit_liv_med_fangekoret-00000001/cover/front.webp",
+      "back": "./blockchain/m/i/mit_liv_med_fangekoret-00000001/cover/back.webp",
+      "spine": "./blockchain/m/i/mit_liv_med_fangekoret-00000001/cover/spine.webp"
+    },
+    "pdf": "./blockchain/m/i/mit_liv_med_fangekoret-00000001/mit_liv_med_fangekoret-00000001.pdf"
   }
 ]

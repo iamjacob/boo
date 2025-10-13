@@ -164,6 +164,8 @@ export const useBookDrag = ({
           ease: "power4.out",
           overwrite: true,
           onComplete: () => {
+            const { x, y, z } = meshRef.current.position;
+      console.log('Book position on pointer leave:', x, y, z);
             if (onSave) onSave(); // Save both position and rotation changes
           },
         });

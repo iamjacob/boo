@@ -441,7 +441,7 @@ export default function BookForm() {
                 </div>
               </div>
 
-              {/* Tags */}
+              {/* Tags 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-3">Tags (optional)</label>
                 <div className="flex flex-wrap gap-2 mb-3">
@@ -460,7 +460,7 @@ export default function BookForm() {
                   ))}
                 </div>
 
-                {/* Custom Tag Input */}
+                {/* Custom Tag Input 
                 <div className="flex gap-2 mb-4">
                   <input
                     type="text"
@@ -478,7 +478,7 @@ export default function BookForm() {
                   </button>
                 </div>
 
-                {/* Selected Tags */}
+                {/* Selected Tags 
                 {selectedTags.length > 0 && (
                   <div className="flex flex-wrap gap-2 p-3 bg-gray-50 rounded-lg border border-gray-200">
                     {selectedTags.map(tag => (
@@ -492,6 +492,7 @@ export default function BookForm() {
                   </div>
                 )}
               </div>
+                */}
 
               <div className="flex justify-between mt-8">
                 <button

@@ -1,0 +1,141 @@
+{
+  "version": "1.0.0",
+  "name": "Boooks Master Scan System",
+  "description": "Full hierarchical structure for scanning, labeling, and analyzing books in physical and digital formats.",
+  "phases": [
+    {
+      "id": "outerShell",
+      "name": "Outer Shell",
+      "description": "All external parts of the book before it opens.",
+      "children": [
+        {
+          "id": "dustJacket",
+          "name": "Dust Jacket",
+          "optional": true,
+          "description": "Removable paper jacket around hardcovers; may include flaps.",
+          "children": [
+            { "id": "dj_front", "name": "Front", "description": "Front cover of the dust jacket" },
+            { "id": "dj_spine", "name": "Spine", "description": "Spine section of the dust jacket" },
+            { "id": "dj_back", "name": "Back", "description": "Back cover of the dust jacket" },
+            { "id": "dj_flap_front", "name": "Front Flap", "optional": true, "description": "Inner folded flap, often with summary or reviews" },
+            { "id": "dj_flap_back", "name": "Back Flap", "optional": true, "description": "Inner folded flap, often with author bio or publisher info" },
+            { "id": "dj_inner_surface", "name": "Inner Surface", "optional": true, "description": "The inside of the dust jacket (if scanned flat)" }
+          ]
+        },
+        {
+          "id": "cover",
+          "name": "Book Cover",
+          "description": "Main outer layer (hardcover or softcover). May include built-in French flaps.",
+          "children": [
+            { "id": "cover_front", "name": "Front Cover", "description": "Visible when book is closed, usually with title & art" },
+            { "id": "cover_spine", "name": "Spine", "description": "Vertical edge with title and publisher logo" },
+            { "id": "cover_back", "name": "Back Cover", "description": "Contains summary, barcode, or blurbs" },
+            { "id": "cover_flap_front", "name": "Front Flap (French)", "optional": true, "description": "Folded-in extension on front cover" },
+            { "id": "cover_flap_back", "name": "Back Flap (French)", "optional": true, "description": "Folded-in extension on back cover" },
+            { "id": "cover_inner_surface", "name": "Inside Cover Surface", "optional": true, "description": "Inside part of the front/back cover board" }
+          ]
+        },
+        {
+          "id": "barcode",
+          "name": "Barcode / ISBN Zone",
+          "description": "Barcode, ISBN, or price tag usually located on back cover or jacket."
+        },
+        {
+          "id": "edges",
+          "name": "Page Edges",
+          "optional": true,
+          "description": "Sides of the closed book (top, side, bottom) — may contain color, pattern, or gilding."
+        },
+        {
+          "id": "dimensions",
+          "name": "Dimensions",
+          "description": "Measurements: height, width, and spine thickness. Supports custom calibration paths.",
+          "custom": {
+            "unit": "mm",
+            "calibrationPath": "system/camera/calibration.json",
+            "fields": [
+              { "id": "height", "label": "Height", "type": "float" },
+              { "id": "width", "label": "Width", "type": "float" },
+              { "id": "spine", "label": "Spine Thickness", "type": "float" },
+              { "id": "diagonal", "label": "Diagonal (optional)", "type": "float" },
+              { "id": "scaleReference", "label": "Calibration Path", "type": "string", "optional": true }
+            ]
+          }
+        },
+        {
+          "id": "weight",
+          "name": "Weight",
+          "optional": true,
+          "description": "Book weight in grams, if measured or scanned via scale module."
+        }
+      ]
+    },
+
+    {
+      "id": "innerContent",
+      "name": "Inner Content",
+      "description": "Scanned content inside the book, from endpapers to last page.",
+      "children": [
+        { "id": "endpaper_front", "name": "Front Endpaper", "optional": true, "description": "Decorative or blank page glued to the cover" },
+        { "id": "flyleaf_front", "name": "Front Flyleaf", "optional": true, "description": "Blank page before the title page" },
+        { "id": "titlepage", "name": "Title Page", "description": "Shows title, author, and publisher" },
+        { "id": "copyright", "name": "Copyright Page", "description": "Legal information and edition details" },
+        { "id": "dedication", "name": "Dedication / Epigraph", "optional": true },
+        { "id": "foreword", "name": "Foreword / Preface", "optional": true },
+        { "id": "introduction", "name": "Introduction" },
+        { "id": "toc", "name": "Table of Contents" },
+        {
+          "id": "mainContent",
+          "name": "Main Content",
+          "description": "Core body of the book",
+          "children": [
+            { "id": "chapter", "name": "Chapters", "description": "Individual chapters, typically multiple scans" },
+            { "id": "illustrations", "name": "Illustrations / Images", "optional": true },
+            { "id": "tables", "name": "Tables / Figures", "optional": true },
+            { "id": "footnotes", "name": "Footnotes", "optional": true }
+          ]
+        },
+        { "id": "index", "name": "Index" },
+        { "id": "appendix", "name": "Appendix / Notes", "optional": true },
+        { "id": "bibliography", "name": "Bibliography / References", "optional": true },
+        { "id": "colophon", "name": "Colophon / Printer Info", "optional": true },
+        { "id": "endpaper_back", "name": "Back Endpaper", "optional": true },
+        { "id": "flyleaf_back", "name": "Back Flyleaf", "optional": true },
+        { "id": "page_count", "name": "Total Page Count" }
+      ]
+    },
+
+    {
+      "id": "metadata",
+      "name": "Metadata & Quality",
+      "description": "Derived information and quality metrics.",
+      "children": [
+        { "id": "language", "name": "Language Detection", "description": "Auto-detect text language(s)" },
+        { "id": "ocr_quality", "name": "OCR Quality Check", "description": "Evaluate text extraction accuracy" },
+        { "id": "color_profile", "name": "Color Profile / White Balance", "optional": true },
+        { "id": "lighting", "name": "Lighting Quality", "optional": true },
+        { "id": "focus", "name": "Focus / Sharpness Check", "optional": true },
+        { "id": "condition", "name": "Physical Condition", "optional": true, "description": "Detect tears, folds, or dirt" },
+        { "id": "reScan", "name": "Re-scan / Stitching Pass", "optional": true, "description": "Enhance scan resolution or correct warps" },
+        { "id": "orientation", "name": "Page Orientation", "description": "Detect and correct rotation/skew" },
+        { "id": "alignment", "name": "Page Alignment Consistency", "optional": true },
+        { "id": "checksum", "name": "Scan Integrity Hash", "description": "Verify file consistency (for blockchain)" }
+      ]
+    },
+
+    {
+      "id": "advanced",
+      "name": "Advanced AI / Archival",
+      "description": "Extended scanning and semantic layers.",
+      "children": [
+        { "id": "text_embedding", "name": "Text Embedding", "description": "Generate vector representations for search" },
+        { "id": "semantic_chapters", "name": "Semantic Chapter Segmentation", "description": "AI-based split by meaning rather than page breaks" },
+        { "id": "image_captioning", "name": "Image Captioning", "optional": true },
+        { "id": "language_translation", "name": "Auto Translation", "optional": true },
+        { "id": "summarization", "name": "AI Summaries", "optional": true },
+        { "id": "crosslink", "name": "Crosslink References", "optional": true },
+        { "id": "metadata_sync", "name": "Metadata Blockchain Sync", "description": "Commit scan hashes to blockchain" }
+      ]
+    }
+  ]
+}

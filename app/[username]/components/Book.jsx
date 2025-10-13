@@ -401,6 +401,13 @@ const Book = forwardRef(
       bookInfoWasOpenRef.current = isOpenForThisBook;
     }, [bookInfoSelectedBook, bookID, initialPosition]);
 
+    // Set initial position
+    useEffect(() => {
+      if (meshRef.current) {
+        meshRef.current.position.copy(positionRef.current);
+      }
+    }, []);
+
     // Book opening/closing effects
     useEffect(() => {
       // If this book was open and is now closed, animate back
@@ -495,10 +502,36 @@ const Book = forwardRef(
       isDragging ? "grabbing" : "grab"
     );
 
+    // Normalize cover object to ensure front, back, spine are set
+
+    const normalizePath = (path) => {
+      if (!path) return "./test.png";
+      return path.startsWith('./covers/') ? path.replace('./covers/', '/covers/') : path;
+    };
+    const normalizeCoverObject = (coverInput) => {
+      // If cover is a string, use it for all sides
+      if (typeof coverInput === 'string') {
+        const norm = normalizePath(coverInput);
+        return {
+          front: norm,
+          back: norm,
+          spine: norm,
+        };
+      }
+      // If cover is an object, normalize each side
+      return {
+        front: normalizePath(coverInput?.front || "./test.png"),
+        back: normalizePath(coverInput?.back || coverInput?.front || "./test.png"),
+        spine: normalizePath(coverInput?.spine || coverInput?.front || "./test.png"),
+      };
+    };
+
+    const normalizedCover = useMemo(() => normalizeCoverObject(cover), [cover]);
+
     // Use the optimized materials hook with caching
     const { materials, isLoading, texturesLoaded, bookColor } = useBookMaterials(
-      cover, 
-      initialPosition, 
+      normalizedCover,
+      initialPosition,
       id || bookID
     );
 
@@ -566,7 +599,6 @@ const Book = forwardRef(
             onContextMenu: handleContextMenu
           })}
           scale={scale}
-          position={positionRef.current}
           rotation={rotationRef.current}
           onPointerEnter={() => {
             if (shouldEnableDrag) {

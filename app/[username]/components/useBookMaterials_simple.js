@@ -31,19 +31,20 @@ export const useBookMaterials = (cover, initialPosition, bookID) => {
     return LOADING_COLORS[positionHash % LOADING_COLORS.length];
   }, [initialPosition]);
 
-  // ⭐ Normalize cover path to WebP format
-  const normalizedCover = useMemo(() => normalizeImagePath(cover), [cover]);
-  
-//   console.log(`🖼️ Book ${bookID || 'NO-ID'} loading cover: ${cover} → ${normalizedCover}`);
+  // Ensure cover is an object with front/back/spine
+  const getSide = (side) => {
+    if (!cover || typeof cover !== 'object') return undefined;
+    return normalizeImagePath(cover[side]);
+  };
 
-  // 📦 Load textures using the working useSafeLoader
+  // 📦 Load textures for each side
   const textures = [
-    useSafeLoader("./books/booktextureRotated.webp"),
-    useSafeLoader(normalizedCover || "./covers/000.webp"),
-    useSafeLoader("./books/booktexture.webp"),
-    useSafeLoader("./books/booktexture.webp"),
-    useSafeLoader(normalizedCover || "./covers/000.webp"),
-    useSafeLoader(normalizedCover || "./covers/000.webp"),
+    useSafeLoader("./books/booktextureRotated.webp"), // top
+    useSafeLoader(getSide('front') || "./covers/000.webp"), // front
+    useSafeLoader("./books/booktexture.webp"), // bottom
+    useSafeLoader(getSide('spine') || "./covers/000.webp"), // spine
+    useSafeLoader(getSide('back') || "./covers/000.webp"), // back
+    useSafeLoader(getSide('front') || "./covers/000.webp"), // right (repeat front)
   ];
 
   // 🎭 Loading materials (wireframe while textures load)

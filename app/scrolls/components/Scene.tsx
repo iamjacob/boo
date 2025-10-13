@@ -31,7 +31,7 @@ export function Scene({ id }: { id: string }) {
         gyroRotation.current.y = event.gamma * 0.01;
         if (!hasOrientation) setHasOrientation(true);
       }
-    };
+    }
 
     const handleKeyPress = (event: KeyboardEvent) => {
       if (event.key.toLowerCase() === 'p') {
@@ -115,11 +115,12 @@ export function Scene({ id }: { id: string }) {
       </mesh> */}
       {/* Floating UI */}
       <Html translate='yes'
-        className={`relative z-[50000] flex gap-4 text-center items-center touch-auto  ${isMobile ? "h-[40px] w-[320px] flex-row right-[-165px] bottom-[-235px]" : "w-[40px] h-[320px] flex-col right-[-200px] top-[-140px]"} `}
+        className={`relative z-[50000] flex gap-4 text-center items-center touch-auto  ${isMobile ? "h-[40px] w-[320px] flex-row right-[-165px] bottom-[-255px]" : "w-[40px] h-[320px] flex-col right-[-200px] top-[-140px]"} `}
         style={{ pointerEvents: "none" }} // Prevent blocking clicks on 3D scene
       >
           <button
             title='heart'
+            className='rotate-[-45deg] cursor-pointer'
             style={{ pointerEvents: "auto" }}
             onClick={() => console.log("Heart clicked")}
           >

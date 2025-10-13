@@ -5,6 +5,7 @@ import BoooksHeart from "../BoooksHeart";
 // import FullScreen from "../Fullscreen";
 import { useMenuStore } from "../../stores/useMenuStore";
 import { useLevelStore } from "../../stores/useLevelStore";
+import { useBookInfoStore } from "../../stores/useBookInfoStore";
 
 const BottomNav = () => {
   const [share, setShare] = useState(false);
@@ -37,6 +38,8 @@ const BottomNav = () => {
 
   const { levelUp, level, levelDown } = useLevelStore();
 
+  const { showBookInfo } = useBookInfoStore();
+
   // Load profile data
   useEffect(() => {
     const loadProfileData = async () => {
@@ -54,10 +57,12 @@ const BottomNav = () => {
     }
   }, [profileOpen, profileData]);
 
+  if (showBookInfo) return null;
+
   return (
     <>
       <div
-        className={`absolute z-50 right-0 w-screen left-0 flex justify-center items-center ${
+        className={`absolute z-1000 right-0 w-screen left-0 flex justify-center items-center ${
           filter || dnaTimeline ? "bottom-[80px]" : "bottom-1"
         } transition-all duration-500 ease-in-out`}
       >

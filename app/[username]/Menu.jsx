@@ -2,7 +2,6 @@ import React, { useRef } from 'react'
 import { useMenuStore } from "../../stores/useMenuStore";
 import { useBooksStore } from "../../stores/useBooksStore";
 import { useCameraStore } from "../../stores/useCameraStore";
-import gsap from "gsap";
 
 export const Menu = ({ resetCamera }) => {
   const { toggleProfile, profileOpen } = useMenuStore();

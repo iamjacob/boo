@@ -375,7 +375,9 @@ export const Experience = ({
         {/* <CameraIntro /> */}
       </Canvas>
 
+      {!drag && (
       <Menu drag={drag} setDrag={setDrag} resetCamera={resetCamera} />
+      )}
 
      {activeOpenBook && <BookMenu />}
 

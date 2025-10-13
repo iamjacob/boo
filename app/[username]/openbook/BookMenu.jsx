@@ -88,7 +88,7 @@ const BookMenu = () => {
             </svg>
           )}
         </button>
-        <button
+        {/* <button
           className="p-2 bg-black/80 backdrop-blur-md text-white rounded-full border border-white/30 hover:bg-white/20 transition-all duration-200"
           title="More Options"
         >
@@ -108,7 +108,7 @@ const BookMenu = () => {
             <circle cx="12" cy="5" r="1" />
             <circle cx="12" cy="19" r="1" />
           </svg>
-        </button>
+        </button> */}
 
         {/* Right Controls - Close Button */}
         <button

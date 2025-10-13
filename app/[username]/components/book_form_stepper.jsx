@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Upload, ChevronRight, Check, Plus, Link, X } from 'lucide-react';
+import { Upload, Check, Plus, Link, X } from 'lucide-react';
 import { useBooksStore } from '../../../stores/useBooksStore'
 import { useMenuStore } from '../../../stores/useMenuStore'
 
@@ -7,6 +7,10 @@ import { useMenuStore } from '../../../stores/useMenuStore'
 export default function BookForm() {
   const addBook = useBooksStore((s) => s.addBook);
   const { toggleAdd } = useMenuStore();
+  const addState = useMenuStore((s) => s.add);
+
+  // Debug logging
+  console.log('BookForm render - addState:', addState);
 
   const [currentStep, setCurrentStep] = useState(0);
   const [coverPreview, setCoverPreview] = useState(null);
@@ -35,13 +39,13 @@ export default function BookForm() {
   ];
 
   const categories = {
-    '🎨 Arts & Humanities': ['Literature & Poetry', 'Philosophy', 'Religion & Spirituality', 'History & Culture', 'Languages'],
-    '🌍 Social Sciences': ['Psychology', 'Sociology', 'Anthropology', 'Political Science', 'Economics & Business', 'Education'],
-    '🔬 Science & Technology': ['Natural Sciences', 'Mathematics', 'Computer Science & AI', 'Engineering & Architecture', 'Medicine & Health'],
-    '🧩 Practical Life': ['Self-Improvement', 'Motivation & Habits', 'Relationships', 'Career & Productivity', 'Lifestyle'],
-    '👤 Biographies': ['Historical Figures', 'Celebrities', 'Activists & Leaders', 'Memoirs'],
-    '🎭 Arts & Creativity': ['Visual Arts', 'Music', 'Theater & Film', 'Design & Architecture', 'Creative Process'],
-    '📖 Fiction': ['Fantasy', 'Sci-Fi', 'Mystery', 'Thriller', 'Romance', 'Classics', 'Short Stories', 'Children\'s & YA']
+    'Arts & Humanities': ['Literature & Poetry', 'Philosophy', 'Religion & Spirituality', 'History & Culture', 'Languages'],
+    'Social Sciences': ['Psychology', 'Sociology', 'Anthropology', 'Political Science', 'Economics & Business', 'Education'],
+    'Science & Technology': ['Natural Sciences', 'Mathematics', 'Computer Science & AI', 'Engineering & Architecture', 'Medicine & Health'],
+    'Practical Life': ['Self-Improvement', 'Motivation & Habits', 'Relationships', 'Career & Productivity', 'Lifestyle'],
+    'Biographies': ['Historical Figures', 'Celebrities', 'Activists & Leaders', 'Memoirs'],
+    'Arts & Creativity': ['Visual Arts', 'Music', 'Theater & Film', 'Design & Architecture', 'Creative Process'],
+    'Fiction': ['Fantasy', 'Sci-Fi', 'Mystery', 'Thriller', 'Romance', 'Classics', 'Short Stories', 'Children\'s & YA']
   };
 
   const popularTags = [
@@ -160,34 +164,22 @@ export default function BookForm() {
   };
 
   return (
-    <div className="absolute w-screen top-0 left-0 z-1000 min-h-screen flex items-center justify-center p-4 ">
+    <div className="absolute w-screen top-0 left-0 z-50 h-screen flex items-center justify-center p-4 ">
       <div className="w-full max-w-2xl">
-        {/* Step Indicator */}
-        <div className="flex justify-center items-center mb-12 space-x-2 bg-balck/50 rounded-full">
-          {steps.map((step, index) => (
-            <React.Fragment key={step.id}>
-              <div className={`flex flex-col items-center transition-all ${index === currentStep ? 'scale-110' : ''}`}>
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium transition-all ${
-                  index < currentStep 
-                    ? 'bg-gray-900 text-white' 
-                    : index === currentStep 
-                    ? 'bg-gray-900 text-white' 
-                    : 'bg-gray-200 text-gray-400'
-                }`}>
-                  {index < currentStep ? '✓' : index + 1}
-                </div>
-                <span className={`text-xs mt-1 ${index === currentStep ? 'text-gray-900 font-medium' : 'text-gray-400'}`}>
-                  {step.name}
-                </span>
-              </div>
-              {index < steps.length - 1 && (
-                <div className={`w-12 h-px mb-4 ${
-                  index < currentStep ? 'bg-gray-900' : 'bg-gray-200'
-                }`} />
-              )}
-            </React.Fragment>
-          ))}
-        </div>
+        {/* Overlay */}
+
+        <button 
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('Close button clicked'); // Debug log
+            toggleAdd();
+          }}
+          className="absolute top-4 right-4 z-10 bg-white hover:bg-gray-100 border border-gray-200 rounded-lg px-4 py-2 text-gray-700 font-medium shadow-sm transition-all"
+        >
+          ✕ Close
+        </button>
+       
 
         {/* Main Card */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-200">
@@ -438,6 +430,9 @@ export default function BookForm() {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           strokeWidth={star <= rating ? 0 : 2}
+                          fill={star <= rating ? 'currentColor' : 'none'}
+                          // d="M131.4 108.6c-5.5 17.5-21.6 27.5-44.3 27.5q-0.6 0-1.3 0l-59.5-1.2c-3.2 0-5.7-2.7-5.7-5.9v-3.6c0-15.5 0.1-75.9 0.1-83.3 0-11.4 5.5-20.8 15.5-26.5 11.9-6.7 28.3-6.8 39-0.4 8.5 5.1 13.3 13.3 13.6 23 0.2 5.3-1 10.9-3.4 16.3 10.9-1.6 21.6 0.9 31.1 7.3 13.7 9.2 20.3 29.7 14.9 46.8zm-54.3-70c-0.2-5.8-2.9-10.2-7.9-13.3-7.3-4.3-18.9-4.1-27.2 0.6-4.3 2.4-9.5 7.2-9.5 16.2 0 6.9-0.1 60.6-0.2 80v1.2l53.7 1.1q0.6 0 1.2 0c17.4 0 29.1-6.9 33-19.3 3.8-12.2-0.8-27.2-10.3-33.6-18-12-35.2-1.5-38.5 0.7q-0.4 0.2-0.8 0.5c-2.6 1.9-6.2 1.3-8.1-1.3-1.9-2.6-1.3-6.2 1.2-8.2q0.1-0.1 0.9-0.6c7.5-5.5 12.8-15.6 12.5-24z"
+                          
                           d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"
                         />
                       </svg>
@@ -605,6 +600,46 @@ export default function BookForm() {
               </div>
             </div>
           )}
+        </div>
+        <div class="cover">
+<div class="back">
+</div>
+<div class="spine">
+</div>
+<div class="front">
+</div>
+</div>
+
+        {/* Step Indicator */}
+        <div className="flex justify-center items-center mb-12 space-x-2 bg-balck/50 rounded-full">
+          {steps.map((step, index) => (
+            <React.Fragment key={step.id}>
+              <div className={`flex flex-col items-center transition-all ${index === currentStep ? 'scale-110' : ''}`}>
+                <div className={`w-fit h-8 px-2 rounded-[4px] flex items-center justify-center text-sm font-medium transition-all ${
+                  index < currentStep 
+                    ? 'bg-gray-200 text-white' 
+                    : index === currentStep 
+                    ? 'bg-gray-300 text-white' 
+                    : 'bg-gray-200 text-gray-400'
+                }`}>
+                   <span className={`text-xs ${index === currentStep ? 'text-gray-900 font-medium' : 'text-gray-400'}`}>
+                  {step.name}
+                </span>
+
+                  {index < currentStep && '✓' }
+                  {/* {index < currentStep ? '✓' : index + 1} */}
+                </div>
+                {/* <span className={`text-xs mt-1 ${index === currentStep ? 'text-gray-900 font-medium' : 'text-gray-400'}`}>
+                  {step.name}
+                </span> */}
+              </div>
+              {index < steps.length - 1 && (
+                <div className={`w-8 h-px ${
+                  index < currentStep ? 'bg-gray-900' : 'bg-gray-400'
+                }`} />
+              )}
+            </React.Fragment>
+          ))}
         </div>
       </div>
     </div>

@@ -64,6 +64,9 @@ const Book = forwardRef(
     // Current place tracking
     const currentPlace = useRef("home");
 
+    // Track if book info was open for this book
+    const bookInfoWasOpenRef = useRef(false);
+
     const {
       openBookId,
       setBookObject,
@@ -76,7 +79,7 @@ const Book = forwardRef(
       setLoadingBookId,
       setOpenBookId,
     } = useOpenBookStore();
-    const { toggleBookInfo } = useBookInfoStore();
+    const { toggleBookInfo, selectedBook: bookInfoSelectedBook } = useBookInfoStore();
 
     // Refs for position and rotation
     const positionRef = useRef(new THREE.Vector3(...initialPosition));
@@ -378,6 +381,26 @@ const Book = forwardRef(
       }
     }, [selectedBook, bookID, scale]);
 
+    // Handle book info open/close animations
+    useEffect(() => {
+      const isOpenForThisBook = bookInfoSelectedBook?.id === bookID;
+      
+      if (bookInfoWasOpenRef.current && !isOpenForThisBook) {
+        // Book info was closed for this book, animate back to shelf
+        gsap.killTweensOf(meshRef.current.position);
+        gsap.to(meshRef.current.position, {
+          z: initialPosition[2],
+          x: initialPosition[0],
+          y: initialPosition[1],
+          duration: 1,
+          ease: "power3.out",
+          onComplete: () => positionRef.current.copy(meshRef.current.position)
+        });
+      }
+      
+      bookInfoWasOpenRef.current = isOpenForThisBook;
+    }, [bookInfoSelectedBook, bookID, initialPosition]);
+
     // Book opening/closing effects
     useEffect(() => {
       // If this book was open and is now closed, animate back
@@ -511,6 +534,18 @@ const Book = forwardRef(
                   // Only show book info if long press wasn't triggered
                   if (!longPressTriggered.current) {
                     toggleBookInfo(bookObject);
+
+                    //gsap the 3d book to fly out
+                    gsap.killTweensOf(meshRef.current.position);
+                    gsap.to(meshRef.current.position, {
+                      z: 0,
+                      x: 0,
+                      y: 0,
+                      duration: 1,
+                      ease: "power3.out",
+                      onComplete: () => positionRef.current.copy(meshRef.current.position)
+                    });
+
                     console.log("📖 Showing book info - no long press detected");
                   } else {
                     console.log("🚫 Book info blocked - long press was detected");

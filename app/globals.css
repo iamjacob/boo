@@ -424,3 +424,45 @@ transform: translateX(0px);
     padding: 8px 12px;
   }
 }
+
+
+
+/*
+THIS IS FOR BOOK UPLOAD FORM
+*/
+
+
+.cover{
+	/* outline:1px solid gray; */
+	border-radius:5px;
+	display:flex;
+	height:70px;
+  display: flex;
+  justify-content: center;
+	/* padding:64px; */
+}
+
+.back,.spine,.front{
+	height:62px;
+	margin:4px;
+	overflow:hidden;
+}
+
+.back{
+	outline:2px solid gray;
+	width:60px;
+	transform: matrix3d(1, 0.2, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+}
+
+.spine{
+	outline:2px solid gray;
+	width:12px;
+  margin-bottom: 12px;
+	transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 20, 0, 1) translateY(-12px);
+}
+
+.front{
+	outline:2px solid gray;
+	width:50px;
+	transform: matrix3d(1, -0.2, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+}

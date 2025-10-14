@@ -4,7 +4,7 @@ import { Html } from "@react-three/drei";
 import { useRef, useEffect, useState } from "react";
 import { Mesh } from "three";
 
-export function Scene({ id }: { id: string }) {
+export function Scene({ id, active = true }: { id: string, active?: boolean }) {
   const meshRef = useRef<Mesh>(null);
   const { pointer } = useThree();
   const [hasOrientation, setHasOrientation] = useState(false);
@@ -60,7 +60,7 @@ export function Scene({ id }: { id: string }) {
   }, []);
 
   useFrame((state) => {
-    if (!meshRef.current) return;
+    if (!active || !meshRef.current) return;
 
     // Update mouse rotation
     mouseRotation.current.x +=

@@ -15,6 +15,8 @@ function App() {
   const [isDragging, setIsDragging] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
   const [activeButton, setActiveButton] = useState<'up' | 'down' | null>(null);
+  // New state to block scroll when modal/portal is open
+  const [isActiveModal, setIsActiveModal] = useState(false);
 
   // Handle initial URL and popstate
   useEffect(() => {
@@ -48,7 +50,7 @@ function App() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (isNavigating) return;
+      if (isNavigating || isActiveModal) return;
       if (e.key === 'ArrowUp') {
         setActiveButton('up');
         navigateShort('down');
@@ -63,7 +65,7 @@ function App() {
     };
 
     const handleWheel = (e: WheelEvent) => {
-      if (isNavigating) return;
+      if (isNavigating || isActiveModal) return;
       if (e.deltaY < 0 && currentIndex > 0) {
         setActiveButton('up');
         navigateShort('down');
@@ -84,16 +86,16 @@ function App() {
       window.removeEventListener('keyup', handleKeyUp);
       window.removeEventListener('wheel', handleWheel);
     };
-  }, [currentIndex, isNavigating]);
+  }, [currentIndex, isNavigating, isActiveModal]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
-    if (isNavigating) return;
+    if (isNavigating || isActiveModal) return;
     setTouchStart(e.targetTouches[0].clientY);
     setIsDragging(true);
   };
 
   const handleTouchMove = (e: React.TouchEvent) => {
-    if (!touchStart || isNavigating) return;
+    if (!touchStart || isNavigating || isActiveModal) return;
     setTouchEnd(e.targetTouches[0].clientY);
     const currentDrag = e.targetTouches[0].clientY - touchStart;
     setDragOffset(currentDrag);
@@ -200,7 +202,7 @@ function App() {
                 </div>
               }> */}
                 
-                <Short sceneId={history[currentIndex].id} />
+                <Short sceneId={scene.id} active={scene.offset === 0} />
                 {/* <Short sceneId={scene.id} /> */}
               {/* </Suspense> */}
             </div>

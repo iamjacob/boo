@@ -4,7 +4,7 @@ import * as THREE from "three";
 import { useThree, useFrame } from "@react-three/fiber";
 
 // A helper component for a spot light
-export function SpotLightHelperComponent({ lightRef, scaleFactor = 2 }) {
+export function SpotLightHelperComponent({ lightRef, scaleFactor = 2, active = true }) {
   const { scene } = useThree();
   const helperRef = useRef();
 
@@ -25,6 +25,7 @@ export function SpotLightHelperComponent({ lightRef, scaleFactor = 2 }) {
   }, [lightRef, scene, scaleFactor]);
 
   useFrame(() => {
+    if (!active) return;
     if (helperRef.current) {
       helperRef.current.update();
     }
@@ -34,7 +35,7 @@ export function SpotLightHelperComponent({ lightRef, scaleFactor = 2 }) {
 }
 
 // A helper component for a directional light
-export function DirectionalLightHelperComponent({ lightRef, size = 10 }) {
+export function DirectionalLightHelperComponent({ lightRef, size = 10, active = true }) {
   const { scene } = useThree();
   const helperRef = useRef();
 
@@ -57,6 +58,7 @@ export function DirectionalLightHelperComponent({ lightRef, size = 10 }) {
   }, [lightRef, scene, size]);
 
   useFrame(() => {
+    if (!active) return;
     if (helperRef.current) {
       helperRef.current.update();
     }

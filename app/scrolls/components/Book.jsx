@@ -1,6 +1,6 @@
-import React, { useRef, useMemo } from "react";
+import React, { useRef, useMemo, useEffect } from "react";
 import * as THREE from "three";
-import { useLoader } from "@react-three/fiber";
+import { useLoader, useThree } from "@react-three/fiber";
 
 const Book = ({ book, scale = [0.5, 0.7, 0.15], position = [0, 0, 0] }) => {
   const meshRef = useRef();
@@ -17,6 +17,13 @@ const Book = ({ book, scale = [0.5, 0.7, 0.15], position = [0, 0, 0] }) => {
     book.cover?.back || "https://jacobg.me/k.jpg",
     book.cover?.spine || "https://jacobg.me/k.jpg",
   ]);
+
+  // Invalidate the canvas when textures are loaded to force a redraw
+  const { invalidate } = useThree();
+  useEffect(() => {
+    invalidate();
+    // Only run when textures change
+  }, [defaultTexture, frontTexture, backTexture, spineTexture, invalidate]);
 
   // Create materials once per Book instance; textures are cached so this is cheap
   const materials = useMemo(() => {

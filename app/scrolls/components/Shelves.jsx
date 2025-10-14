@@ -32,30 +32,27 @@ const Shelves = () => {
     return null;
   }
 
-  function Shelf({
-    position = [0, 0, 0],
-    rotation = [(Math.PI / 180) * 90, 0, 0],
-  }) {
-    const [colorMap, normalMap, roughnessMap] = useLoader(THREE.TextureLoader, [
-      "/shelf/Wood051_1K-JPG_Color.jpg",
-      "/shelf/Wood051_1K-JPG_NormalDX.jpg",
-      "/shelf/Wood051_1K-JPG_Roughness.jpg",
-    ]);
+  const shelfTextures = useLoader(THREE.TextureLoader, [
+    "/shelf/Wood051_1K-JPG_Color.jpg",
+    "/shelf/Wood051_1K-JPG_NormalDX.jpg",
+    "/shelf/Wood051_1K-JPG_Roughness.jpg",
+  ]);
 
-    // Set texture wrapping and repetition
+  // Prepare geometry and set texture params once
+  const Shelf = React.useMemo(() => {
+    const [colorMap, normalMap, roughnessMap] = shelfTextures;
+
     [colorMap, normalMap, roughnessMap].forEach((map) => {
       map.wrapS = THREE.RepeatWrapping;
       map.wrapT = THREE.RepeatWrapping;
-      map.repeat.set(1, 1); // Adjust the repeat values as needed
+      map.repeat.set(1, 1);
+      map.needsUpdate = true;
     });
 
-    // Create a shape for the ring
+    // Create a reusable geometry for the shelf ring
     const outerRadius = 7;
     const innerRadius = 6;
-    let segments = 64;
-    //const shelfDegrees = Math.PI/ 180 * 50;
-
-    //Make this like ringGeometry so I can cut it.
+    const segments = 64;
 
     const shape = new THREE.Shape();
     shape.absarc(0, 0, outerRadius, 0, Math.PI * 2, false);
@@ -64,9 +61,8 @@ const Shelves = () => {
     holePath.absarc(0, 0, innerRadius, 0, Math.PI * 2, true);
     shape.holes.push(holePath);
 
-    // Extrude settings
     const extrudeSettings = {
-      depth: 0.08, // Extrusion depth
+      depth: 0.08,
       bevelEnabled: false,
       steps: 1,
       curveSegments: segments,
@@ -74,27 +70,40 @@ const Shelves = () => {
 
     const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
 
-    return (
-      <mesh position={position} rotation={rotation}>
-        <primitive object={geometry} attach="geometry" />
-        <meshStandardMaterial
-          map={colorMap}
-          normalMap={normalMap}
-          roughnessMap={roughnessMap}
-          side={THREE.DoubleSide} // Ensure both sides are visible
-        />
-      </mesh>
+    const Material = (
+      <meshStandardMaterial
+        map={colorMap}
+        normalMap={normalMap}
+        roughnessMap={roughnessMap}
+        side={THREE.DoubleSide}
+      />
     );
-  }
+
+    return { geometry, Material };
+    // shelfTextures intentionally excluded from deps to avoid re-creation
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
       <SetCameraPosition />
       <group position={[0, -0.8, 4]}>
-        <Shelf position={[0, -1, 0]} books={books} meta={books["meta"]} />
-        <Shelf position={[0, 0, 0]} />
-        <Shelf position={[0, 1, 0]} />
-        <Shelf position={[0, 2, 0]} />
+        <mesh position={[0, -1, 0]} rotation={[(Math.PI / 180) * 90, 0, 0]}>
+          <primitive object={Shelf.geometry} attach="geometry" />
+          {Shelf.Material}
+        </mesh>
+        <mesh position={[0, 0, 0]} rotation={[(Math.PI / 180) * 90, 0, 0]}>
+          <primitive object={Shelf.geometry} attach="geometry" />
+          {Shelf.Material}
+        </mesh>
+        <mesh position={[0, 1, 0]} rotation={[(Math.PI / 180) * 90, 0, 0]}>
+          <primitive object={Shelf.geometry} attach="geometry" />
+          {Shelf.Material}
+        </mesh>
+        <mesh position={[0, 2, 0]} rotation={[(Math.PI / 180) * 90, 0, 0]}>
+          <primitive object={Shelf.geometry} attach="geometry" />
+          {Shelf.Material}
+        </mesh>
         <SetBackground />
 
         

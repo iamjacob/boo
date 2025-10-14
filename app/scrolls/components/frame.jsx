@@ -1,6 +1,9 @@
 import React, { useMemo, useRef } from "react";
 import { useLoader } from "@react-three/fiber";
+import { Html } from "@react-three/drei";
 import * as THREE from "three";
+import BoooksHeart from "../../BoooksHeart";
+
 
 function Frame() {
   // Load textures at the top level
@@ -44,7 +47,7 @@ function Frame() {
 
   return (
     <>
-    <mesh ref={frameRef} scale={1}>
+    <mesh ref={frameRef}>
       {frameParts.map((part, index) => (
         <mesh key={index} position={part.position}>
           <boxGeometry args={part.size} />
@@ -52,10 +55,25 @@ function Frame() {
         </mesh>
       ))}
     </mesh>
-    <ambientLight intensity={1} />
+       <Html
+        translate="yes"
+        position={[-1.15,-1.4,0]}
+        rotation={[0.1,0.1,0.1]}
+        className={`relative z-[5000] touch-auto `}
+        style={{ pointerEvents: "none" }} // Prevent blocking clicks on 3D scene
+      >
+        <button
+          title="heart"
+          className="rotate-[-45deg] cursor-pointer"
+          style={{ pointerEvents: "auto" }}
+          onClick={() => console.log("Heart clicked")}
+        >
+          <BoooksHeart width="30" height="30" />
+        </button>
+      </Html>
     </>
 
   );
 }
 
-export default Frame;
+export default React.memo(Frame);

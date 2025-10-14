@@ -1,5 +1,5 @@
 'use client'
-import { CameraControls, Html, RoundedBox, useCursor } from "@react-three/drei";
+import { CameraControls, Html, RoundedBox, useCursor,Stars } from "@react-three/drei";
 // import { BookOpen, Eye, Earth, ChevronDown } from "lucide-react";
 import * as THREE from "three";
 import { easing } from "maath";
@@ -9,10 +9,10 @@ import {
   MeshPortalMaterial,
 } from "@react-three/drei";
 import { Suspense, useEffect, useRef, useState, useMemo, useCallback } from "react";
-import {
-  SpotLightHelperComponent,
-  DirectionalLightHelperComponent,
-} from "./LightHelpers";
+// import {
+//   SpotLightHelperComponent,
+//   DirectionalLightHelperComponent,
+// } from "./LightHelpers";
 import { gsap } from "gsap";
 
 import Frame from "./frame";
@@ -40,7 +40,7 @@ export const Portal = ({id}) => {
     if (active === id) {
       // Portal is active - zoom in the camera for better view
       gsapTween = gsap.to(camera, {
-        zoom: 4.5, // Higher zoom like main experience
+        zoom: 1.5, // Higher zoom like main experience
         duration: 1.2,
         ease: "power2.out",
         onUpdate: () => {
@@ -144,7 +144,7 @@ const LibStage = ({
     }
     
     // Use exactly the same positions as in the main experience
-    return booksData.slice(0, 15).map((book, index) => {
+    return booksData.map((book, index) => {
       return {
         ...book,
         // Keep original positions exactly as they are in the JSON
@@ -197,11 +197,15 @@ const LibStage = ({
     }
   }, [active, id, setActive]);
 
+  // Memoized handler wrappers so children don't re-create functions each render
+  const memoSetActive = useCallback((v) => setActive(v), [setActive]);
+  const memoSetHovered = useCallback((v) => setHovered(v), [setHovered]);
+
   // Smoothly ease the "blend" property of your MeshPortalMaterial every frame.
   useFrame((_state, delta) => {
     if (!portalMaterial.current) return;
     const worldOpen = active === id;
-    easing.damp(portalMaterial.current, "blend", worldOpen ? 1 : 0, 0.4, delta);
+    easing.damp(portalMaterial.current, "blend", worldOpen ? 1 : 0, 0.6, delta);
   });
 
   // const myBookData = {
@@ -214,11 +218,6 @@ const LibStage = ({
 
   return (
     <group {...props}>
-      <Html transform
-          className="text-black text-[4px] top-[-20px] absolute left-1/2 -translate-x-1/2"
-        >
-          {/* {id} */}
-        </Html>
       <RoundedBox
         name={id}
         scale={0.5}
@@ -237,12 +236,12 @@ const LibStage = ({
           blend={active === id ? 1 : 0}
         >
           <Suspense loading={"loading"}>
-            <mesh position={[0, 0, 0]}>
+            <mesh position={[0, 0, 2.5]}>
               <ambientLight />
               <Shelves position={[0, 0, 0]} />
 
               {/* Books loop from books.json */}
-              {portalBooks.length > 0 ? portalBooks.map((book, index) => (
+              {portalBooks.length > 0 && portalBooks.map((book, index) => (
                 <Book
                   key={`portal-${id}-book-${book.id}`} // Unique key to prevent React conflicts
                   ref={el => {
@@ -278,12 +277,7 @@ const LibStage = ({
                   title={book.title || "Untitled"}
                   author={book.author || "Unknown Author"}
                 />
-              )) : (
-                // Fallback if no books loaded
-                <Html center className="text-white text-xs">
-                  Loading books...
-                </Html>
-              )}
+              ))}
 
               {/* Exit button when portal is active */}
               {active === id && (
@@ -317,6 +311,7 @@ const LibStage = ({
 
             </mesh>
           </Suspense>
+          <Stars/>
         </MeshPortalMaterial>
 
         <Frame />

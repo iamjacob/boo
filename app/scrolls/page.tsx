@@ -1,6 +1,7 @@
 'use client'
-import React, { useEffect, useState, Suspense } from 'react';
-import { ChevronUp, ChevronDown } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { BookOpen, Eye,  ChevronDown, ChevronUp } from "lucide-react";
+
 import { Short } from './components/Short';
 import { useShortsStore } from './store/shorts';
 import Header from '../Header';
@@ -193,15 +194,15 @@ function App() {
                 zIndex: 2 - Math.abs(scene.offset)
               }}
             >
-              <Suspense fallback={
+              {/* <Suspense fallback={
                 <div className="w-full h-full flex items-center justify-center text-white/50">
                   Loading...
                 </div>
-              }>
+              }> */}
                 
                 <Short sceneId={history[currentIndex].id} />
                 {/* <Short sceneId={scene.id} /> */}
-              </Suspense>
+              {/* </Suspense> */}
             </div>
           )
         )}
@@ -251,7 +252,7 @@ function App() {
           ID: {history[currentIndex].id}
         </div> */}
 
-        {isDragging && (
+        {/* {isDragging && (
           <div 
             className="absolute inset-0 pointer-events-none z-40"
             style={{
@@ -261,8 +262,68 @@ function App() {
               )`
             }}
           />
-        )}
+        )} */}
       </div>
+
+      <footer>
+         <button
+            title='eye'
+            style={{ pointerEvents: "auto" }}
+            onClick={() => console.log("Eye clicked")}
+          >
+            <Eye className="w-6 h-6 text-black" />
+          </button>
+          {/* <span>200M views</span> */}
+
+          {/* {!isMobile && (
+            <>
+              <button
+                style={{ pointerEvents: "auto" }}
+                onClick={() => console.log("Library clicked")}
+              >
+                <SquareLibrary className="w-6 h-6 text-black" />
+              </button>
+              <span>books read</span>
+            </>
+          )} */}
+
+          <button
+            title='open book'
+            style={{ pointerEvents: "auto" }}
+            onClick={() => console.log("Book Open clicked")}
+          >
+            <BookOpen className="w-6 h-6 text-black" />
+          </button>
+          {/* <span>reading now</span> */}
+
+          {/* {!isMobile && (
+            <>
+              <button
+                style={{ pointerEvents: "auto" }}
+                onClick={() => console.log("Calendar clicked")}
+              >
+                <Calendar className="w-6 h-6 text-black" />
+              </button>
+              <span>born</span>
+
+              <button
+                style={{ pointerEvents: "auto" }}
+                onClick={() => console.log("Earth clicked")}
+              >
+                <Earth className="w-6 h-6 text-black" />
+              </button>
+              <span>location</span> 
+              </>
+)}*/ }
+              {/* <button
+                title='more'
+                style={{ pointerEvents: "auto" }}
+                onClick={() => console.log("Chevron clicked")}
+              >
+                <ChevronDown />
+              </button> */}
+
+      </footer>
     </div>
   </>
 

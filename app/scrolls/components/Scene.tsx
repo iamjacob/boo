@@ -1,11 +1,8 @@
-import { Portal } from './portal';
-import { useFrame, useThree } from '@react-three/fiber';
-import { Html } from '@react-three/drei';
-import { useRef, useEffect, useState } from 'react';
-import { Mesh } from 'three';
-import { BookOpen, Eye, SquareLibrary, Calendar, Earth, ChevronDown, ChevronUp } from "lucide-react";
-import BoooksHeart from '../../BoooksHeart'
-
+import { Portal } from "./portal";
+import { useFrame, useThree } from "@react-three/fiber";
+import { Html } from "@react-three/drei";
+import { useRef, useEffect, useState } from "react";
+import { Mesh } from "three";
 
 export function Scene({ id }: { id: string }) {
   const meshRef = useRef<Mesh>(null);
@@ -15,14 +12,15 @@ export function Scene({ id }: { id: string }) {
   const gyroRotation = useRef({ x: 0, y: 0 });
   const mouseRotation = useRef({ x: 0, y: 0 });
   const [isMobile, setIsMobile] = useState(false);
-  
 
+  
   useEffect(() => {
     const updateIsMobile = () => setIsMobile(window.innerWidth <= 768);
     updateIsMobile(); // Initial check
     window.addEventListener("resize", updateIsMobile);
     return () => window.removeEventListener("resize", updateIsMobile);
   }, []);
+
 
   useEffect(() => {
     const handleOrientation = (event: DeviceOrientationEvent) => {
@@ -31,33 +29,33 @@ export function Scene({ id }: { id: string }) {
         gyroRotation.current.y = event.gamma * 0.01;
         if (!hasOrientation) setHasOrientation(true);
       }
-    }
+    };
 
     const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.key.toLowerCase() === 'p') {
-        setIsPaused(prev => !prev);
+      if (event.key.toLowerCase() === "p") {
+        setIsPaused((prev) => !prev);
       }
     };
 
     // Request permission for device orientation on iOS (type-safe)
     const DeviceOrientationEventAny = DeviceOrientationEvent as any;
-    if (typeof DeviceOrientationEventAny.requestPermission === 'function') {
+    if (typeof DeviceOrientationEventAny.requestPermission === "function") {
       DeviceOrientationEventAny.requestPermission()
         .then((permissionState: string) => {
-          if (permissionState === 'granted') {
-            window.addEventListener('deviceorientation', handleOrientation);
+          if (permissionState === "granted") {
+            window.addEventListener("deviceorientation", handleOrientation);
           }
         })
         .catch(console.error);
     } else {
-      window.addEventListener('deviceorientation', handleOrientation);
+      window.addEventListener("deviceorientation", handleOrientation);
     }
 
-    window.addEventListener('keydown', handleKeyPress);
+    window.addEventListener("keydown", handleKeyPress);
 
     return () => {
-      window.removeEventListener('deviceorientation', handleOrientation);
-      window.removeEventListener('keydown', handleKeyPress);
+      window.removeEventListener("deviceorientation", handleOrientation);
+      window.removeEventListener("keydown", handleKeyPress);
     };
   }, []);
 
@@ -65,12 +63,16 @@ export function Scene({ id }: { id: string }) {
     if (!meshRef.current) return;
 
     // Update mouse rotation
-    mouseRotation.current.x += (pointer.y * 0.2 - mouseRotation.current.x) * 0.1;
-    mouseRotation.current.y += (pointer.x * 0.2 - mouseRotation.current.y) * 0.1;
+    mouseRotation.current.x +=
+      (pointer.y * 0.2 - mouseRotation.current.x) * 0.1;
+    mouseRotation.current.y +=
+      (pointer.x * 0.2 - mouseRotation.current.y) * 0.1;
 
     // Combine both rotations
-    const combinedX = mouseRotation.current.x + (hasOrientation ? gyroRotation.current.x : 0);
-    const combinedY = mouseRotation.current.y + (hasOrientation ? gyroRotation.current.y : 0);
+    const combinedX =
+      mouseRotation.current.x + (hasOrientation ? gyroRotation.current.x : 0);
+    const combinedY =
+      mouseRotation.current.y + (hasOrientation ? gyroRotation.current.y : 0);
 
     // Target rotation values
     let targetX = combinedX;
@@ -89,14 +91,13 @@ export function Scene({ id }: { id: string }) {
 
   return (
     <>
-      <ambientLight intensity={1} />
-      <pointLight position={[10, 10, 10]} intensity={1} color="#ffffff" />
-      <pointLight position={[-10, 5, -10]} intensity={0.8} color="#bae6fd" />
-      <pointLight position={[5, -10, -5]} intensity={0.6} color="#818cf8" />
-      <directionalLight position={[0, 10, 0]} intensity={0.5} />
-      <pointLight position={[0, -10, 0]} intensity={0.4} color="#ffffff" />
+      {/* <pointLight position={[10, 10, 10]} intensity={1} color="#ffffff" /> */}
+      {/* <pointLight position={[-10, 5, -10]} intensity={0.8} color="#bae6fd" /> */}
+      {/* <pointLight position={[5, -10, -5]} intensity={0.6} color="#818cf8" /> */}
+      {/* <directionalLight position={[0, 10, 0]} intensity={0.5} /> */}
+      {/* <pointLight position={[0, -10, 0]} intensity={0.4} color="#ffffff" /> */}
       <mesh ref={meshRef}>
-        <Portal id={id}/>
+        <Portal id={id} />
         {/*
           <boxGeometry args={[1.5, 1.5, 1.5]} />
           <meshStandardMaterial
@@ -113,77 +114,26 @@ export function Scene({ id }: { id: string }) {
         <sphereGeometry />
         <meshStandardMaterial color={isPaused ? "#ef4444" : "#22c55e"} />
       </mesh> */}
+
       {/* Floating UI */}
-      <Html translate='yes'
-        className={`relative z-[50000] flex gap-4 text-center items-center touch-auto  ${isMobile ? "h-[40px] w-[320px] flex-row right-[-165px] bottom-[-255px]" : "w-[40px] h-[320px] flex-col right-[-200px] top-[-140px]"} `}
+      {/* <Html
+        translate="yes"
+        className={`relative z-[50000] flex gap-4 text-center items-center touch-auto  ${
+          isMobile
+            ? "h-[40px] w-[320px] flex-row right-[-165px] bottom-[-255px]"
+            : "w-[40px] h-[320px] flex-col right-[-200px] top-[-140px]"
+        } `}
         style={{ pointerEvents: "none" }} // Prevent blocking clicks on 3D scene
       >
-          <button
-            title='heart'
-            className='rotate-[-45deg] cursor-pointer'
-            style={{ pointerEvents: "auto" }}
-            onClick={() => console.log("Heart clicked")}
-          >
-            <BoooksHeart width="30" height="30" />
-          </button>
-
-          <button
-            title='eye'
-            style={{ pointerEvents: "auto" }}
-            onClick={() => console.log("Eye clicked")}
-          >
-            <Eye className="w-6 h-6 text-black" />
-          </button>
-          {/* <span>200M views</span> */}
-
-          {/* {!isMobile && (
-            <>
-              <button
-                style={{ pointerEvents: "auto" }}
-                onClick={() => console.log("Library clicked")}
-              >
-                <SquareLibrary className="w-6 h-6 text-black" />
-              </button>
-              <span>books read</span>
-            </>
-          )} */}
-
-          <button
-            title='open book'
-            style={{ pointerEvents: "auto" }}
-            onClick={() => console.log("Book Open clicked")}
-          >
-            <BookOpen className="w-6 h-6 text-black" />
-          </button>
-          {/* <span>reading now</span> */}
-
-          {/* {!isMobile && (
-            <>
-              <button
-                style={{ pointerEvents: "auto" }}
-                onClick={() => console.log("Calendar clicked")}
-              >
-                <Calendar className="w-6 h-6 text-black" />
-              </button>
-              <span>born</span>
-
-              <button
-                style={{ pointerEvents: "auto" }}
-                onClick={() => console.log("Earth clicked")}
-              >
-                <Earth className="w-6 h-6 text-black" />
-              </button>
-              <span>location</span> 
-              </>
-)}*/}
-              <button
-                title='more'
-                style={{ pointerEvents: "auto" }}
-                onClick={() => console.log("Chevron clicked")}
-              >
-                <ChevronDown />
-              </button>
-      </Html>
+        <button
+          title="heart"
+          className="rotate-[-45deg] cursor-pointer"
+          style={{ pointerEvents: "auto" }}
+          onClick={() => console.log("Heart clicked")}
+        >
+          <BoooksHeart width="30" height="30" />
+        </button>
+      </Html> */}
     </>
   );
 }

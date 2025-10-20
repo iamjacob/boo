@@ -267,7 +267,7 @@ function App() {
         )} */}
       </div>
 
-      <footer>
+      <footer className='fixed  bottom-0 left-0 w-screen'>
          <button
             title='eye'
             style={{ pointerEvents: "auto" }}
@@ -275,19 +275,9 @@ function App() {
           >
             <Eye className="w-6 h-6 text-black" />
           </button>
-          {/* <span>200M views</span> */}
+          <span>200M views</span>
 
-          {/* {!isMobile && (
-            <>
-              <button
-                style={{ pointerEvents: "auto" }}
-                onClick={() => console.log("Library clicked")}
-              >
-                <SquareLibrary className="w-6 h-6 text-black" />
-              </button>
-              <span>books read</span>
-            </>
-          )} */}
+          
 
           <button
             title='open book'
